@@ -83,14 +83,16 @@ services:
       - "traefik.docker.network=traefik-public"
 
       # HTTP Router (redirect to HTTPS)
-      - "traefik.http.routers.wolfguard-http.rule=Host(`wolfguard.infra4.dev`)"
+      - "traefik.http.routers.wolfguard-http.rule=Host(`wolfguard.io`) || Host(`www.wolfguard.io`)"
       - "traefik.http.routers.wolfguard-http.entrypoints=http"
       - "traefik.http.routers.wolfguard-http.middlewares=https-redirect@file"
 
       # HTTPS Router
-      - "traefik.http.routers.wolfguard.rule=Host(`wolfguard.infra4.dev`)"
+      - "traefik.http.routers.wolfguard.rule=Host(`wolfguard.io`) || Host(`www.wolfguard.io`)"
       - "traefik.http.routers.wolfguard.entrypoints=https"
       - "traefik.http.routers.wolfguard.tls.certresolver=cloudflare"
+      - "traefik.http.routers.wolfguard.tls.domains[0].main=wolfguard.io"
+      - "traefik.http.routers.wolfguard.tls.domains[0].sans=www.wolfguard.io"
       - "traefik.http.routers.wolfguard.middlewares=web-standard@file"
 
       # Service configuration (specify container port)

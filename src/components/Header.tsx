@@ -18,9 +18,11 @@ export const Header: React.FC = () => {
     >
       <NavbarBrand>
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-lg">W</span>
-          </div>
+          <img
+            src="/logo-small.png"
+            alt="WolfGuard Logo"
+            className="w-8 h-8 object-contain"
+          />
           <p className="font-bold text-xl text-foreground">WolfGuard</p>
         </div>
       </NavbarBrand>
