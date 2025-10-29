@@ -4,10 +4,14 @@ import { Card, CardBody, CardHeader, Button, Tabs, Tab } from '@heroui/react';
 export const QuickStart: React.FC = () => {
   const [copied, setCopied] = useState<string | null>(null);
 
-  const copyToClipboard = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopied(id);
-    setTimeout(() => setCopied(null), 2000);
+  const copyToClipboard = async (text: string, id: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(id);
+      setTimeout(() => setCopied(null), 2000);
+    } catch (err) {
+      console.error('Failed to copy text:', err);
+    }
   };
 
   const installCommands = {
@@ -67,11 +71,11 @@ dtls = true
 dtls-legacy = false`;
 
   return (
-    <section id="quickstart" className="py-20 bg-gradient-to-br from-content1 to-content2">
+    <section id="quickstart" className="py-20 bg-gradient-to-br from-content1 to-content2" aria-labelledby="quickstart-heading">
       <div className="container mx-auto px-4 max-w-5xl">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+          <h2 id="quickstart-heading" className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             Quick Start
           </h2>
           <p className="text-lg text-foreground/60 max-w-2xl mx-auto">
@@ -109,15 +113,17 @@ dtls-legacy = false`;
                   }
                 >
                   <div className="mt-4 relative">
-                    <pre className="bg-content2 p-4 rounded-lg overflow-x-auto text-sm border border-divider">
-                      <code className="text-foreground">{installCommands.debian}</code>
+                    <pre className="bg-content2 p-6 rounded-xl overflow-x-auto text-sm border border-divider/50 shadow-sm font-mono">
+                      <code className="text-foreground/90">{installCommands.debian}</code>
                     </pre>
                     <Button
                       isIconOnly
                       size="sm"
                       variant="flat"
-                      className="absolute top-2 right-2"
+                      color="default"
+                      className="absolute top-3 right-3 shadow-sm"
                       onPress={() => copyToClipboard(installCommands.debian, 'debian')}
+                      aria-label="Copy Debian installation commands"
                     >
                       {copied === 'debian' ? (
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -142,15 +148,17 @@ dtls-legacy = false`;
                   }
                 >
                   <div className="mt-4 relative">
-                    <pre className="bg-content2 p-4 rounded-lg overflow-x-auto text-sm border border-divider">
-                      <code className="text-foreground">{installCommands.rhel}</code>
+                    <pre className="bg-content2 p-6 rounded-xl overflow-x-auto text-sm border border-divider/50 shadow-sm font-mono">
+                      <code className="text-foreground/90">{installCommands.rhel}</code>
                     </pre>
                     <Button
                       isIconOnly
                       size="sm"
                       variant="flat"
-                      className="absolute top-2 right-2"
+                      color="default"
+                      className="absolute top-3 right-3 shadow-sm"
                       onPress={() => copyToClipboard(installCommands.rhel, 'rhel')}
+                      aria-label="Copy RHEL installation commands"
                     >
                       {copied === 'rhel' ? (
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -175,15 +183,17 @@ dtls-legacy = false`;
                   }
                 >
                   <div className="mt-4 relative">
-                    <pre className="bg-content2 p-4 rounded-lg overflow-x-auto text-sm border border-divider">
-                      <code className="text-foreground">{installCommands.arch}</code>
+                    <pre className="bg-content2 p-6 rounded-xl overflow-x-auto text-sm border border-divider/50 shadow-sm font-mono">
+                      <code className="text-foreground/90">{installCommands.arch}</code>
                     </pre>
                     <Button
                       isIconOnly
                       size="sm"
                       variant="flat"
-                      className="absolute top-2 right-2"
+                      color="default"
+                      className="absolute top-3 right-3 shadow-sm"
                       onPress={() => copyToClipboard(installCommands.arch, 'arch')}
+                      aria-label="Copy Arch Linux installation commands"
                     >
                       {copied === 'arch' ? (
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -212,15 +222,17 @@ dtls-legacy = false`;
             </CardHeader>
             <CardBody>
               <div className="relative">
-                <pre className="bg-content2 p-4 rounded-lg overflow-x-auto text-sm border border-divider">
-                  <code className="text-foreground">{configExample}</code>
+                <pre className="bg-content2 p-6 rounded-xl overflow-x-auto text-sm border border-divider/50 shadow-sm font-mono">
+                  <code className="text-foreground/90">{configExample}</code>
                 </pre>
                 <Button
                   isIconOnly
                   size="sm"
                   variant="flat"
-                  className="absolute top-2 right-2"
+                  color="default"
+                  className="absolute top-3 right-3 shadow-sm"
                   onPress={() => copyToClipboard(configExample, 'config')}
+                  aria-label="Copy configuration example"
                 >
                   {copied === 'config' ? (
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -259,6 +271,7 @@ dtls-legacy = false`;
                     color="primary"
                     variant="flat"
                     className="font-semibold"
+                    aria-label="View full WolfGuard documentation"
                   >
                     View Full Documentation
                   </Button>

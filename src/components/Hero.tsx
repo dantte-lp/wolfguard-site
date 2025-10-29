@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Link } from '@heroui/react';
+import { Button, Link, Chip, Card, CardBody } from '@heroui/react';
 
 export const Hero: React.FC = () => {
   return (
@@ -13,13 +13,20 @@ export const Hero: React.FC = () => {
       <div className="container mx-auto px-4 py-20 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full bg-primary/10 dark:bg-primary/20 border border-primary/20">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-            </span>
-            <span className="text-sm font-medium text-primary">Modern OpenConnect VPN Server</span>
-          </div>
+          <Chip
+            color="primary"
+            variant="flat"
+            size="lg"
+            className="mb-6"
+            startContent={
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+              </span>
+            }
+          >
+            Modern OpenConnect VPN Server
+          </Chip>
 
           {/* Main heading */}
           <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
@@ -43,6 +50,7 @@ export const Hero: React.FC = () => {
               color="primary"
               size="lg"
               className="font-semibold min-w-[200px]"
+              aria-label="Get started with WolfGuard"
             >
               Get Started
             </Button>
@@ -54,6 +62,7 @@ export const Hero: React.FC = () => {
               size="lg"
               isExternal
               className="font-semibold min-w-[200px] border-2"
+              aria-label="View WolfGuard on GitHub"
               startContent={
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -75,29 +84,38 @@ export const Hero: React.FC = () => {
               variant="light"
               size="lg"
               className="font-semibold min-w-[200px]"
+              aria-label="View WolfGuard documentation"
             >
               Documentation
             </Button>
           </div>
 
           {/* Stats */}
-          <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-primary mb-2">C23</div>
-              <div className="text-sm text-foreground/60">Modern C Standard</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-primary mb-2">DTLS 1.3</div>
-              <div className="text-sm text-foreground/60">Latest Protocol</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-primary mb-2">WolfSSL</div>
-              <div className="text-sm text-foreground/60">Secure Crypto</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-primary mb-2">5.x</div>
-              <div className="text-sm text-foreground/60">Cisco Compatible</div>
-            </div>
+          <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
+            <Card className="shadow-md bg-content1/50 backdrop-blur-sm">
+              <CardBody className="text-center py-6">
+                <div className="text-3xl font-bold text-primary mb-2">C23</div>
+                <div className="text-sm text-foreground/60">Modern C Standard</div>
+              </CardBody>
+            </Card>
+            <Card className="shadow-md bg-content1/50 backdrop-blur-sm">
+              <CardBody className="text-center py-6">
+                <div className="text-3xl font-bold text-primary mb-2">DTLS 1.3</div>
+                <div className="text-sm text-foreground/60">Latest Protocol</div>
+              </CardBody>
+            </Card>
+            <Card className="shadow-md bg-content1/50 backdrop-blur-sm">
+              <CardBody className="text-center py-6">
+                <div className="text-3xl font-bold text-primary mb-2">WolfSSL</div>
+                <div className="text-sm text-foreground/60">Secure Crypto</div>
+              </CardBody>
+            </Card>
+            <Card className="shadow-md bg-content1/50 backdrop-blur-sm">
+              <CardBody className="text-center py-6">
+                <div className="text-3xl font-bold text-primary mb-2">5.x</div>
+                <div className="text-sm text-foreground/60">Cisco Compatible</div>
+              </CardBody>
+            </Card>
           </div>
         </div>
       </div>

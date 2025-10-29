@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from '@heroui/react';
+import { Link, Divider } from '@heroui/react';
 
 export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -163,7 +163,8 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-divider">
+        <Divider className="my-8" />
+        <div className="pt-0">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-foreground/60">
               © {currentYear} WolfGuard. Open source software licensed under MIT.

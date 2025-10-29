@@ -62,11 +62,11 @@ const links: LinkItem[] = [
 
 export const Links: React.FC = () => {
   return (
-    <section id="links" className="py-20 bg-background">
+    <section id="links" className="py-20 bg-background" aria-labelledby="links-heading">
       <div className="container mx-auto px-4 max-w-5xl">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+          <h2 id="links-heading" className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             Resources & Links
           </h2>
           <p className="text-lg text-foreground/60 max-w-2xl mx-auto">
@@ -140,6 +140,7 @@ export const Links: React.FC = () => {
                   variant="flat"
                   isExternal
                   className="font-semibold"
+                  aria-label="Report an issue on GitHub"
                   startContent={
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <circle cx="12" cy="12" r="10"></circle>
@@ -156,6 +157,7 @@ export const Links: React.FC = () => {
                   variant="bordered"
                   isExternal
                   className="font-semibold border-2"
+                  aria-label="Submit a pull request on GitHub"
                   startContent={
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <circle cx="18" cy="18" r="3"></circle>
