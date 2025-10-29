@@ -5,7 +5,7 @@
 # ==============================================================================
 # Stage 1: Build Stage
 # ==============================================================================
-FROM docker.io/library/node:22-alpine AS builder
+FROM docker.io/library/node:22-trixie-slim AS builder
 
 # OCI Labels - Build Stage
 LABEL org.opencontainers.image.title="WolfGuard Site Builder"
@@ -16,12 +16,12 @@ LABEL org.opencontainers.image.vendor="WolfGuard"
 WORKDIR /build
 
 # Install build dependencies
-RUN apk add --no-cache \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     python3 \
     make \
     g++ \
-    && rm -rf /var/cache/apk/*
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy package files first (layer caching optimization)
 COPY package*.json ./
