@@ -33,3 +33,22 @@ coverage
 .nyc_output
 build
 .cache
+.vite
+
+# Temporary files
+*.tmp
+*.swp
+*~
+
+# OS files
+Thumbs.db
+
+# Container volumes
+volumes/
+
+# Backup files
+*.bak
+*.backup
+
+# Test files
+*.test.js.snap

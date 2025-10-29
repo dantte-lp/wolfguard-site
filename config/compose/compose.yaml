@@ -1,0 +1,105 @@
+# Podman Compose configuration for WolfGuard static site
+# Compose Specification 2025 (https://github.com/compose-spec/compose-spec)
+# NO 'version' field - deprecated in Compose Specification
+
+name: wolfguard
+
+services:
+  wolfguard-site:
+    container_name: wolfguard-site
+    image: localhost/wolfguard-site:latest
+
+    build:
+      context: /opt/projects/repositories/wolfguard-site
+      dockerfile: config/docker/Containerfile
+      args:
+        BUILD_DATE: "${BUILD_DATE:-}"
+        GIT_COMMIT: "${GIT_COMMIT:-}"
+      tags:
+        - localhost/wolfguard-site:latest
+        - localhost/wolfguard-site:${GIT_COMMIT:-dev}
+
+    # Port mapping (host:container)
+    # Using 8080 for development, should be behind reverse proxy in production
+    ports:
+      - "8080:8080"
+
+    # Restart policy
+    restart: unless-stopped
+
+    # Health check
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 64M
+
+    # Security options
+    security_opt:
+      - no-new-privileges:true
+
+    cap_drop:
+      - ALL
+
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+      - NET_BIND_SERVICE
+
+    # Read-only root filesystem (with tmpfs for writable areas)
+    read_only: true
+
+    tmpfs:
+      - /var/cache/nginx:mode=1777
+      - /var/run:mode=1777
+      - /tmp:mode=1777
+
+    # Volumes for logs (optional - comment out if not needed)
+    volumes:
+      - nginx-logs:/var/log/nginx:rw
+
+    # Environment variables
+    environment:
+      - TZ=UTC
+      - NGINX_ENTRYPOINT_QUIET_LOGS=1
+
+    # Labels for metadata
+    labels:
+      - "com.wolfguard.project=wolfguard-site"
+      - "com.wolfguard.description=WolfGuard landing page static site"
+      - "com.wolfguard.maintainer=WolfGuard Team"
+      - "com.wolfguard.environment=production"
+
+    # Logging configuration
+    logging:
+      driver: k8s-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+# Named volumes
+volumes:
+  nginx-logs:
+    driver: local
+    labels:
+      - "com.wolfguard.project=wolfguard-site"
+      - "com.wolfguard.volume=nginx-logs"
+
+# Networks (optional - for Traefik integration)
+# Uncomment if using Traefik reverse proxy
+# networks:
+#   traefik-public:
+#     external: true
+#     name: traefik-public
