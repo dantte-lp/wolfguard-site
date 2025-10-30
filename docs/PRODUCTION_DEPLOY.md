@@ -19,10 +19,10 @@ This guide covers deploying the WolfGuard landing page to production using Traef
 
 Add the following records in Cloudflare:
 
-| Type | Name | Content | Proxy Status | TTL |
-|------|------|---------|--------------|-----|
-| A | @ | YOUR_SERVER_IP | Proxied (Orange) | Auto |
-| CNAME | www | wolfguard.io | Proxied (Orange) | Auto |
+| Type  | Name | Content        | Proxy Status     | TTL  |
+| ----- | ---- | -------------- | ---------------- | ---- |
+| A     | @    | YOUR_SERVER_IP | Proxied (Orange) | Auto |
+| CNAME | www  | wolfguard.io   | Proxied (Orange) | Auto |
 
 **Note:** If using Cloudflare proxy, Traefik must use Cloudflare DNS challenge for Let's Encrypt.
 
@@ -35,6 +35,7 @@ podman network ls | grep traefik-public
 ```
 
 If not exists:
+
 ```bash
 podman network create traefik-public
 ```
@@ -60,6 +61,7 @@ podman-compose -f compose.prod.yaml up -d
 ```
 
 Or use Makefile:
+
 ```bash
 make deploy-prod
 ```
@@ -113,26 +115,26 @@ openssl s_client -connect wolfguard.io:443 -servername wolfguard.io < /dev/null 
 ```yaml
 labels:
   # Enable Traefik
-  - "traefik.enable=true"
-  - "traefik.docker.network=traefik-public"
+  - 'traefik.enable=true'
+  - 'traefik.docker.network=traefik-public'
 
   # HTTP → HTTPS redirect
-  - "traefik.http.routers.wolfguard-http.rule=Host(`wolfguard.io`) || Host(`www.wolfguard.io`)"
-  - "traefik.http.routers.wolfguard-http.entrypoints=http"
-  - "traefik.http.routers.wolfguard-http.middlewares=https-redirect@file"
+  - 'traefik.http.routers.wolfguard-http.rule=Host(`wolfguard.io`) || Host(`www.wolfguard.io`)'
+  - 'traefik.http.routers.wolfguard-http.entrypoints=http'
+  - 'traefik.http.routers.wolfguard-http.middlewares=https-redirect@file'
 
   # HTTPS Router
-  - "traefik.http.routers.wolfguard.rule=Host(`wolfguard.io`) || Host(`www.wolfguard.io`)"
-  - "traefik.http.routers.wolfguard.entrypoints=https"
-  - "traefik.http.routers.wolfguard.tls.certresolver=cloudflare"
-  - "traefik.http.routers.wolfguard.tls.domains[0].main=wolfguard.io"
-  - "traefik.http.routers.wolfguard.tls.domains[0].sans=www.wolfguard.io"
-  - "traefik.http.routers.wolfguard.middlewares=web-standard@file"
+  - 'traefik.http.routers.wolfguard.rule=Host(`wolfguard.io`) || Host(`www.wolfguard.io`)'
+  - 'traefik.http.routers.wolfguard.entrypoints=https'
+  - 'traefik.http.routers.wolfguard.tls.certresolver=cloudflare'
+  - 'traefik.http.routers.wolfguard.tls.domains[0].main=wolfguard.io'
+  - 'traefik.http.routers.wolfguard.tls.domains[0].sans=www.wolfguard.io'
+  - 'traefik.http.routers.wolfguard.middlewares=web-standard@file'
 
   # Service configuration
-  - "traefik.http.services.wolfguard.loadbalancer.server.port=8080"
-  - "traefik.http.services.wolfguard.loadbalancer.healthcheck.path=/health"
-  - "traefik.http.services.wolfguard.loadbalancer.healthcheck.interval=30s"
+  - 'traefik.http.services.wolfguard.loadbalancer.server.port=8080'
+  - 'traefik.http.services.wolfguard.loadbalancer.healthcheck.path=/health'
+  - 'traefik.http.services.wolfguard.loadbalancer.healthcheck.interval=30s'
 ```
 
 ### Middleware Applied
@@ -175,6 +177,7 @@ curl https://wolfguard.io/health
 ### Traefik Dashboard
 
 If Traefik dashboard is enabled, check:
+
 - Service status: `wolfguard`
 - Router status: `wolfguard`, `wolfguard-http`
 - Certificate status: `wolfguard.io`
@@ -215,12 +218,15 @@ podman-compose -f compose.prod.yaml up -d --force-recreate
 ### Issue: Container not accessible via Traefik
 
 **Check:**
+
 1. Container is connected to `traefik-public` network:
+
    ```bash
    podman inspect wolfguard-site | jq '.[0].NetworkSettings.Networks'
    ```
 
 2. Traefik can see the container:
+
    ```bash
    podman exec traefik wget -qO- http://wolfguard-site:8080/health
    ```
@@ -233,6 +239,7 @@ podman-compose -f compose.prod.yaml up -d --force-recreate
 ### Issue: SSL certificate not issued
 
 **Check:**
+
 1. Cloudflare DNS challenge configured in Traefik
 2. Cloudflare API token has correct permissions
 3. DNS records exist and are correct
@@ -244,13 +251,16 @@ podman-compose -f compose.prod.yaml up -d --force-recreate
 ### Issue: 502 Bad Gateway
 
 **Check:**
+
 1. Container is running and healthy:
+
    ```bash
    podman ps | grep wolfguard-site
    podman inspect wolfguard-site | jq '.[0].State'
    ```
 
 2. Nginx is responding:
+
    ```bash
    podman exec wolfguard-site wget -qO- http://localhost:8080/
    ```
@@ -263,6 +273,7 @@ podman-compose -f compose.prod.yaml up -d --force-recreate
 ### Issue: HTTP redirect not working
 
 **Check:**
+
 1. Middleware `https-redirect@file` exists in `dynamic.yml`
 2. HTTP router is configured correctly
 3. Test direct connection:
@@ -294,6 +305,7 @@ podman-compose -f compose.prod.yaml up -d
 ### Log Rotation
 
 Logs are automatically rotated:
+
 - **Max size**: 50MB per file
 - **Max files**: 5
 - **Total storage**: ~250MB
@@ -344,6 +356,7 @@ podman network prune
 ### Nginx Optimization
 
 Already applied in `nginx.conf`:
+
 - Gzip compression (level 6)
 - Static file caching (1 year)
 - Worker processes optimized
@@ -357,8 +370,8 @@ Adjust in `compose.prod.yaml` if needed:
 deploy:
   resources:
     limits:
-      cpus: '4.0'      # Increase for high traffic
-      memory: 1024M    # Increase if OOM errors
+      cpus: '4.0' # Increase for high traffic
+      memory: 1024M # Increase if OOM errors
     reservations:
       cpus: '1.0'
       memory: 256M

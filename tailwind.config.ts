@@ -3,8 +3,8 @@ import { heroui } from '@heroui/react'
 
 const config: Config = {
   content: [
-    './index.html',
-    './src/**/*.{js,ts,jsx,tsx}',
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
     './node_modules/@heroui/react/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
@@ -46,14 +46,7 @@ const config: Config = {
           'Arial',
           'sans-serif',
         ],
-        mono: [
-          'JetBrains Mono',
-          'Fira Code',
-          'Consolas',
-          'Monaco',
-          'Courier New',
-          'monospace',
-        ],
+        mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', 'Courier New', 'monospace'],
       },
       boxShadow: {
         'neon-green': '0 0 10px #39ff14, 0 0 20px #39ff14, 0 0 30px #39ff14',

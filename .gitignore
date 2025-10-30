@@ -6,6 +6,12 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Next.js
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
 # Build outputs
 dist/
 build/

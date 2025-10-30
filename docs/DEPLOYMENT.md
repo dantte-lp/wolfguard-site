@@ -45,11 +45,13 @@ podman info | grep -A 1 "ociRuntime:"
 ### Installation (if needed)
 
 **Oracle Linux / RHEL / Fedora:**
+
 ```bash
 sudo dnf install -y podman buildah skopeo podman-compose
 ```
 
 **Ubuntu / Debian:**
+
 ```bash
 sudo apt update
 sudo apt install -y podman buildah skopeo
@@ -170,6 +172,7 @@ make version            # Show version
 **Location:** `/opt/projects/repositories/wolfguard-site/Containerfile`
 
 **Features:**
+
 - Stage 1: Build with Node.js 22
 - Stage 2: Serve with Nginx 1.27-alpine
 - Non-root user (uid 1001)
@@ -178,6 +181,7 @@ make version            # Show version
 - Health check built-in
 
 **Build:**
+
 ```bash
 podman build -t localhost/wolfguard-site:latest .
 ```
@@ -187,6 +191,7 @@ podman build -t localhost/wolfguard-site:latest .
 **Location:** `/opt/projects/repositories/wolfguard-site/compose.yaml`
 
 **Features:**
+
 - Port 8080 exposed to host
 - Health checks
 - Resource limits
@@ -194,6 +199,7 @@ podman build -t localhost/wolfguard-site:latest .
 - Volume for logs
 
 **Usage:**
+
 ```bash
 podman-compose up -d
 ```
@@ -203,6 +209,7 @@ podman-compose up -d
 **Location:** `/opt/projects/repositories/wolfguard-site/compose.prod.yaml`
 
 **Features:**
+
 - Traefik integration (automatic HTTPS)
 - No direct port exposure
 - Enhanced resource limits
@@ -210,6 +217,7 @@ podman-compose up -d
 - Health checks for load balancer
 
 **Usage:**
+
 ```bash
 podman-compose -f compose.prod.yaml up -d
 ```
@@ -219,6 +227,7 @@ podman-compose -f compose.prod.yaml up -d
 **Location:** `/opt/projects/repositories/wolfguard-site/nginx.conf`
 
 **Features:**
+
 - Non-root user configuration
 - Gzip compression
 - Security headers (CSP, X-Frame-Options, etc.)
@@ -227,6 +236,7 @@ podman-compose -f compose.prod.yaml up -d
 - Health check endpoint
 
 **Key Settings:**
+
 - Listen port: 8080 (non-privileged)
 - SPA routing: `try_files $uri $uri/ /index.html`
 - Asset caching: 1 year for static files
@@ -237,6 +247,7 @@ podman-compose -f compose.prod.yaml up -d
 **Location:** `/opt/projects/repositories/wolfguard-site/.containerignore`
 
 **Excludes:**
+
 - node_modules/
 - .git/
 - IDE files
@@ -248,11 +259,13 @@ podman-compose -f compose.prod.yaml up -d
 ### Container Security
 
 **Non-root User:**
+
 ```yaml
-USER nginx-user  # uid 1001, gid 1001
+USER nginx-user # uid 1001, gid 1001
 ```
 
 **Dropped Capabilities:**
+
 ```yaml
 cap_drop:
   - ALL
@@ -264,6 +277,7 @@ cap_add:
 ```
 
 **Read-only Filesystem:**
+
 ```yaml
 read_only: true
 tmpfs:
@@ -273,6 +287,7 @@ tmpfs:
 ```
 
 **Security Options:**
+
 ```yaml
 security_opt:
   - no-new-privileges:true
@@ -281,6 +296,7 @@ security_opt:
 ### Nginx Security Headers
 
 **Applied Headers:**
+
 - `X-Frame-Options: SAMEORIGIN`
 - `X-Content-Type-Options: nosniff`
 - `X-XSS-Protection: 1; mode=block`
@@ -289,6 +305,7 @@ security_opt:
 - `Content-Security-Policy: ...` (customize as needed)
 
 **Test Security:**
+
 ```bash
 curl -I http://localhost:8080 | grep -E "(X-Frame|X-Content|X-XSS|Referrer|CSP)"
 ```
@@ -320,6 +337,7 @@ resources:
 ```
 
 **Adjust based on:**
+
 - Server capacity
 - Traffic volume
 - Number of concurrent users
@@ -330,7 +348,7 @@ resources:
 
 ```yaml
 ports:
-  - "8080:8080"
+  - '8080:8080'
 ```
 
 **Access:** http://localhost:8080
@@ -343,12 +361,13 @@ networks:
 ```
 
 **Traefik labels:**
+
 ```yaml
 labels:
-  - "traefik.enable=true"
-  - "traefik.http.routers.wolfguard.rule=Host(`wolfguard.infra4.dev`)"
-  - "traefik.http.routers.wolfguard.entrypoints=https"
-  - "traefik.http.routers.wolfguard.tls.certresolver=cloudflare"
+  - 'traefik.enable=true'
+  - 'traefik.http.routers.wolfguard.rule=Host(`wolfguard.infra4.dev`)'
+  - 'traefik.http.routers.wolfguard.entrypoints=https'
+  - 'traefik.http.routers.wolfguard.tls.certresolver=cloudflare'
 ```
 
 **Access:** https://wolfguard.infra4.dev
@@ -371,17 +390,20 @@ podman network inspect traefik-public --format '{{range .Containers}}{{.Name}} {
 ### Container Health Check
 
 **Defined in Containerfile:**
+
 ```dockerfile
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:8080/ || exit 1
 ```
 
 **Check health status:**
+
 ```bash
 podman inspect wolfguard-site --format '{{.State.Health.Status}}'
 ```
 
 **View health log:**
+
 ```bash
 podman inspect wolfguard-site --format '{{json .State.Health}}' | python3 -m json.tool
 ```
@@ -389,9 +411,10 @@ podman inspect wolfguard-site --format '{{json .State.Health}}' | python3 -m jso
 ### Compose Health Check
 
 **Defined in compose.yaml:**
+
 ```yaml
 healthcheck:
-  test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
+  test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:8080/health']
   interval: 30s
   timeout: 10s
   retries: 3
@@ -403,6 +426,7 @@ healthcheck:
 **Endpoint:** `/health`
 
 **Test:**
+
 ```bash
 curl http://localhost:8080/health
 # Output: healthy
@@ -429,36 +453,41 @@ podman-compose logs -f wolfguard-site
 ### Log Configuration
 
 **Development:**
+
 ```yaml
 logging:
   driver: json-file
   options:
-    max-size: "10m"
-    max-file: "3"
+    max-size: '10m'
+    max-file: '3'
 ```
 
 **Production:**
+
 ```yaml
 logging:
   driver: json-file
   options:
-    max-size: "50m"
-    max-file: "5"
+    max-size: '50m'
+    max-file: '5'
 ```
 
 ### Log Locations
 
 **Container logs:**
+
 ```bash
 podman logs wolfguard-site
 ```
 
 **Nginx access logs:**
+
 ```bash
 podman exec wolfguard-site cat /var/log/nginx/access.log
 ```
 
 **Nginx error logs:**
+
 ```bash
 podman exec wolfguard-site cat /var/log/nginx/error.log
 ```
@@ -468,18 +497,22 @@ podman exec wolfguard-site cat /var/log/nginx/error.log
 ### Container won't start
 
 **Check logs:**
+
 ```bash
 podman logs wolfguard-site
 ```
 
 **Common issues:**
+
 1. Port already in use
+
    ```bash
    lsof -i :8080
    # Change port in compose.yaml
    ```
 
 2. Build failed
+
    ```bash
    make build-no-cache
    ```
@@ -493,17 +526,20 @@ podman logs wolfguard-site
 ### Health check failing
 
 **Test manually:**
+
 ```bash
 curl -v http://localhost:8080/health
 curl -v http://localhost:8080/
 ```
 
 **Check Nginx config:**
+
 ```bash
 podman exec wolfguard-site nginx -t
 ```
 
 **Inspect health status:**
+
 ```bash
 podman inspect wolfguard-site --format '{{json .State.Health}}' | python3 -m json.tool
 ```
@@ -511,17 +547,21 @@ podman inspect wolfguard-site --format '{{json .State.Health}}' | python3 -m jso
 ### Traefik not routing
 
 **Checklist:**
+
 1. Container on traefik-public network?
+
    ```bash
    podman network inspect traefik-public | grep wolfguard
    ```
 
 2. Labels correct?
+
    ```bash
    podman inspect wolfguard-site --format '{{json .Config.Labels}}' | python3 -m json.tool | grep traefik
    ```
 
 3. DNS record exists?
+
    ```bash
    dig wolfguard.infra4.dev
    ```
@@ -534,6 +574,7 @@ podman inspect wolfguard-site --format '{{json .State.Health}}' | python3 -m jso
 ### Build cache issues
 
 **Clear build cache:**
+
 ```bash
 podman system prune -af
 buildah rm --all
@@ -543,12 +584,14 @@ make build-no-cache
 ### Permission denied errors
 
 **SELinux context:**
+
 ```bash
 # If using volumes with SELinux
 sudo chcon -R -t container_file_t /path/to/volume
 ```
 
 **Rootless Podman:**
+
 ```bash
 # Check subuid/subgid
 grep $USER /etc/subuid /etc/subgid
@@ -559,6 +602,7 @@ grep $USER /etc/subuid /etc/subgid
 ### Nginx Optimization
 
 **Already configured in nginx.conf:**
+
 - Gzip compression
 - Sendfile enabled
 - TCP optimizations (nopush, nodelay)
@@ -568,27 +612,31 @@ grep $USER /etc/subuid /etc/subgid
 ### Container Resources
 
 **Monitor resource usage:**
+
 ```bash
 make stats
 podman stats wolfguard-site
 ```
 
 **Adjust limits in compose.yaml:**
+
 ```yaml
 deploy:
   resources:
     limits:
-      cpus: '2.0'      # Increase if needed
-      memory: 512M     # Increase if needed
+      cpus: '2.0' # Increase if needed
+      memory: 512M # Increase if needed
 ```
 
 ### Caching Strategy
 
 **Static assets (CSS, JS, images):**
+
 - Cache-Control: public, immutable
 - Expires: 1 year
 
 **HTML files:**
+
 - Cache-Control: no-cache
 - Forces revalidation on each request
 
@@ -678,18 +726,21 @@ podman volume import nginx-logs nginx-logs-backup.tar
 ## Additional Resources
 
 **Official Documentation:**
+
 - Podman: https://docs.podman.io/en/latest/
 - Buildah: https://buildah.io/
 - Compose Spec: https://github.com/compose-spec/compose-spec
 - Nginx: https://nginx.org/en/docs/
 
 **WolfGuard Infrastructure:**
+
 - Traefik Dashboard: https://tr-01.infra4.dev
 - Production Site: https://wolfguard.infra4.dev
 
 ## Support
 
 For issues or questions:
+
 1. Check troubleshooting section above
 2. Review logs: `make logs`
 3. Inspect container: `make inspect`

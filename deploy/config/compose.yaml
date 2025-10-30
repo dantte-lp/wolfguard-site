@@ -11,7 +11,7 @@ services:
 
     build:
       context: /opt/projects/repositories/wolfguard-site
-      dockerfile: config/docker/Containerfile
+      dockerfile: deploy/config/Containerfile
       args:
         BUILD_DATE: "${BUILD_DATE:-}"
         GIT_COMMIT: "${GIT_COMMIT:-}"

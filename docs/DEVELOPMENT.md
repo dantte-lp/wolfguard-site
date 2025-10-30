@@ -68,6 +68,7 @@ npm run dev
 ```
 
 This will start the Vite development server at `http://localhost:5173` with:
+
 - Hot Module Replacement (HMR)
 - Fast refresh for React components
 - TypeScript type checking
@@ -113,12 +114,14 @@ podman-compose -f compose.prod.yaml down              # Stop production containe
 ### React 19.2.0
 
 Latest React version with:
+
 - Concurrent rendering features
 - Automatic batching improvements
 - Server Components support (future-ready)
 - Improved hydration and SSR
 
 **Best Practices:**
+
 - Use functional components with hooks
 - Implement proper error boundaries
 - Leverage React.memo for performance
@@ -127,12 +130,14 @@ Latest React version with:
 ### TypeScript 5.9
 
 Modern TypeScript features:
+
 - Strict mode enabled
 - Proper type inference
 - No `any` types (use proper typing)
 - Interface over type when possible
 
 **Best Practices:**
+
 - Always define proper types for props
 - Use utility types (Partial, Pick, Omit, etc.)
 - Leverage type guards for runtime checks
@@ -141,22 +146,24 @@ Modern TypeScript features:
 ### HeroUI 2.8.5
 
 Modern React component library:
+
 - Pre-built accessible components
 - Dark/Light theme support out of the box
 - Tailwind CSS integration
 - Customizable with CSS variables
 
 **Available Components:**
+
 - Button, Card, Input, Modal, Dropdown
 - Table, Pagination, Tabs, Switch
 - Skeleton (loading states)
 - And many more...
 
 **Usage Example:**
-```tsx
-import { Button, Card, CardBody } from '@heroui/react';
 
-<Card className="shadow-lg">
+```tsx
+import { Button, Card, CardBody } from '@heroui/react'
+;<Card className="shadow-lg">
   <CardBody>
     <Button color="primary" size="lg">
       Get Started
@@ -168,12 +175,14 @@ import { Button, Card, CardBody } from '@heroui/react';
 ### Tailwind CSS 4.1.16
 
 Latest Tailwind with:
+
 - Performance improvements
 - New utility classes
 - Better dark mode support
 - Improved customization
 
 **Best Practices:**
+
 - Use utility classes for styling
 - Create custom components for repeated patterns
 - Use `@apply` sparingly in component styles
@@ -182,12 +191,14 @@ Latest Tailwind with:
 ### Vite 7.1.12
 
 Lightning-fast build tool:
+
 - Instant server start
 - Lightning-fast HMR
 - Optimized production builds
 - Built-in TypeScript support
 
 **Configuration:**
+
 - `vite.config.ts` - Main Vite configuration
 - `tsconfig.json` - TypeScript configuration
 - `postcss.config.js` - PostCSS plugins
@@ -202,12 +213,13 @@ touch src/components/NewComponent.tsx
 ```
 
 **Component Template:**
+
 ```tsx
-import React from 'react';
+import React from 'react'
 
 interface NewComponentProps {
-  title: string;
-  description?: string;
+  title: string
+  description?: string
 }
 
 export const NewComponent: React.FC<NewComponentProps> = ({ title, description }) => {
@@ -216,8 +228,8 @@ export const NewComponent: React.FC<NewComponentProps> = ({ title, description }
       <h2 className="text-3xl font-bold mb-4">{title}</h2>
       {description && <p className="text-lg">{description}</p>}
     </div>
-  );
-};
+  )
+}
 ```
 
 ### 2. Styling Components
@@ -225,15 +237,15 @@ export const NewComponent: React.FC<NewComponentProps> = ({ title, description }
 Use Tailwind utility classes:
 
 ```tsx
-<div className="
+<div
+  className="
   flex items-center justify-center
   min-h-screen
   bg-gradient-to-br from-blue-500 to-purple-600
   text-white
-">
-  <h1 className="text-4xl md:text-6xl font-bold">
-    WolfGuard
-  </h1>
+"
+>
+  <h1 className="text-4xl md:text-6xl font-bold">WolfGuard</h1>
 </div>
 ```
 
@@ -342,9 +354,9 @@ podman-compose -f compose.prod.yaml build --no-cache
 Vite automatically code-splits on dynamic imports:
 
 ```tsx
-const LazyComponent = React.lazy(() => import('./components/LazyComponent'));
+const LazyComponent = React.lazy(() => import('./components/LazyComponent'))
 
-<React.Suspense fallback={<div>Loading...</div>}>
+;<React.Suspense fallback={<div>Loading...</div>}>
   <LazyComponent />
 </React.Suspense>
 ```

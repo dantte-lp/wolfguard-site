@@ -9,20 +9,24 @@ This is the official landing page for WolfGuard, showcasing the project's featur
 ## Tech Stack
 
 ### Frontend Framework
+
 - **React 19.2.0** - Latest React with concurrent features and improved performance
 - **TypeScript 5.9** - Strict type checking and modern language features
 - **Vite 7.1.12** - Lightning-fast build tool with HMR
 
 ### UI Components & Styling
+
 - **HeroUI 2.8.5** - Modern React component library with beautiful defaults
 - **Tailwind CSS 4.1.16** - Utility-first CSS framework with latest features
 - **Framer Motion 11.15.0** - Production-ready animation library
 
 ### Production Runtime
+
 - **Nginx 1.27** - High-performance web server (Alpine Linux)
 - **Node 22 Trixie-slim** - Build environment
 
 ### Container Platform
+
 - **Podman** - Rootless container management
 - **Podman Compose** - Multi-container orchestration
 - **Traefik** - Reverse proxy with automatic SSL/TLS
@@ -111,12 +115,14 @@ Contributions are welcome! Please read the contributing guidelines before submit
 ## Support
 
 For issues, questions, or contributions, please visit:
+
 - GitHub Issues: [wolfguard/wolfguard-site](https://github.com/wolfguard/wolfguard-site/issues)
 - Documentation: [docs.wolfguard.io](https://docs.wolfguard.io)
 
 ## Acknowledgments
 
 Built with love using:
+
 - React Team for React 19
 - HeroUI Team for the beautiful component library
 - Tailwind Labs for Tailwind CSS 4

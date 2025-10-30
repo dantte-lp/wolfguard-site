@@ -4,34 +4,34 @@
 
 ## Основные зависимости
 
-| Пакет | Текущая стабильная версия | Источник | Примечания |
-|-------|---------------------------|----------|------------|
-| **Node.js** | 22.12+ | Next.js требует | Next.js 15 требует Node.js 18.18+ или выше |
-| **Next.js** | 15.1.6 | [nextjs.org](https://nextjs.org/docs) | Релиз 15.x с App Router, RSC, Server Actions |
-| **React** | 19.2.0 | [react.dev](https://react.dev/versions) | Релиз от 01.10.2025, включает новый `<Activity>` компонент |
-| **ReactDOM** | 19.2.0 | [react.dev](https://react.dev/versions) | Синхронно с React |
-| **TypeScript** | 5.7.3 | [typescriptlang.org](https://www.typescriptlang.org/) | Релиз от 22.11.2024, патч 5.7.3 |
-| **Tailwind CSS** | 4.1.16 | [tailwindcss.com](https://tailwindcss.com/) | Релиз 5 дней назад, v4.1 от апреля 2025 |
-| **HeroUI** | 2.8.5 | [heroui.com](https://www.heroui.com/) | Релиз 25 дней назад, поддержка Tailwind v4 |
+| Пакет            | Текущая стабильная версия | Источник                                              | Примечания                                                 |
+| ---------------- | ------------------------- | ----------------------------------------------------- | ---------------------------------------------------------- |
+| **Node.js**      | 22.12+                    | Next.js требует                                       | Next.js 15 требует Node.js 18.18+ или выше                 |
+| **Next.js**      | 15.1.6                    | [nextjs.org](https://nextjs.org/docs)                 | Релиз 15.x с App Router, RSC, Server Actions               |
+| **React**        | 19.2.0                    | [react.dev](https://react.dev/versions)               | Релиз от 01.10.2025, включает новый `<Activity>` компонент |
+| **ReactDOM**     | 19.2.0                    | [react.dev](https://react.dev/versions)               | Синхронно с React                                          |
+| **TypeScript**   | 5.7.3                     | [typescriptlang.org](https://www.typescriptlang.org/) | Релиз от 22.11.2024, патч 5.7.3                            |
+| **Tailwind CSS** | 4.1.16                    | [tailwindcss.com](https://tailwindcss.com/)           | Релиз 5 дней назад, v4.1 от апреля 2025                    |
+| **HeroUI**       | 2.8.5                     | [heroui.com](https://www.heroui.com/)                 | Релиз 25 дней назад, поддержка Tailwind v4                 |
 
 ## Дополнительные зависимости
 
-| Пакет | Рекомендуемая версия | Цель |
-|-------|---------------------|------|
-| **Framer Motion** | Последняя v12.x | Анимации |
-| **ESLint** | Последняя v9.x | Линтинг |
-| **Prettier** | Последняя v3.x | Форматирование |
-| **Husky** | Последняя v9.x | Git hooks |
-| **lint-staged** | Последняя v15.x | Pre-commit линтинг |
+| Пакет             | Рекомендуемая версия | Цель               |
+| ----------------- | -------------------- | ------------------ |
+| **Framer Motion** | Последняя v12.x      | Анимации           |
+| **ESLint**        | Последняя v9.x       | Линтинг            |
+| **Prettier**      | Последняя v3.x       | Форматирование     |
+| **Husky**         | Последняя v9.x       | Git hooks          |
+| **lint-staged**   | Последняя v15.x      | Pre-commit линтинг |
 
 ## Инструменты контейнеризации
 
-| Инструмент | Версия | Примечания |
-|------------|--------|------------|
+| Инструмент        | Версия | Примечания                 |
+| ----------------- | ------ | -------------------------- |
 | **Docker/Podman** | Latest | Для dev и prod контейнеров |
-| **Buildah** | Latest | Сборка образов |
-| **Skopeo** | Latest | Управление образами |
-| **crun** | Latest | Container runtime |
+| **Buildah**       | Latest | Сборка образов             |
+| **Skopeo**        | Latest | Управление образами        |
+| **crun**          | Latest | Container runtime          |
 
 ## package.json (примерная структура)
 

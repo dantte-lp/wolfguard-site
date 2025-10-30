@@ -9,17 +9,21 @@ services:
 
     build:
       context: .
-      dockerfile: config/docker/Dockerfile.dev
+      dockerfile: deploy/config/Containerfile.dev
 
     # Mount source code for hot reload
     volumes:
       - .:/app:rw
       - /app/node_modules
-      - npm-cache:/home/node-dev/.npm:rw
+      - npm-cache:/home/node/.npm:rw
 
-    # Port mapping: host:container
+    # Port mapping: host:container (kept for local access)
     ports:
       - "3000:3000"
+
+    # Connect to Traefik network for external access
+    networks:
+      - traefik-public
 
     # Development environment variables
     environment:
@@ -45,9 +49,33 @@ services:
 
     # Labels
     labels:
+      # Project metadata
       - "com.wolfguard.project=wolfguard-site"
       - "com.wolfguard.environment=development"
       - "com.wolfguard.description=WolfGuard site development server"
+
+      # Traefik configuration
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik-public"
+
+      # HTTP Router (redirect to HTTPS)
+      - "traefik.http.routers.wolfguard-dev-http.rule=Host(`dev.wolfguard.io`)"
+      - "traefik.http.routers.wolfguard-dev-http.entrypoints=http"
+      - "traefik.http.routers.wolfguard-dev-http.middlewares=https-redirect@file"
+
+      # HTTPS Router
+      - "traefik.http.routers.wolfguard-dev.rule=Host(`dev.wolfguard.io`)"
+      - "traefik.http.routers.wolfguard-dev.entrypoints=https"
+      - "traefik.http.routers.wolfguard-dev.tls.certresolver=cloudflare"
+      - "traefik.http.routers.wolfguard-dev.tls.domains[0].main=dev.wolfguard.io"
+      - "traefik.http.routers.wolfguard-dev.middlewares=web-development@file"
+
+      # Service configuration (Next.js dev server port)
+      - "traefik.http.services.wolfguard-dev.loadbalancer.server.port=3000"
+
+      # Health check
+      - "traefik.http.services.wolfguard-dev.loadbalancer.healthcheck.path=/"
+      - "traefik.http.services.wolfguard-dev.loadbalancer.healthcheck.interval=30s"
 
     # Command to run (npm run dev will be executed)
     command: sh -c "npm install && npm run dev"
@@ -59,3 +87,9 @@ volumes:
     labels:
       - "com.wolfguard.project=wolfguard-site"
       - "com.wolfguard.environment=development"
+
+# Networks
+networks:
+  traefik-public:
+    external: true
+    name: traefik-public

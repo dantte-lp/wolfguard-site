@@ -11,11 +11,13 @@
 ### Технический стек
 
 **Было:**
+
 - Vite 7.1.12 как build tool
 - React Router для маршрутизации
 - SPA архитектура
 
 **Стало:**
+
 - Next.js 15.1.6 как React Framework
 - App Router (встроенный)
 - SSR/SSG архитектура
@@ -23,12 +25,16 @@
 ### Обновленные файлы
 
 #### 1. Техническое задание
+
 **Файл:** `docs/TECHNICAL_SPECIFICATIONS_FOR_WEBSITE_DEVELOPMENT.md`
+
 - Удалена строка с Vite
 - Версия Next.js обновлена на 15.x (стабильная версия)
 
 #### 2. SCRUM План
+
 **Файл:** `SCRUM_PLAN.md`
+
 - US-001: Порт изменен с 5173 на 3000
 - US-002: Название изменено на "Next.js + React + TypeScript"
 - US-002: Acceptance Criteria обновлены для Next.js App Router
@@ -36,27 +42,35 @@
 - US-005: Структура изменена на app/layout.tsx
 
 #### 3. GitHub Issues
+
 **Обновлено:**
+
 - Issue #1 (US-001): Порт 3000 вместо 5173
 - Issue #2 (US-002): Полностью переписан для Next.js
 - Issue #5 (US-005): Обновлен для Next.js App Router
 
 #### 4. README.md
+
 **Изменения:**
+
 - Tech Stack: добавлен Next.js 15.x
 - Все упоминания порта 5173 заменены на 3000
 
 #### 5. DEPENDENCIES_VERSIONS.md
+
 **Изменения:**
+
 - Next.js 15.1.6 добавлен вместо Vite
 - React Router удален (не нужен)
 - package.json обновлен с Next.js скриптами
 - Добавлен eslint-config-next
 
 #### 6. docker-compose.dev.yaml
+
 **Изменения:**
+
 - Порт: 5173 → 3000
-- Environment variables: VITE_* → NEXT_TELEMETRY_DISABLED
+- Environment variables: VITE\_\* → NEXT_TELEMETRY_DISABLED
 - Health check URL обновлен
 
 ### Преимущества Next.js для WolfGuard
@@ -131,6 +145,7 @@ wolfguard-site/
 ### Milestones в GitHub
 
 Созданы 4 milestone:
+
 - **Sprint 1: Foundation & Infrastructure** (до 13.11.2025)
 - **Sprint 2: Core Pages & Animations** (до 27.11.2025)
 - **Sprint 3: Documentation & Community** (до 11.12.2025)

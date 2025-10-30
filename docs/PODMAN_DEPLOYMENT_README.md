@@ -162,12 +162,14 @@ curl http://localhost:8080/health
 ## Common Commands
 
 ### Build
+
 ```bash
 make build              # Build container image
 make build-no-cache     # Clean build (no cache)
 ```
 
 ### Container Management
+
 ```bash
 make start              # Start containers
 make stop               # Stop containers
@@ -176,6 +178,7 @@ make deploy             # Full deployment pipeline
 ```
 
 ### Monitoring
+
 ```bash
 make logs               # Follow logs (Ctrl+C to exit)
 make logs-tail          # Last 100 lines
@@ -185,6 +188,7 @@ make stats              # Resource usage
 ```
 
 ### Cleanup
+
 ```bash
 make clean              # Remove containers and images
 make prune              # Remove unused resources
@@ -192,28 +196,31 @@ make clean-all          # Deep clean
 ```
 
 ### Help
+
 ```bash
 make help               # Show all available commands
 ```
 
 ## Port Mappings
 
-| Environment | Host Port | Container Port | Access URL |
-|-------------|-----------|----------------|------------|
-| Development | 8080 | 8080 | http://localhost:8080 |
-| Production | - | 8080 | https://wolfguard.infra4.dev (via Traefik) |
+| Environment | Host Port | Container Port | Access URL                                 |
+| ----------- | --------- | -------------- | ------------------------------------------ |
+| Development | 8080      | 8080           | http://localhost:8080                      |
+| Production  | -         | 8080           | https://wolfguard.infra4.dev (via Traefik) |
 
 ## Security Features
 
 ### Container Security
 
 ✅ **Non-root user** (uid 1001, gid 1001)
+
 ```bash
 podman exec wolfguard-site id
 # Output: uid=1001(nginx-user) gid=1001(nginx-user)
 ```
 
 ✅ **Read-only root filesystem**
+
 ```yaml
 read_only: true
 tmpfs:
@@ -223,6 +230,7 @@ tmpfs:
 ```
 
 ✅ **Dropped capabilities**
+
 ```yaml
 cap_drop:
   - ALL
@@ -234,6 +242,7 @@ cap_add:
 ```
 
 ✅ **Security options**
+
 ```yaml
 security_opt:
   - no-new-privileges:true
@@ -242,6 +251,7 @@ security_opt:
 ### Nginx Security
 
 ✅ **Security Headers**
+
 - X-Frame-Options: SAMEORIGIN
 - X-Content-Type-Options: nosniff
 - X-XSS-Protection: 1; mode=block
@@ -297,6 +307,7 @@ resources:
 ```
 
 **Monitor resource usage:**
+
 ```bash
 make stats
 ```
@@ -312,7 +323,7 @@ make stats
 
 ```yaml
 healthcheck:
-  test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
+  test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:8080/health']
   interval: 30s
   timeout: 10s
   retries: 3
@@ -362,18 +373,19 @@ curl https://wolfguard.infra4.dev/health
 ```yaml
 labels:
   # Enable Traefik
-  - "traefik.enable=true"
+  - 'traefik.enable=true'
 
   # HTTPS Router
-  - "traefik.http.routers.wolfguard.rule=Host(`wolfguard.infra4.dev`)"
-  - "traefik.http.routers.wolfguard.entrypoints=https"
-  - "traefik.http.routers.wolfguard.tls.certresolver=cloudflare"
+  - 'traefik.http.routers.wolfguard.rule=Host(`wolfguard.infra4.dev`)'
+  - 'traefik.http.routers.wolfguard.entrypoints=https'
+  - 'traefik.http.routers.wolfguard.tls.certresolver=cloudflare'
 
   # Service port
-  - "traefik.http.services.wolfguard.loadbalancer.server.port=8080"
+  - 'traefik.http.services.wolfguard.loadbalancer.server.port=8080'
 ```
 
 **Verify routing:**
+
 ```bash
 # Check Traefik dashboard
 https://tr-01.infra4.dev
@@ -606,6 +618,7 @@ jobs:
 ### Nginx Optimization
 
 Already configured in `nginx.conf`:
+
 - ✅ Gzip compression (level 6)
 - ✅ Sendfile enabled
 - ✅ TCP optimizations (nopush, nodelay)
@@ -630,8 +643,8 @@ Edit `compose.yaml` or `compose.prod.yaml`:
 deploy:
   resources:
     limits:
-      cpus: '2.0'      # Increase if needed
-      memory: 512M     # Increase if needed
+      cpus: '2.0' # Increase if needed
+      memory: 512M # Increase if needed
 ```
 
 ## Backup and Recovery
@@ -669,12 +682,12 @@ podman volume import nginx-logs nginx-logs-backup.tar
 
 ## Documentation Reference
 
-| File | Description | Size |
-|------|-------------|------|
-| **DEPLOYMENT.md** | Complete deployment guide with architecture, troubleshooting | 14 KB |
-| **SECURITY.md** | Security architecture, hardening, incident response | 17 KB |
-| **CHEATSHEET.md** | Quick reference for common commands and workflows | 8.7 KB |
-| **PODMAN_DEPLOYMENT_README.md** | This file - overview and quick start | - |
+| File                            | Description                                                  | Size   |
+| ------------------------------- | ------------------------------------------------------------ | ------ |
+| **DEPLOYMENT.md**               | Complete deployment guide with architecture, troubleshooting | 14 KB  |
+| **SECURITY.md**                 | Security architecture, hardening, incident response          | 17 KB  |
+| **CHEATSHEET.md**               | Quick reference for common commands and workflows            | 8.7 KB |
+| **PODMAN_DEPLOYMENT_README.md** | This file - overview and quick start                         | -      |
 
 ## Technical Specifications
 
@@ -747,12 +760,14 @@ make version
    - Check [CHEATSHEET.md](CHEATSHEET.md) for quick commands
 
 2. **Test Locally**
+
    ```bash
    make deploy
    curl http://localhost:8080
    ```
 
 3. **Deploy to Production**
+
    ```bash
    make build
    podman-compose -f compose.prod.yaml up -d

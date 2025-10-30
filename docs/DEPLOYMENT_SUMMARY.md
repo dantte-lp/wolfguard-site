@@ -10,19 +10,19 @@
 
 ### Configuration Files Created (10 files)
 
-| File | Size | Purpose |
-|------|------|---------|
-| **Containerfile** | 3.4 KB | Multi-stage OCI container build definition |
-| **nginx.conf** | 4.1 KB | Production-optimized Nginx web server config |
-| **compose.yaml** | 2.5 KB | Development deployment (localhost:8080) |
-| **compose.prod.yaml** | 3.4 KB | Production deployment (Traefik integration) |
-| **Makefile** | 7.7 KB | Build automation (30+ commands) |
-| **.containerignore** | 1.1 KB | Build exclusions (node_modules, .git, etc.) |
-| **.env.example** | 511 B | Environment variable templates |
-| **DEPLOYMENT.md** | 14 KB | Complete deployment guide |
-| **SECURITY.md** | 17 KB | Security architecture and hardening |
-| **CHEATSHEET.md** | 8.6 KB | Quick reference for common tasks |
-| **PODMAN_DEPLOYMENT_README.md** | 17 KB | Overview and quick start guide |
+| File                            | Size   | Purpose                                      |
+| ------------------------------- | ------ | -------------------------------------------- |
+| **Containerfile**               | 3.4 KB | Multi-stage OCI container build definition   |
+| **nginx.conf**                  | 4.1 KB | Production-optimized Nginx web server config |
+| **compose.yaml**                | 2.5 KB | Development deployment (localhost:8080)      |
+| **compose.prod.yaml**           | 3.4 KB | Production deployment (Traefik integration)  |
+| **Makefile**                    | 7.7 KB | Build automation (30+ commands)              |
+| **.containerignore**            | 1.1 KB | Build exclusions (node_modules, .git, etc.)  |
+| **.env.example**                | 511 B  | Environment variable templates               |
+| **DEPLOYMENT.md**               | 14 KB  | Complete deployment guide                    |
+| **SECURITY.md**                 | 17 KB  | Security architecture and hardening          |
+| **CHEATSHEET.md**               | 8.6 KB | Quick reference for common tasks             |
+| **PODMAN_DEPLOYMENT_README.md** | 17 KB  | Overview and quick start guide               |
 
 **Total Configuration:** ~78 KB
 
@@ -195,12 +195,13 @@ make deploy-prod
 
 ## 🔌 Port Mappings
 
-| Environment | Host Port | Container Port | Access URL |
-|-------------|-----------|----------------|------------|
-| **Development** | 8080 | 8080 | http://localhost:8080 |
-| **Production** | None | 8080 | https://wolfguard.infra4.dev |
+| Environment     | Host Port | Container Port | Access URL                   |
+| --------------- | --------- | -------------- | ---------------------------- |
+| **Development** | 8080      | 8080           | http://localhost:8080        |
+| **Production**  | None      | 8080           | https://wolfguard.infra4.dev |
 
 **Notes:**
+
 - Development: Direct port binding to localhost
 - Production: No port exposure, access via Traefik reverse proxy
 - Container always listens on port 8080 (non-privileged)
@@ -213,11 +214,13 @@ make deploy-prod
 ### Container Security Hardening
 
 ✅ **Non-root User**
+
 - User: `nginx-user` (uid 1001, gid 1001)
 - All processes run as non-root
 - Verification: `podman exec wolfguard-site id`
 
 ✅ **Read-only Root Filesystem**
+
 - Root filesystem mounted as read-only
 - Writable directories: tmpfs mounts
   - `/var/cache/nginx`
@@ -226,15 +229,18 @@ make deploy-prod
 - Verification: `podman exec wolfguard-site touch /test` (should fail)
 
 ✅ **Dropped Capabilities**
+
 - Default: ALL capabilities dropped
 - Granted: CHOWN, SETGID, SETUID, NET_BIND_SERVICE
 - Verification: `podman inspect wolfguard-site --format '{{.EffectiveCaps}}'`
 
 ✅ **Security Options**
+
 - `no-new-privileges:true` - prevents privilege escalation
 - seccomp profile: default (blocks dangerous syscalls)
 
 ✅ **Resource Limits**
+
 - CPU: 1.0 cores (dev), 2.0 cores (prod)
 - Memory: 256M (dev), 512M (prod)
 - Prevents resource exhaustion attacks
@@ -242,6 +248,7 @@ make deploy-prod
 ### Nginx Security Features
 
 ✅ **Security Headers**
+
 ```
 X-Frame-Options: SAMEORIGIN
 X-Content-Type-Options: nosniff
@@ -252,24 +259,29 @@ Content-Security-Policy: [customizable]
 ```
 
 ✅ **Server Information**
+
 - `server_tokens off` - hides Nginx version
 - Reduces information disclosure
 
 ✅ **Compression**
+
 - Gzip enabled (level 6)
 - Optimizes bandwidth and performance
 
 ✅ **Cache Control**
+
 - Static assets: 1 year cache (immutable)
 - HTML: no-cache (force revalidation)
 
 ### Network Security
 
 ✅ **Development**
+
 - Port binding: `127.0.0.1:8080:8080` (localhost only)
 - Not exposed to external network
 
 ✅ **Production**
+
 - No direct port exposure
 - Access via Traefik reverse proxy
 - Network isolation: `traefik-public` network
@@ -301,6 +313,7 @@ curl -v https://wolfguard.infra4.dev 2>&1 | grep -E "(TLS|SSL)"
 ### Resource Limits
 
 **Default (Development):**
+
 ```yaml
 resources:
   limits:
@@ -312,17 +325,19 @@ resources:
 ```
 
 **Recommended (Production):**
+
 ```yaml
 resources:
   limits:
-    cpus: '2.0'      # Increase for high traffic
-    memory: 512M     # Increase if needed
+    cpus: '2.0' # Increase for high traffic
+    memory: 512M # Increase if needed
   reservations:
     cpus: '0.5'
     memory: 128M
 ```
 
 **Adjust based on:**
+
 - Server capacity
 - Expected traffic volume
 - Number of concurrent users
@@ -331,67 +346,72 @@ resources:
 ### Traefik Configuration
 
 **Minimal (already configured):**
+
 ```yaml
 labels:
-  - "traefik.enable=true"
-  - "traefik.http.routers.wolfguard.rule=Host(`wolfguard.infra4.dev`)"
-  - "traefik.http.routers.wolfguard.entrypoints=https"
-  - "traefik.http.routers.wolfguard.tls.certresolver=cloudflare"
-  - "traefik.http.services.wolfguard.loadbalancer.server.port=8080"
+  - 'traefik.enable=true'
+  - 'traefik.http.routers.wolfguard.rule=Host(`wolfguard.infra4.dev`)'
+  - 'traefik.http.routers.wolfguard.entrypoints=https'
+  - 'traefik.http.routers.wolfguard.tls.certresolver=cloudflare'
+  - 'traefik.http.services.wolfguard.loadbalancer.server.port=8080'
 ```
 
 **Enhanced (recommended for production):**
+
 ```yaml
 labels:
   # Basic configuration
-  - "traefik.enable=true"
-  - "traefik.docker.network=traefik-public"
+  - 'traefik.enable=true'
+  - 'traefik.docker.network=traefik-public'
 
   # HTTP -> HTTPS redirect
-  - "traefik.http.routers.wolfguard-http.rule=Host(`wolfguard.infra4.dev`)"
-  - "traefik.http.routers.wolfguard-http.entrypoints=http"
-  - "traefik.http.routers.wolfguard-http.middlewares=https-redirect@file"
+  - 'traefik.http.routers.wolfguard-http.rule=Host(`wolfguard.infra4.dev`)'
+  - 'traefik.http.routers.wolfguard-http.entrypoints=http'
+  - 'traefik.http.routers.wolfguard-http.middlewares=https-redirect@file'
 
   # HTTPS router
-  - "traefik.http.routers.wolfguard.rule=Host(`wolfguard.infra4.dev`)"
-  - "traefik.http.routers.wolfguard.entrypoints=https"
-  - "traefik.http.routers.wolfguard.tls.certresolver=cloudflare"
-  - "traefik.http.routers.wolfguard.middlewares=web-standard@file"
+  - 'traefik.http.routers.wolfguard.rule=Host(`wolfguard.infra4.dev`)'
+  - 'traefik.http.routers.wolfguard.entrypoints=https'
+  - 'traefik.http.routers.wolfguard.tls.certresolver=cloudflare'
+  - 'traefik.http.routers.wolfguard.middlewares=web-standard@file'
 
   # Service configuration
-  - "traefik.http.services.wolfguard.loadbalancer.server.port=8080"
-  - "traefik.http.services.wolfguard.loadbalancer.healthcheck.path=/health"
-  - "traefik.http.services.wolfguard.loadbalancer.healthcheck.interval=30s"
+  - 'traefik.http.services.wolfguard.loadbalancer.server.port=8080'
+  - 'traefik.http.services.wolfguard.loadbalancer.healthcheck.path=/health'
+  - 'traefik.http.services.wolfguard.loadbalancer.healthcheck.interval=30s'
 ```
 
 ### Logging Configuration
 
 **Development:**
+
 ```yaml
 logging:
   driver: json-file
   options:
-    max-size: "10m"
-    max-file: "3"
+    max-size: '10m'
+    max-file: '3'
 ```
 
 **Production:**
+
 ```yaml
 logging:
   driver: json-file
   options:
-    max-size: "50m"
-    max-file: "5"
-    tag: "wolfguard-site-prod"
-    labels: "com.wolfguard.project,com.wolfguard.environment"
+    max-size: '50m'
+    max-file: '5'
+    tag: 'wolfguard-site-prod'
+    labels: 'com.wolfguard.project,com.wolfguard.environment'
 ```
 
 ### Health Check Configuration
 
 **Current (optimal for most cases):**
+
 ```yaml
 healthcheck:
-  test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
+  test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:8080/health']
   interval: 30s
   timeout: 10s
   retries: 3
@@ -399,10 +419,11 @@ healthcheck:
 ```
 
 **Aggressive (for critical services):**
+
 ```yaml
 healthcheck:
-  test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
-  interval: 10s      # Check every 10 seconds
+  test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:8080/health']
+  interval: 10s # Check every 10 seconds
   timeout: 5s
   retries: 3
   start_period: 5s
@@ -411,6 +432,7 @@ healthcheck:
 ### Nginx Optimization
 
 **Already configured in nginx.conf:**
+
 - ✅ Worker processes: auto (detects CPU cores)
 - ✅ Gzip compression: enabled (level 6)
 - ✅ Sendfile: enabled
@@ -418,6 +440,7 @@ healthcheck:
 - ✅ Keep-alive: 65 seconds
 
 **Additional tuning (if needed):**
+
 ```nginx
 # Increase worker connections (high traffic)
 events {
@@ -660,17 +683,21 @@ make restart
 ## 📚 Documentation Index
 
 ### Quick Start
+
 - **PODMAN_DEPLOYMENT_README.md** - Overview and quick start guide (17 KB)
 - **CHEATSHEET.md** - Common commands and workflows (8.6 KB)
 
 ### Complete Guide
+
 - **DEPLOYMENT.md** - Full deployment guide with troubleshooting (14 KB)
 - **SECURITY.md** - Security architecture and best practices (17 KB)
 
 ### Summary
+
 - **DEPLOYMENT_SUMMARY.md** - This file - complete reference
 
 ### Configuration Reference
+
 - **Containerfile** - Multi-stage build definition
 - **nginx.conf** - Nginx configuration
 - **compose.yaml** - Development deployment
@@ -682,6 +709,7 @@ make restart
 ## ✅ Pre-Deployment Checklist
 
 ### Prerequisites
+
 - [ ] Podman installed (>= 4.0)
 - [ ] Buildah installed (>= 1.28)
 - [ ] Skopeo installed (>= 1.10)
@@ -689,6 +717,7 @@ make restart
 - [ ] crun runtime available
 
 ### Development Deployment
+
 - [ ] Review `compose.yaml` configuration
 - [ ] Customize resource limits if needed
 - [ ] Run `make build` to build image
@@ -698,6 +727,7 @@ make restart
 - [ ] Monitor logs: `make logs`
 
 ### Production Deployment
+
 - [ ] Traefik network created: `podman network create traefik-public`
 - [ ] Traefik running and accessible
 - [ ] DNS record configured for `wolfguard.infra4.dev`
@@ -716,17 +746,20 @@ make restart
 ## 🎓 Learning Resources
 
 ### Official Documentation
+
 - **Podman:** https://docs.podman.io/en/latest/
 - **Buildah:** https://buildah.io/
 - **Compose Spec:** https://github.com/compose-spec/compose-spec
 - **Nginx:** https://nginx.org/en/docs/
 
 ### Security Resources
+
 - **OWASP:** https://owasp.org/
 - **CIS Benchmarks:** https://www.cisecurity.org/cis-benchmarks/
 - **NIST 800-190:** https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-190.pdf
 
 ### Tools
+
 - **Trivy (vulnerability scanning):** https://github.com/aquasecurity/trivy
 - **Falco (runtime security):** https://falco.org/
 
@@ -775,6 +808,7 @@ make version
    - Check `compose.yaml` for deployment settings
 
 2. **Test Local Deployment**
+
    ```bash
    cd /opt/projects/repositories/wolfguard-site
    make deploy
@@ -789,6 +823,7 @@ make version
 ### After Frontend Complete
 
 1. **Verify Build**
+
    ```bash
    # Ensure dist/ directory is created by frontend build
    npm run build
@@ -796,11 +831,13 @@ make version
    ```
 
 2. **Test Container Build**
+
    ```bash
    make build
    ```
 
 3. **Deploy and Test**
+
    ```bash
    make start
    curl http://localhost:8080
@@ -824,16 +861,19 @@ make version
 **Total Size:** ~78 KB
 
 **Ready for:**
+
 - ✅ Build and testing (after frontend agent completes)
 - ✅ Local development deployment
 - ✅ Production deployment with Traefik
 
 **Awaiting:**
+
 - Frontend agent to complete React app structure
 - `package.json` with build script
 - Source files in `src/` directory
 
 **Next Command (after frontend ready):**
+
 ```bash
 make deploy
 ```

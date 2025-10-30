@@ -5,6 +5,7 @@ Complete guide for deploying the WolfGuard landing page to production with Podma
 ## Overview
 
 This deployment uses:
+
 - **Podman** - Rootless container runtime
 - **Podman Compose** - Multi-container orchestration
 - **Traefik** - Reverse proxy with automatic SSL/TLS (Let's Encrypt)
@@ -109,6 +110,7 @@ podman images | grep wolfguard-site
 ```
 
 Expected output:
+
 ```
 localhost/wolfguard-site  latest  <IMAGE_ID>  X minutes ago  87.2 MB
 ```
@@ -172,23 +174,23 @@ Ensure Traefik is configured to route traffic to the container.
 
 ```yaml
 labels:
-  - "traefik.enable=true"
-  - "traefik.docker.network=traefik-public"
+  - 'traefik.enable=true'
+  - 'traefik.docker.network=traefik-public'
 
   # HTTP to HTTPS redirect
-  - "traefik.http.routers.wolfguard-http.rule=Host(`wolfguard.io`) || Host(`www.wolfguard.io`)"
-  - "traefik.http.routers.wolfguard-http.entrypoints=http"
-  - "traefik.http.routers.wolfguard-http.middlewares=https-redirect@file"
+  - 'traefik.http.routers.wolfguard-http.rule=Host(`wolfguard.io`) || Host(`www.wolfguard.io`)'
+  - 'traefik.http.routers.wolfguard-http.entrypoints=http'
+  - 'traefik.http.routers.wolfguard-http.middlewares=https-redirect@file'
 
   # HTTPS router
-  - "traefik.http.routers.wolfguard.rule=Host(`wolfguard.io`) || Host(`www.wolfguard.io`)"
-  - "traefik.http.routers.wolfguard.entrypoints=https"
-  - "traefik.http.routers.wolfguard.tls.certresolver=cloudflare"
-  - "traefik.http.routers.wolfguard.tls.domains[0].main=wolfguard.io"
-  - "traefik.http.routers.wolfguard.tls.domains[0].sans=www.wolfguard.io"
+  - 'traefik.http.routers.wolfguard.rule=Host(`wolfguard.io`) || Host(`www.wolfguard.io`)'
+  - 'traefik.http.routers.wolfguard.entrypoints=https'
+  - 'traefik.http.routers.wolfguard.tls.certresolver=cloudflare'
+  - 'traefik.http.routers.wolfguard.tls.domains[0].main=wolfguard.io'
+  - 'traefik.http.routers.wolfguard.tls.domains[0].sans=www.wolfguard.io'
 
   # Service configuration
-  - "traefik.http.services.wolfguard.loadbalancer.server.port=8080"
+  - 'traefik.http.services.wolfguard.loadbalancer.server.port=8080'
 ```
 
 ## Post-Deployment Tasks
@@ -427,6 +429,7 @@ podman run -d --name nginx-exporter \
 ### Uptime Monitoring
 
 Use external services:
+
 - UptimeRobot (free tier)
 - Pingdom
 - StatusCake
@@ -435,6 +438,7 @@ Use external services:
 ## Support
 
 For deployment issues:
+
 - Check [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)
 - Review logs: `podman logs wolfguard-site`
 - Open issue: [GitHub Issues](https://github.com/wolfguard/wolfguard-site/issues)

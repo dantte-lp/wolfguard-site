@@ -2,40 +2,39 @@
   "name": "wolfguard-site",
   "version": "1.0.0",
   "description": "Official website for WolfGuard VPN Server",
-  "type": "module",
   "private": true,
   "scripts": {
-    "dev": "vite --host 0.0.0.0",
-    "build": "tsc && vite build",
-    "preview": "vite preview --host 0.0.0.0",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "lint:fix": "eslint . --ext ts,tsx --fix",
-    "format": "prettier --write \"src/**/*.{ts,tsx,css,json}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,css,json}\"",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "format": "prettier --write \"**/*.{ts,tsx,css,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,css,json,md}\"",
     "type-check": "tsc --noEmit",
-    "prepare": "command -v husky >/dev/null 2>&1 && husky install || true"
+    "prepare": "husky"
   },
   "dependencies": {
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
     "@heroui/react": "2.8.5",
-    "framer-motion": "12.10.0"
+    "framer-motion": "^12.23.24",
+    "lucide-react": "^0.548.0",
+    "next": "15.1.6",
+    "next-themes": "^0.4.6",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
   },
   "devDependencies": {
-    "@types/react": "19.0.6",
-    "@types/react-dom": "19.0.3",
-    "@typescript-eslint/eslint-plugin": "8.22.0",
-    "@typescript-eslint/parser": "8.22.0",
-    "@vitejs/plugin-react": "4.3.4",
-    "eslint": "9.18.0",
-    "eslint-plugin-react-hooks": "5.1.0",
-    "eslint-plugin-react-refresh": "0.4.18",
-    "husky": "9.1.7",
-    "lint-staged": "15.2.12",
-    "prettier": "3.4.2",
-    "tailwindcss": "4.1.16",
-    "typescript": "5.7.3",
-    "vite": "7.1.12"
+    "@tailwindcss/postcss": "^4.1.16",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "15.1.6",
+    "husky": "^9.0.0",
+    "lint-staged": "^15.0.0",
+    "prettier": "^3.0.0",
+    "tailwindcss": "^4.1.16",
+    "typescript": "5.7.3"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -47,7 +46,7 @@
     ]
   },
   "engines": {
-    "node": ">=22.12.0",
+    "node": ">=22.0.0",
     "npm": ">=10.0.0"
   },
   "repository": {
@@ -60,8 +59,9 @@
     "tls",
     "cisco-anyconnect",
     "wolfssl",
-    "security"
+    "security",
+    "nextjs"
   ],
   "author": "WolfGuard Team",
-  "license": "GPLv2"
+  "license": "GPL-3.0"
 }

@@ -60,37 +60,41 @@ Modern, responsive static landing page for **WolfGuard** - a next-generation Ope
 
 ## Technology Stack (Verified Working)
 
-| Technology | Version | Status |
-|------------|---------|--------|
-| Node.js | 22.x | Required |
-| React | 19.2.0 | Latest |
-| React DOM | 19.2.0 | Latest |
-| TypeScript | 5.9 | Latest |
-| Vite | 7.1.12 | Latest |
-| HeroUI React | 2.8.5 | Latest |
-| HeroUI Theme | 2.4.23 | Latest available |
-| Tailwind CSS | 4.1.16 | Latest |
-| @tailwindcss/postcss | 4.1.16 | Latest |
-| Framer Motion | 11.15.0 | Latest |
-| ESLint | 9.20.0 | Latest |
-| TypeScript ESLint | 8.23.0 | Latest |
+| Technology           | Version | Status           |
+| -------------------- | ------- | ---------------- |
+| Node.js              | 22.x    | Required         |
+| React                | 19.2.0  | Latest           |
+| React DOM            | 19.2.0  | Latest           |
+| TypeScript           | 5.9     | Latest           |
+| Vite                 | 7.1.12  | Latest           |
+| HeroUI React         | 2.8.5   | Latest           |
+| HeroUI Theme         | 2.4.23  | Latest available |
+| Tailwind CSS         | 4.1.16  | Latest           |
+| @tailwindcss/postcss | 4.1.16  | Latest           |
+| Framer Motion        | 11.15.0 | Latest           |
+| ESLint               | 9.20.0  | Latest           |
+| TypeScript ESLint    | 8.23.0  | Latest           |
 
 ---
 
 ## Build Commands
 
 ### Development Server
+
 ```bash
 npm run dev
 ```
+
 - Starts Vite dev server at `http://localhost:5173`
 - Hot module replacement (HMR) enabled
 - Fast refresh for React components
 
 ### Production Build
+
 ```bash
 npm run build
 ```
+
 - TypeScript compilation with strict mode
 - Vite production build with esbuild minification
 - Output directory: `dist/`
@@ -104,16 +108,20 @@ npm run build
   - **Total:** ~498 KB (~153 KB gzipped)
 
 ### Preview Production Build
+
 ```bash
 npm run preview
 ```
+
 - Serves the production build locally
 - Tests production configuration before deployment
 
 ### Linting
+
 ```bash
 npm run lint
 ```
+
 - ESLint with TypeScript support
 - React hooks linting
 - Strict mode enabled
@@ -159,6 +167,7 @@ wolfguard-site/
 ## Features Implemented
 
 ### 1. Hero Section
+
 - Gradient background with decorative elements
 - Animated status badge
 - Main headline with gradient text
@@ -166,6 +175,7 @@ wolfguard-site/
 - Stats grid showing C23, DTLS 1.3, WolfSSL, Cisco 5.x
 
 ### 2. Features Section
+
 - Grid layout (responsive: 1/2/3 columns)
 - 6 feature cards with icons:
   - Modern C23 Implementation
@@ -177,6 +187,7 @@ wolfguard-site/
 - Hover effects and shadows
 
 ### 3. Quick Start Section
+
 - Tabbed installation guides for:
   - Debian/Ubuntu
   - RHEL/Fedora
@@ -186,6 +197,7 @@ wolfguard-site/
 - Link to full documentation
 
 ### 4. Links Section
+
 - Resource cards:
   - GitHub Repository (external)
   - Documentation (placeholder)
@@ -196,6 +208,7 @@ wolfguard-site/
   - Submit a PR button
 
 ### 5. Footer
+
 - Four-column layout:
   - Brand/About
   - Project links
@@ -205,6 +218,7 @@ wolfguard-site/
 - Copyright and license information
 
 ### 6. Navigation Header
+
 - Sticky navbar with blur effect
 - Brand logo and name
 - Navigation links (Features, Quick Start, Links)
@@ -212,6 +226,7 @@ wolfguard-site/
 - GitHub button
 
 ### 7. Theme System
+
 - Automatic system preference detection
 - Manual toggle with persistent localStorage
 - Smooth transitions between themes
@@ -264,24 +279,29 @@ wolfguard-site/
 ## Issues Encountered & Resolutions
 
 ### Issue 1: HeroUI Theme Version Mismatch
+
 **Problem:** `@heroui/theme@^2.8.5` doesn't exist
 **Solution:** Changed to `@heroui/theme@^2.4.23` (latest available)
 **Status:** ✅ Resolved
 
 ### Issue 2: Tailwind CSS 4.x PostCSS Plugin
+
 **Problem:** Tailwind CSS 4.x requires separate PostCSS plugin
 **Solution:**
+
 - Added `@tailwindcss/postcss@^4.1.16` to devDependencies
 - Updated `postcss.config.js` to use `@tailwindcss/postcss`
 - Updated `src/index.css` with new import syntax
-**Status:** ✅ Resolved
+  **Status:** ✅ Resolved
 
 ### Issue 3: Terser Not Found
+
 **Problem:** Vite 7.x requires terser as optional dependency
 **Solution:** Changed minifier from `terser` to `esbuild` in `vite.config.ts`
 **Status:** ✅ Resolved
 
 ### Issue 4: Unused Import
+
 **Problem:** TypeScript error for unused `Code` import in `QuickStart.tsx`
 **Solution:** Removed unused import
 **Status:** ✅ Resolved
@@ -293,9 +313,11 @@ wolfguard-site/
 ### Immediate Actions
 
 1. **Test Development Server**
+
    ```bash
    npm run dev
    ```
+
    Verify all components render correctly and theme toggle works
 
 2. **Deploy to Hosting**
@@ -459,5 +481,5 @@ npm run build
 
 ---
 
-*Generated: October 29, 2025*
-*Node.js: 22.x | React: 19.2.0 | TypeScript: 5.9 | Vite: 7.1.12 | HeroUI: 2.8.5 | Tailwind: 4.1.16*
+_Generated: October 29, 2025_
+_Node.js: 22.x | React: 19.2.0 | TypeScript: 5.9 | Vite: 7.1.12 | HeroUI: 2.8.5 | Tailwind: 4.1.16_
