@@ -78,7 +78,7 @@ export function Benefits() {
           whileInView="show"
           viewport={{ once: true }}
         >
-          {benefits.map((benefit, index) => {
+          {benefits.map((benefit) => {
             const Icon = benefit.icon
             return (
               <motion.div key={benefit.title} variants={item}>

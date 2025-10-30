@@ -17,11 +17,6 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: false,
   },
 
-  /* ESLint */
-  eslint: {
-    ignoreDuringBuilds: false,
-  },
-
   /* Security Headers for development */
   async headers() {
     return [

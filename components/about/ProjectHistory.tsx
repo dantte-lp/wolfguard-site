@@ -72,7 +72,7 @@ export function ProjectHistory() {
               <h3 className="text-lg font-bold mb-2">Fork & Evolution</h3>
               <p className="text-muted-foreground leading-relaxed">
                 WolfGuard is a modernized fork of the OpenConnect Server (ocserv) project.
-                While maintaining protocol compatibility, we've completely rebuilt the
+                While maintaining protocol compatibility, we&apos;ve completely rebuilt the
                 architecture with:
               </p>
               <ul className="mt-3 space-y-1 text-muted-foreground">
