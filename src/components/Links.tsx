@@ -62,8 +62,8 @@ const links: LinkItem[] = [
 
 export const Links: React.FC = () => {
   return (
-    <section id="links" className="py-20 bg-background" aria-labelledby="links-heading">
-      <div className="container mx-auto px-4 max-w-5xl">
+    <section id="links" className="py-24 bg-background" aria-labelledby="links-heading">
+      <div className="max-w-7xl mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 id="links-heading" className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">

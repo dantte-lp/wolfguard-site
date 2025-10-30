@@ -14,7 +14,7 @@ export const Header: React.FC = () => {
     <Navbar
       isBordered
       maxWidth="xl"
-      className="bg-background/70 backdrop-blur-md"
+      className="bg-background/70 backdrop-blur-md z-50"
     >
       <NavbarBrand>
         <div className="flex items-center gap-2">

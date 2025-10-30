@@ -71,8 +71,8 @@ dtls = true
 dtls-legacy = false`;
 
   return (
-    <section id="quickstart" className="py-20 bg-gradient-to-br from-content1 to-content2" aria-labelledby="quickstart-heading">
-      <div className="container mx-auto px-4 max-w-5xl">
+    <section id="quickstart" className="py-24 bg-gradient-to-br from-content1 to-content2" aria-labelledby="quickstart-heading">
+      <div className="max-w-7xl mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 id="quickstart-heading" className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">

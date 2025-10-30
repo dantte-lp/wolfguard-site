@@ -72,8 +72,8 @@ const features: Feature[] = [
 
 export const Features: React.FC = () => {
   return (
-    <section id="features" className="py-20 bg-background" aria-labelledby="features-heading">
-      <div className="container mx-auto px-4 max-w-7xl">
+    <section id="features" className="pt-32 pb-24 bg-background" aria-labelledby="features-heading">
+      <div className="max-w-7xl mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 id="features-heading" className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
