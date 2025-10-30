@@ -70,17 +70,35 @@ services:
     volumes:
       - nginx-logs:/var/log/nginx:rw
 
+    # Networks
+    networks:
+      - traefik-public
+
     # Environment variables
     environment:
       - TZ=UTC
       - NGINX_ENTRYPOINT_QUIET_LOGS=1
 
-    # Labels for metadata
+    # Labels for metadata and Traefik routing
     labels:
       - "com.wolfguard.project=wolfguard-site"
       - "com.wolfguard.description=WolfGuard landing page static site"
       - "com.wolfguard.maintainer=WolfGuard Team"
       - "com.wolfguard.environment=production"
+
+      # Traefik Configuration
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik-public"
+
+      # HTTPS Router for wolfguard.io
+      - "traefik.http.routers.wolfguard-site.entrypoints=https"
+      - "traefik.http.routers.wolfguard-site.rule=Host(`wolfguard.io`) || Host(`www.wolfguard.io`)"
+      - "traefik.http.routers.wolfguard-site.tls=true"
+      - "traefik.http.routers.wolfguard-site.tls.certresolver=cloudflare"
+      - "traefik.http.routers.wolfguard-site.middlewares=web-standard@file"
+
+      # Service configuration
+      - "traefik.http.services.wolfguard-site.loadbalancer.server.port=8080"
 
     # Logging configuration
     logging:
@@ -97,9 +115,8 @@ volumes:
       - "com.wolfguard.project=wolfguard-site"
       - "com.wolfguard.volume=nginx-logs"
 
-# Networks (optional - for Traefik integration)
-# Uncomment if using Traefik reverse proxy
-# networks:
-#   traefik-public:
-#     external: true
-#     name: traefik-public
+# Networks for Traefik integration
+networks:
+  traefik-public:
+    external: true
+    name: traefik-public

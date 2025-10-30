@@ -39,6 +39,11 @@ export const Header: React.FC = () => {
           </Link>
         </NavbarItem>
         <NavbarItem>
+          <Link color="foreground" href="https://docs.wolfguard.io/" isExternal className="hover:text-primary transition-colors">
+            Documentation
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
           <Link color="foreground" href="#links" className="hover:text-primary transition-colors">
             Links
           </Link>
