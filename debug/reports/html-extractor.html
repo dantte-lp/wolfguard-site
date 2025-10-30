@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WolfGuard HTML Extractor</title>
+  <style>
+    body {
+      font-family: monospace;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #006FEE;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 10px 5px;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    #iframe-container {
+      border: 2px solid #ccc;
+      margin: 20px 0;
+      background: white;
+    }
+    iframe {
+      width: 100%;
+      height: 800px;
+      border: none;
+    }
+    #output {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 20px;
+      border-radius: 5px;
+      max-height: 600px;
+      overflow: auto;
+      font-size: 12px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .status {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      background: #d1ecf1;
+      color: #0c5460;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>WolfGuard HTML Extractor</h1>
+    <div class="status" id="status">Loading page...</div>
+
+    <div>
+      <button onclick="extractHTML()">Extract Full HTML</button>
+      <button onclick="analyzeLayout()">Analyze Layout</button>
+      <button onclick="downloadHTML()">Download HTML</button>
+      <button onclick="copyToClipboard()">Copy to Clipboard</button>
+    </div>
+
+    <div id="iframe-container">
+      <iframe id="target-frame" src="https://wolfguard.io/"></iframe>
+    </div>
+
+    <h2>Extracted HTML:</h2>
+    <div id="output">Waiting for extraction...</div>
+  </div>
+
+  <script>
+    let extractedHTML = '';
+    const iframe = document.getElementById('target-frame');
+    const output = document.getElementById('output');
+    const status = document.getElementById('status');
+
+    // Wait for iframe to load
+    iframe.addEventListener('load', function() {
+      status.textContent = 'Page loaded! Ready to extract.';
+      status.style.background = '#d4edda';
+      status.style.color = '#155724';
+
+      // Auto-extract after 3 seconds
+      setTimeout(() => {
+        extractHTML();
+      }, 3000);
+    });
+
+    function extractHTML() {
+      try {
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        extractedHTML = doc.documentElement.outerHTML;
+
+        output.textContent = formatHTML(extractedHTML);
+        status.textContent = `Extracted ${extractedHTML.length.toLocaleString()} characters`;
+        status.style.background = '#d4edda';
+        status.style.color = '#155724';
+      } catch (error) {
+        output.textContent = 'Error: Cannot access iframe content (CORS policy). This is expected for cross-origin iframes.';
+        status.textContent = 'Error: CORS restriction';
+        status.style.background = '#f8d7da';
+        status.style.color = '#721c24';
+        console.error('Error extracting HTML:', error);
+      }
+    }
+
+    function analyzeLayout() {
+      try {
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        const analysis = [];
+
+        analysis.push('=== LAYOUT ANALYSIS ===\n');
+        analysis.push('Viewport: ' + window.innerWidth + 'x' + window.innerHeight + '\n');
+        analysis.push('Document scroll: ' + doc.documentElement.scrollWidth + 'x' + doc.documentElement.scrollHeight + '\n\n');
+
+        // Analyze key elements
+        const selectors = [
+          'body',
+          '#root',
+          '#root > div',
+          'header',
+          'nav',
+          'main',
+          'section',
+          'footer'
+        ];
+
+        selectors.forEach(selector => {
+          const elements = doc.querySelectorAll(selector);
+          if (elements.length > 0) {
+            elements.forEach((el, idx) => {
+              const computed = window.getComputedStyle(el);
+              const rect = el.getBoundingClientRect();
+
+              analysis.push(`\n[${selector}]${idx > 0 ? ` [${idx}]` : ''}`);
+              analysis.push(`  Tag: ${el.tagName}`);
+              analysis.push(`  Classes: ${el.className || 'none'}`);
+              analysis.push(`  Display: ${computed.display}`);
+              analysis.push(`  Position: ${computed.position}`);
+              analysis.push(`  Dimensions: ${rect.width.toFixed(0)}x${rect.height.toFixed(0)}`);
+              analysis.push(`  Location: top=${rect.top.toFixed(0)}, left=${rect.left.toFixed(0)}`);
+
+              if (computed.display === 'flex') {
+                analysis.push(`  Flex Direction: ${computed.flexDirection}`);
+                analysis.push(`  Justify Content: ${computed.justifyContent}`);
+                analysis.push(`  Align Items: ${computed.alignItems}`);
+              }
+
+              if (computed.display === 'grid') {
+                analysis.push(`  Grid Template Columns: ${computed.gridTemplateColumns}`);
+                analysis.push(`  Grid Template Rows: ${computed.gridTemplateRows}`);
+                analysis.push(`  Gap: ${computed.gap}`);
+              }
+
+              analysis.push('');
+            });
+          }
+        });
+
+        output.textContent = analysis.join('\n');
+        status.textContent = 'Layout analysis complete';
+      } catch (error) {
+        output.textContent = 'Error: Cannot analyze (CORS policy)';
+        console.error('Error analyzing layout:', error);
+      }
+    }
+
+    function formatHTML(html) {
+      // Basic HTML formatting
+      let formatted = html.replace(/></g, '>\n<');
+      return formatted;
+    }
+
+    function downloadHTML() {
+      if (!extractedHTML) {
+        alert('Please extract HTML first!');
+        return;
+      }
+
+      const blob = new Blob([extractedHTML], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'wolfguard-extracted.html';
+      a.click();
+      URL.revokeObjectURL(url);
+
+      status.textContent = 'HTML downloaded!';
+    }
+
+    function copyToClipboard() {
+      if (!extractedHTML) {
+        alert('Please extract HTML first!');
+        return;
+      }
+
+      navigator.clipboard.writeText(extractedHTML).then(() => {
+        status.textContent = 'HTML copied to clipboard!';
+        status.style.background = '#d4edda';
+        status.style.color = '#155724';
+      }).catch(err => {
+        status.textContent = 'Failed to copy to clipboard';
+        status.style.background = '#f8d7da';
+        status.style.color = '#721c24';
+      });
+    }
+  </script>
+</body>
+</html>

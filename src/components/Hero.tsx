@@ -3,7 +3,7 @@ import { Button, Link, Chip, Card, CardBody } from '@heroui/react';
 
 export const Hero: React.FC = () => {
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-primary-50 via-background to-secondary-50 dark:from-primary-900/10 dark:via-background dark:to-secondary-900/10">
+    <section id="hero" className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-primary-50 via-background to-secondary-50 dark:from-primary-900/10 dark:via-background dark:to-secondary-900/10">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 -left-48 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />

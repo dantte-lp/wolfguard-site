@@ -1,0 +1,78 @@
+# syntax=docker/dockerfile:1.4
+# Diagnostic Container for WolfGuard Site
+# Includes browser automation and frontend debugging tools
+
+FROM docker.io/library/node:22-trixie-slim
+
+# OCI Labels
+LABEL org.opencontainers.image.title="WolfGuard Site Debugger"
+LABEL org.opencontainers.image.description="Frontend debugging and layout analysis tools"
+LABEL org.opencontainers.image.vendor="WolfGuard"
+
+# Set working directory
+WORKDIR /workspace
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    # Chromium and dependencies for Playwright
+    chromium \
+    chromium-driver \
+    # Additional dependencies for browser automation
+    libglib2.0-0 \
+    libnss3 \
+    libnspr4 \
+    libatk1.0-0 \
+    libatk-bridge2.0-0 \
+    libcups2 \
+    libdrm2 \
+    libdbus-1-3 \
+    libxkbcommon0 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxfixes3 \
+    libxrandr2 \
+    libgbm1 \
+    libpango-1.0-0 \
+    libcairo2 \
+    libasound2 \
+    libatspi2.0-0 \
+    # Tools
+    wget \
+    curl \
+    git \
+    python3 \
+    make \
+    g++ \
+    # Utilities
+    jq \
+    vim \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install global npm packages for frontend debugging
+RUN npm install -g \
+    playwright@latest \
+    @playwright/test@latest \
+    lighthouse@latest \
+    @axe-core/cli@latest \
+    puppeteer@latest \
+    pa11y@latest \
+    http-server@latest
+
+# Install Playwright browsers (Chromium only for smaller image)
+RUN npx playwright install chromium --with-deps
+
+# Create directories for output
+RUN mkdir -p /workspace/reports /workspace/screenshots /workspace/scripts
+
+# Set environment variables
+ENV PLAYWRIGHT_BROWSERS_PATH=/root/.cache/ms-playwright
+ENV CHROME_BIN=/usr/bin/chromium
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD chromium --version || exit 1
+
+# Default command - keep container running
+CMD ["/bin/bash"]
