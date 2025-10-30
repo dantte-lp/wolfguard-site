@@ -1,0 +1,62 @@
+# Development Docker Compose configuration for WolfGuard site
+# Compose Specification 2025 (https://github.com/compose-spec/compose-spec)
+
+name: wolfguard-dev
+
+services:
+  node-dev:
+    container_name: wolfguard-site-dev
+
+    build:
+      context: .
+      dockerfile: config/docker/Dockerfile.dev
+
+    # Mount source code for hot reload
+    volumes:
+      - .:/app:rw
+      - /app/node_modules
+      - npm-cache:/home/node-dev/.npm:rw
+
+    # Port mapping: host:container
+    ports:
+      - "5173:5173"
+
+    # Development environment variables
+    environment:
+      - NODE_ENV=development
+      - VITE_HOST=0.0.0.0
+      - VITE_PORT=5173
+      - CHOKIDAR_USEPOLLING=false
+      - TZ=UTC
+
+    # Interactive terminal for debugging
+    stdin_open: true
+    tty: true
+
+    # Restart policy
+    restart: unless-stopped
+
+    # Health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5173/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+    # Labels
+    labels:
+      - "com.wolfguard.project=wolfguard-site"
+      - "com.wolfguard.environment=development"
+      - "com.wolfguard.description=WolfGuard site development server"
+
+    # Command to run (npm run dev will be executed)
+    command: sh -c "npm install && npm run dev"
+
+# Named volumes
+volumes:
+  npm-cache:
+    driver: local
+    labels:
+      - "com.wolfguard.project=wolfguard-site"
+      - "com.wolfguard.environment=development"

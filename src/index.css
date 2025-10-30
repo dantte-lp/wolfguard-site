@@ -1,44 +1,61 @@
-@import "tailwindcss";
-@config "../tailwind.config.ts";
-@custom-variant dark (&:is(.dark *));
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+/* Base styles */
+@layer base {
+  * {
+    @apply border-border;
+  }
 
-  color-scheme: light dark;
+  body {
+    @apply bg-wolfguard-dark text-wolfguard-light;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  html.dark body {
+    @apply bg-cyber-dark text-wolfguard-light;
+  }
+
+  html.light body {
+    @apply bg-wolfguard-light text-cyber-dark;
+  }
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* Custom scrollbar */
+@layer utilities {
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-cyber-darker;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-wolfguard-primary rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-wolfguard-secondary;
+  }
 }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
+/* Animations */
+@layer utilities {
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
 
-#root {
-  min-height: 100vh;
-}
-
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
-  overflow-x: hidden;
-}
-
-/* Focus visible for accessibility */
-*:focus-visible {
-  outline: 2px solid hsl(var(--heroui-primary));
-  outline-offset: 2px;
+  @keyframes glow {
+    from {
+      text-shadow: 0 0 10px #39ff14, 0 0 20px #39ff14, 0 0 30px #39ff14;
+    }
+    to {
+      text-shadow: 0 0 20px #39ff14, 0 0 30px #39ff14, 0 0 40px #39ff14;
+    }
+  }
 }

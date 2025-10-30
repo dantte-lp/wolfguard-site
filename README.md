@@ -1,210 +1,249 @@
-# WolfGuard Landing Page
+# WolfGuard Website
 
-Modern, responsive landing page for WolfGuard - a next-generation OpenConnect VPN Server.
-
-## About WolfGuard
-
-WolfGuard is a modern OpenConnect VPN server implementation featuring:
-
-- Modern C23 implementation
-- WolfSSL cryptography library
-- DTLS 1.3 support
-- WolfSentry integration
-- Cisco Secure Client 5.x compatibility
-
-**Main Repository:** [github.com/dantte-lp/wolfguard](https://github.com/dantte-lp/wolfguard)
+Official website for **WolfGuard** - an open-source VPN server with TLS 1.3/DTLS 1.3 support and Cisco Secure Client compatibility.
 
 ## Tech Stack
 
-- **React** 19.2.0 - UI framework
-- **TypeScript** 5.9 - Type safety
-- **Vite** 7.1.12 - Build tool
-- **HeroUI** 2.8.5 - UI component library
-- **Tailwind CSS** 4.1.16 - Styling
-- **Framer Motion** - Animations
+- **React** 19.2.0
+- **Vite** 7.1.12
+- **TypeScript** 5.7.3
+- **Tailwind CSS** 4.1.16
+- **HeroUI** 2.8.5 (NextUI successor)
+- **Framer Motion** 12.10.0
+- **Node.js** 22.12+
 
 ## Prerequisites
 
-- Node.js 22 or higher
-- npm (comes with Node.js)
+- **Docker** or **Podman** installed
+- **Git** for version control
+- No need to install Node.js locally - everything runs in containers!
 
-## Getting Started
+## Quick Start (Development)
 
-### 1. Install Dependencies
+### Option 1: Using Docker Compose (Recommended)
 
 ```bash
-npm install
+# Clone the repository
+git clone https://github.com/dantte-lp/wolfguard-site.git
+cd wolfguard-site
+
+# Start development server
+docker compose -f docker-compose.dev.yaml up
+
+# The site will be available at http://localhost:5173
 ```
 
-### 2. Development Server
-
-Start the development server with hot reload:
+### Option 2: Using Podman Compose
 
 ```bash
+# Clone the repository
+git clone https://github.com/dantte-lp/wolfguard-site.git
+cd wolfguard-site
+
+# Start development server
+podman-compose -f docker-compose.dev.yaml up
+
+# The site will be available at http://localhost:5173
+```
+
+### Option 3: Manual Development (requires Node.js 22.12+)
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
 npm run dev
 ```
 
-The site will be available at `http://localhost:5173`
+## Available Scripts
 
-### 3. Build for Production
-
-Create an optimized production build:
+All commands should be run inside the container:
 
 ```bash
-npm run build
-```
+# Development server with hot reload
+docker compose -f docker-compose.dev.yaml exec node-dev npm run dev
 
-The build output will be in the `dist/` directory.
+# Type checking
+docker compose -f docker-compose.dev.yaml exec node-dev npm run type-check
 
-### 4. Preview Production Build
+# Linting
+docker compose -f docker-compose.dev.yaml exec node-dev npm run lint
 
-Preview the production build locally:
+# Format code
+docker compose -f docker-compose.dev.yaml exec node-dev npm run format
 
-```bash
-npm run preview
+# Build for production
+docker compose -f docker-compose.dev.yaml exec node-dev npm run build
+
+# Preview production build
+docker compose -f docker-compose.dev.yaml exec node-dev npm run preview
 ```
 
 ## Project Structure
 
 ```
 wolfguard-site/
-├── src/
-│   ├── components/          # React components
-│   │   ├── Header.tsx       # Navigation header
-│   │   ├── Hero.tsx         # Hero section
-│   │   ├── Features.tsx     # Features showcase
-│   │   ├── QuickStart.tsx   # Installation guide
-│   │   ├── Links.tsx        # Resource links
-│   │   ├── Footer.tsx       # Page footer
-│   │   └── ThemeSwitch.tsx  # Dark mode toggle
-│   ├── App.tsx              # Main app component
-│   ├── main.tsx             # Entry point
-│   └── index.css            # Global styles
-├── index.html               # HTML template
-├── vite.config.ts           # Vite configuration
-├── tailwind.config.ts       # Tailwind configuration
-├── tsconfig.json            # TypeScript configuration
-└── package.json             # Project dependencies
-
+├── config/                      # Configuration files
+│   ├── compose/                 # Docker Compose configs
+│   ├── docker/                  # Dockerfiles
+│   └── nginx/                   # Nginx configuration
+├── docs/                        # Documentation
+│   └── TECHNICAL_SPECIFICATIONS_FOR_WEBSITE_DEVELOPMENT.md
+├── public/                      # Static assets
+│   └── assets/
+├── src/                         # Source code
+│   ├── assets/                  # Images, fonts, etc.
+│   ├── components/              # React components
+│   ├── hooks/                   # Custom React hooks
+│   ├── pages/                   # Page components
+│   ├── types/                   # TypeScript types
+│   ├── utils/                   # Utility functions
+│   ├── App.tsx                  # Main App component
+│   ├── main.tsx                 # Entry point
+│   └── index.css                # Global styles
+├── docker-compose.dev.yaml      # Dev environment
+├── package.json                 # Dependencies
+├── tsconfig.json                # TypeScript config
+├── tailwind.config.ts           # Tailwind CSS config
+├── vite.config.ts               # Vite config
+└── README.md                    # This file
 ```
 
-## Features
+## Development Workflow
 
-### Responsive Design
-- Mobile-first approach
-- Fully responsive across all devices
-- Touch-friendly interface
-
-### Dark Mode
-- Automatic system preference detection
-- Manual toggle with persistent storage
-- Smooth theme transitions
-
-### Accessibility
-- WCAG 2.1 AA compliant
-- Semantic HTML structure
-- Keyboard navigation support
-- Screen reader friendly
-- Focus management
-
-### Performance
-- Code splitting with Vite
-- Optimized bundle size
-- Tree-shaking enabled
-- Fast page loads
-
-## Customization
-
-### Updating Content
-
-Edit the component files in `src/components/` to update:
-
-- **Hero section**: `Hero.tsx` - Update headlines, descriptions, and CTAs
-- **Features**: `Features.tsx` - Add/remove/modify feature cards
-- **Quick Start**: `QuickStart.tsx` - Update installation commands and examples
-- **Links**: `Links.tsx` - Update resource links and external references
-
-### Styling
-
-The project uses Tailwind CSS 4.1.16 with HeroUI 2.8.5:
-
-- Global styles: `src/index.css`
-- Tailwind config: `tailwind.config.ts`
-- HeroUI theme customization available in `tailwind.config.ts`
-
-### Theme Colors
-
-Default HeroUI color scheme is used:
-- Primary: Blue (#006fee)
-- Secondary: Purple (#7828c8)
-- Success: Green (#17c964)
-- Warning: Orange (#f5a524)
-- Danger: Red (#f31260)
-
-## Deployment
-
-### Static Hosting
-
-The built site is static and can be deployed to any static hosting service:
-
-- **Vercel**: `vercel --prod`
-- **Netlify**: Connect repository or drag & drop `dist/` folder
-- **GitHub Pages**: Use GitHub Actions workflow
-- **Cloudflare Pages**: Connect repository
-- **AWS S3 + CloudFront**: Upload `dist/` contents
-
-### Build Output
-
-Production build creates:
-- Minified JavaScript bundles
-- Optimized CSS
-- Compressed assets
-- Source maps disabled for production
-
-## Scripts
+### 1. Create a Feature Branch
 
 ```bash
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
-
-# Lint code (if configured)
-npm run lint
+git checkout -b feature/your-feature-name
 ```
 
-## Browser Support
+### 2. Make Changes
 
-- Chrome/Edge (last 2 versions)
-- Firefox (last 2 versions)
-- Safari (last 2 versions)
-- iOS Safari (last 2 versions)
-- Android Chrome (last 2 versions)
+Edit files in the `src/` directory. The development server will automatically reload.
+
+### 3. Lint and Format
+
+```bash
+# Inside container
+npm run lint
+npm run format
+```
+
+### 4. Commit Changes
+
+```bash
+git add .
+git commit -m "feat: your feature description"
+```
+
+### 5. Push and Create PR
+
+```bash
+git push origin feature/your-feature-name
+# Create Pull Request on GitHub
+```
+
+## Building for Production
+
+### Build Production Image
+
+```bash
+# Using Docker
+docker build -f config/docker/Containerfile -t wolfguard-site:latest .
+
+# Using Podman + Buildah
+buildah bud -f config/docker/Containerfile -t wolfguard-site:latest .
+```
+
+### Run Production Container
+
+```bash
+# Using Docker
+docker run -d -p 8080:8080 wolfguard-site:latest
+
+# Using Podman
+podman run -d -p 8080:8080 wolfguard-site:latest
+```
+
+### Deploy with Docker Compose (Production)
+
+```bash
+docker compose -f config/compose/compose.prod.yaml up -d
+```
+
+## Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+NODE_ENV=development
+VITE_HOST=0.0.0.0
+VITE_PORT=5173
+```
+
+## Troubleshooting
+
+### Container won't start
+
+```bash
+# Check if port 5173 is already in use
+lsof -i :5173
+
+# Stop and remove containers
+docker compose -f docker-compose.dev.yaml down
+
+# Rebuild containers
+docker compose -f docker-compose.dev.yaml up --build
+```
+
+### Hot reload not working
+
+Make sure you're using the correct volume mounts in `docker-compose.dev.yaml`:
+
+```yaml
+volumes:
+  - .:/app:rw
+  - /app/node_modules
+```
+
+### Permission issues
+
+```bash
+# Fix permissions (inside container)
+docker compose -f docker-compose.dev.yaml exec node-dev chown -R node-dev:node-dev /app
+```
+
+## Scrum Plan & GitHub Issues
+
+- View the full Scrum plan: [SCRUM_PLAN.md](./SCRUM_PLAN.md)
+- Track progress: [GitHub Issues](https://github.com/dantte-lp/wolfguard-site/issues)
+- All 39 User Stories are created and labeled by sprint
+
+## Documentation
+
+- **Technical Specifications**: [docs/TECHNICAL_SPECIFICATIONS_FOR_WEBSITE_DEVELOPMENT.md](./docs/TECHNICAL_SPECIFICATIONS_FOR_WEBSITE_DEVELOPMENT.md)
+- **Dependencies**: [DEPENDENCIES_VERSIONS.md](./DEPENDENCIES_VERSIONS.md)
+- **Scrum Plan**: [SCRUM_PLAN.md](./SCRUM_PLAN.md)
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit issues or pull requests to improve the landing page.
+1. Read the [Technical Specifications](./docs/TECHNICAL_SPECIFICATIONS_FOR_WEBSITE_DEVELOPMENT.md)
+2. Check [open issues](https://github.com/dantte-lp/wolfguard-site/issues)
+3. Create a feature branch
+4. Follow the development workflow
+5. Submit a Pull Request
 
 ## License
 
-This landing page is open source. Please refer to the main WolfGuard repository for license information.
+GPLv2 - See LICENSE file for details
 
 ## Links
 
-- **WolfGuard Repository**: https://github.com/dantte-lp/wolfguard
-- **Landing Page Repository**: https://github.com/dantte-lp/wolfguard-site
-- **WolfSSL**: https://www.wolfssl.com/
-- **OpenConnect**: https://www.infradead.org/openconnect/
-
-## Support
-
-For issues or questions about the landing page, please open an issue in this repository.
-For WolfGuard-specific questions, please use the main repository.
+- **Website**: [wolfguard.io](https://wolfguard.io)
+- **Documentation**: [docs.wolfguard.io](https://docs.wolfguard.io)
+- **GitHub**: [github.com/dantte-lp/wolfguard-site](https://github.com/dantte-lp/wolfguard-site)
 
 ---
 
-Built with React, TypeScript, Vite, HeroUI, and Tailwind CSS.
+Built with React, TypeScript, and Tailwind CSS by the WolfGuard Team

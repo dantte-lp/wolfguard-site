@@ -1,0 +1,41 @@
+# syntax=docker/dockerfile:1.4
+# Development Dockerfile for WolfGuard site
+# This container is for development purposes only
+
+FROM docker.io/library/node:22-trixie-slim
+
+# OCI Labels - Development Stage
+LABEL org.opencontainers.image.title="WolfGuard Site Development"
+LABEL org.opencontainers.image.description="Development environment for WolfGuard static site"
+LABEL org.opencontainers.image.vendor="WolfGuard"
+
+# Install development dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    python3 \
+    make \
+    g++ \
+    curl \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app
+
+# Create non-root user for development
+RUN groupadd -g 1000 node-dev && \
+    useradd -u 1000 -g node-dev -m -s /bin/bash node-dev && \
+    chown -R node-dev:node-dev /app
+
+# Switch to non-root user
+USER node-dev
+
+# Expose Vite dev server port
+EXPOSE 5173
+
+# Health check for dev server
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:5173/ || exit 1
+
+# Default command (will be overridden by docker-compose)
+CMD ["npm", "run", "dev"]

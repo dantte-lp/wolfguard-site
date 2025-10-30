@@ -3,20 +3,18 @@
     "target": "ES2022",
     "lib": ["ES2023"],
     "module": "ESNext",
-    "skipLibCheck": true,
-
-    /* Bundler mode */
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "isolatedModules": true,
     "moduleDetection": "force",
-    "noEmit": true,
-
-    /* Linting */
-    "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true
   },
-  "include": ["vite.config.ts"]
+  "include": ["vite.config.ts", "tailwind.config.ts"]
 }
