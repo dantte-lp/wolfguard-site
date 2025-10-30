@@ -19,14 +19,13 @@ services:
 
     # Port mapping: host:container
     ports:
-      - "5173:5173"
+      - "3000:3000"
 
     # Development environment variables
     environment:
       - NODE_ENV=development
-      - VITE_HOST=0.0.0.0
-      - VITE_PORT=5173
-      - CHOKIDAR_USEPOLLING=false
+      - NEXT_TELEMETRY_DISABLED=1
+      - WATCHPACK_POLLING=false
       - TZ=UTC
 
     # Interactive terminal for debugging
@@ -38,7 +37,7 @@ services:
 
     # Health check
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5173/"]
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
       interval: 30s
       timeout: 10s
       retries: 3

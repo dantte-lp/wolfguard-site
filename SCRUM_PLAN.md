@@ -22,7 +22,7 @@ Duration: 8 weeks
 - [ ] docker-compose.dev.yaml configured
 - [ ] Hot reload working with volume mounts
 - [ ] All npm commands run inside containers
-- [ ] Development server accessible on port 5173
+- [ ] Development server accessible on port 3000 (Next.js default)
 
 **Story Points:** 5
 **Priority:** Must Have
@@ -30,17 +30,18 @@ Duration: 8 weeks
 
 ---
 
-### US-002: Project Initialization with Vite + React + TypeScript
+### US-002: Project Initialization with Next.js + React + TypeScript
 **As a** developer
-**I want** a modern React project with TypeScript and Vite
-**So that** I have a fast development experience with type safety
+**I want** a modern React project with Next.js and TypeScript
+**So that** I have SSR/SSG capabilities with type safety
 
 **Acceptance Criteria:**
-- [ ] Vite 7.1.12+ configured
+- [ ] Next.js 15.x+ configured with App Router
 - [ ] React 19.2.0+ installed
 - [ ] TypeScript 5.7+ with strict mode enabled
-- [ ] Project structure created (/src, /public, /components)
-- [ ] tsconfig.json configured properly
+- [ ] Project structure created (app/, public/, components/)
+- [ ] tsconfig.json and next.config.ts configured properly
+- [ ] Metadata API for SEO configured
 
 **Story Points:** 3
 **Priority:** Must Have
@@ -84,17 +85,17 @@ Duration: 8 weeks
 
 ---
 
-### US-005: Base Layout Structure (App.tsx)
+### US-005: Base Layout Structure (Next.js Layout)
 **As a** developer
-**I want** base application layout with routing
+**I want** base application layout with Next.js App Router
 **So that** I have a foundation for all pages
 
 **Acceptance Criteria:**
-- [ ] App.tsx created with layout structure
-- [ ] React Router configured (if multi-page) or SPA structure
+- [ ] app/layout.tsx created with root layout
+- [ ] Next.js App Router structure configured
 - [ ] Header component slot
 - [ ] Footer component slot
-- [ ] Main content area
+- [ ] Main content area with proper semantic HTML
 
 **Story Points:** 3
 **Priority:** Must Have

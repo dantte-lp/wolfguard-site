@@ -4,8 +4,8 @@ Official website for **WolfGuard** - an open-source VPN server with TLS 1.3/DTLS
 
 ## Tech Stack
 
+- **Next.js** 15.x (React Framework with App Router)
 - **React** 19.2.0
-- **Vite** 7.1.12
 - **TypeScript** 5.7.3
 - **Tailwind CSS** 4.1.16
 - **HeroUI** 2.8.5 (NextUI successor)
@@ -30,7 +30,7 @@ cd wolfguard-site
 # Start development server
 docker compose -f docker-compose.dev.yaml up
 
-# The site will be available at http://localhost:5173
+# The site will be available at http://localhost:3000
 ```
 
 ### Option 2: Using Podman Compose
@@ -43,7 +43,7 @@ cd wolfguard-site
 # Start development server
 podman-compose -f docker-compose.dev.yaml up
 
-# The site will be available at http://localhost:5173
+# The site will be available at http://localhost:3000
 ```
 
 ### Option 3: Manual Development (requires Node.js 22.12+)
