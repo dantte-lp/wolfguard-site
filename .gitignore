@@ -48,3 +48,6 @@ temp/
 
 # OS
 Thumbs.db
+
+# Claude Code agents
+.claude/agents/
