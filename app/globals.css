@@ -1,6 +1,9 @@
 @import 'tailwindcss';
 
-/* HeroUI plugin integration for Tailwind CSS 4 */
+/* CRITICAL: Tell Tailwind v4 where to find HeroUI component styles - MUST come BEFORE @plugin */
+@source '../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
+
+/* HeroUI plugin integration for Tailwind CSS 4 - MUST come AFTER @source */
 @plugin '../heroui.config.ts';
 
 /* Custom dark mode variant */
