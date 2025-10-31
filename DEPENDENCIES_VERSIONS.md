@@ -6,7 +6,7 @@
 
 | Пакет            | Текущая стабильная версия | Источник                                              | Примечания                                                 |
 | ---------------- | ------------------------- | ----------------------------------------------------- | ---------------------------------------------------------- |
-| **Node.js**      | 22.12+                    | Next.js требует                                       | Next.js 15 требует Node.js 18.18+ или выше                 |
+| **Node.js**      | 24.x LTS                  | Next.js требует                                       | Next.js 15 требует Node.js 18.18+ или выше                 |
 | **Next.js**      | 15.1.6                    | [nextjs.org](https://nextjs.org/docs)                 | Релиз 15.x с App Router, RSC, Server Actions               |
 | **React**        | 19.2.0                    | [react.dev](https://react.dev/versions)               | Релиз от 01.10.2025, включает новый `<Activity>` компонент |
 | **ReactDOM**     | 19.2.0                    | [react.dev](https://react.dev/versions)               | Синхронно с React                                          |
@@ -55,7 +55,7 @@
     "framer-motion": "^12.0.0"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0",
+    "@types/node": "^24.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
@@ -75,7 +75,7 @@
 
 1. **Все версии ТОЧНЫЕ (без ^ и ~)** в dependencies для production стабильности
 2. **devDependencies могут использовать ^** для получения совместимых обновлений
-3. **Node.js 22.12+** рекомендован для оптимальной производительности
+3. **Node.js 24.x LTS** рекомендован для оптимальной производительности
 4. **Next.js 15.1.6** использует App Router (по умолчанию)
 5. **HeroUI 2.8.5** полностью совместим с Tailwind CSS 4.1
 6. **TypeScript 5.7.3** поддерживает все новые фичи React 19.2

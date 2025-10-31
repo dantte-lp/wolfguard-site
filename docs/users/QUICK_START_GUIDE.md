@@ -1,7 +1,7 @@
 # WolfGuard Site - Quick Start Guide
 
 **Last Updated:** October 31, 2025
-**Environment:** Podman + Node.js 22 + Next.js 15.5.6
+**Environment:** Podman + Node.js 24 LTS + Next.js 15.5.6
 
 ---
 
@@ -177,7 +177,7 @@ chmod +x deploy/scripts/*.sh
 - **Image:** localhost/wolfguard-dev_node-dev:latest
 - **Port:** 3000:3000
 - **User:** node (UID 1000)
-- **Node:** 22.x
+- **Node:** 24.x LTS
 - **npm:** 11.6.2
 
 ### Production Container

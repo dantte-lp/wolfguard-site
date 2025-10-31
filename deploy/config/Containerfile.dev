@@ -23,7 +23,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && npm install -g npm@11.6.2
 
 # Configure node user for rootless operation
-# The node user in node:22 has UID 1000 and GID 1000
+# The node user in node:24 has UID 1000 and GID 1000
 RUN usermod -u 1000 node \
     && groupmod -g 1000 node \
     && echo "node ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers

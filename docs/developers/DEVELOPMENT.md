@@ -6,7 +6,7 @@ Complete guide for developing the WolfGuard landing page locally.
 
 Before you begin, ensure you have the following installed:
 
-- **Node.js 22** (LTS recommended)
+- **Node.js 24** (LTS recommended)
 - **npm 10+** (comes with Node.js)
 - **Git** (for version control)
 - **Podman 5+** (for container development)
@@ -16,14 +16,14 @@ Before you begin, ensure you have the following installed:
 
 ```bash
 # Ubuntu/Debian
-curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
 # macOS (using Homebrew)
-brew install node@22
+brew install node@24
 
 # Verify installation
-node --version  # Should show v22.x.x
+node --version  # Should show v24.x.x
 npm --version   # Should show 10.x.x
 ```
 
