@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Card, CardBody } from '@heroui/react'
-import { CheckCircle2, Network, Shield, Zap, Lock, Globe, Container } from 'lucide-react'
+import { CheckCircle2, Network, Shield, Zap, Globe, GitBranch } from 'lucide-react'
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -40,19 +40,15 @@ const compatibilityHighlights = [
     description: 'Optimized with wolfSSL for minimal overhead and maximum throughput',
   },
   {
-    icon: Lock,
-    title: 'FIPS Certified',
-    description: 'wolfSSL FIPS 140-3 certified cryptography for compliance requirements',
-  },
-  {
     icon: Globe,
     title: 'Cross-Platform',
     description: 'Linux, Windows, macOS support with consistent functionality',
   },
   {
-    icon: Container,
-    title: 'Container Ready',
-    description: 'Docker and Podman support with official container images for easy deployment',
+    icon: GitBranch,
+    title: 'Split Tunneling',
+    description:
+      'Intelligent traffic routing to route specific apps or networks through VPN while allowing direct access for others',
   },
 ]
 

@@ -17,8 +17,8 @@ import { Github } from 'lucide-react'
 import { ThemeSwitch } from './ThemeSwitch'
 import { ThemeAwareLogo } from './ThemeAwareLogo'
 
-const MotionLink = motion(Link)
-const MotionButton = motion(Button)
+const MotionLink = motion.create(Link)
+const MotionButton = motion.create(Button)
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)

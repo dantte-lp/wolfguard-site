@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Card, CardBody, Button, Chip } from '@heroui/react'
-import { Rocket, Github, Monitor, Smartphone, Zap, Shield, Palette } from 'lucide-react'
+import { Rocket, Github, Monitor, Smartphone, Zap, Shield, Palette, RefreshCw } from 'lucide-react'
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -41,6 +41,13 @@ const plannedFeatures = [
     icon: Palette,
     title: 'Modern Qt6 UI',
     description: 'Clean, intuitive interface with native look and feel on each platform',
+    highlight: false,
+  },
+  {
+    icon: RefreshCw,
+    title: 'Auto-Update',
+    description:
+      'Automatic update mechanism to keep your VPN client secure with the latest features and patches',
     highlight: false,
   },
 ]
@@ -304,14 +311,14 @@ export function WolfGuardConnect() {
       </Card>
 
       {/* Current Recommendations */}
-      <Card className="bg-default-50 border border-default-200">
+      <Card className="bg-gradient-to-br from-primary/10 to-purple-500/10 border-2 border-primary/30">
         <CardBody className="p-6">
           <div className="space-y-3">
             <h4 className="text-lg font-semibold text-foreground">In the Meantime</h4>
             <p className="text-sm text-default-700">
               While WolfGuard Connect is under development, we recommend using:
             </p>
-            <ul className="space-y-2 text-sm text-default-600 pl-5">
+            <ul className="space-y-2 text-sm text-default-700 pl-5">
               <li className="flex items-start gap-2">
                 <span className="text-primary mt-0.5">•</span>
                 <span>

@@ -20,8 +20,9 @@ interface ThemeAwareLogoProps {
  * 2. Theme persistence: Uses next-themes which properly handles localStorage and
  *    system preferences, ensuring the theme is preserved across page refreshes.
  *
- * The component uses the monochrome SVG logo with currentColor, allowing CSS
- * to control the color based on the current theme without needing multiple images.
+ * The component uses colored SVG logos (logo-light.svg for light theme,
+ * logo-dark.svg for dark theme) to display the proper branding with colors
+ * while maintaining hydration-safe implementation.
  */
 export function ThemeAwareLogo({
   width = 150,
@@ -50,15 +51,12 @@ export function ThemeAwareLogo({
         }}
       >
         <Image
-          src="/logo-mono.svg"
+          src="/logo-light.svg"
           alt="WolfGuard Logo"
           width={width}
           height={height}
           priority={priority}
-          className={`h-full w-auto ${
-            // Default to dark theme color during SSR
-            'text-gray-900 dark:text-white'
-          }`}
+          className="h-full w-auto"
         />
       </div>
     )
@@ -75,14 +73,12 @@ export function ThemeAwareLogo({
       }}
     >
       <Image
-        src="/logo-mono.svg"
+        src={resolvedTheme === 'dark' ? '/logo-dark.svg' : '/logo-light.svg'}
         alt="WolfGuard Logo"
         width={width}
         height={height}
         priority={priority}
-        className={`h-full w-auto transition-colors duration-200 ${
-          resolvedTheme === 'dark' ? 'text-white' : 'text-gray-900'
-        }`}
+        className="h-full w-auto transition-opacity duration-200"
       />
     </div>
   )
