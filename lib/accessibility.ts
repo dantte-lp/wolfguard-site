@@ -125,6 +125,13 @@ export function trapFocus(container: HTMLElement, firstFocusableElement?: HTMLEl
   const firstElement = firstFocusableElement || focusableElements[0]
   const lastElement = focusableElements[focusableElements.length - 1]
 
+  // If no focusable elements, return early
+  if (!firstElement || !lastElement) {
+    return () => {
+      // No-op cleanup
+    }
+  }
+
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key !== 'Tab') return
 
@@ -146,9 +153,7 @@ export function trapFocus(container: HTMLElement, firstFocusableElement?: HTMLEl
   container.addEventListener('keydown', handleKeyDown)
 
   // Focus first element
-  if (firstElement) {
-    firstElement.focus()
-  }
+  firstElement.focus()
 
   // Return cleanup function
   return () => {

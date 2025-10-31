@@ -12,6 +12,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,css,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,css,json,md}\"",
     "type-check": "tsc --noEmit",
+    "analyze": "node scripts/analyze-bundle.js",
+    "lighthouse": "npm run build && npm run start & sleep 5 && npx lighthouse http://localhost:3000 --output=html --output=json --output-path=./lighthouse-report && kill %1",
     "prepare": "husky || true"
   },
   "dependencies": {
