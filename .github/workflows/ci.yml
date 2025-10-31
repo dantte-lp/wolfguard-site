@@ -9,19 +9,13 @@ on:
 jobs:
   lint-and-format:
     name: Code Quality Checks
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
@@ -40,17 +34,14 @@ jobs:
 
   security-audit:
     name: Security Audit
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
 
       - name: Run npm audit
         run: npm audit --audit-level=moderate
@@ -60,20 +51,19 @@ jobs:
         run: npm audit --production --audit-level=high
         continue-on-error: false
 
+      - name: Run Trivy security scan
+        run: |
+          trivy fs --severity HIGH,CRITICAL --exit-code 1 .
+        continue-on-error: true
+
   build-test:
     name: Production Build Test
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: [lint-and-format]
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
@@ -93,18 +83,12 @@ jobs:
 
   bundle-analysis:
     name: Bundle Size Analysis
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: [build-test]
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
@@ -138,7 +122,7 @@ jobs:
 
   summary:
     name: CI Summary
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: [lint-and-format, security-audit, build-test, bundle-analysis]
     if: always()
 
