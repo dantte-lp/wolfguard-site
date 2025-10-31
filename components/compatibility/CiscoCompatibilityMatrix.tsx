@@ -429,11 +429,13 @@ export function CiscoCompatibilityMatrix() {
           </div>
 
           {/* Protocol Support */}
-          <div className="mt-6 p-6 bg-default-50 dark:bg-default-100 rounded-lg">
-            <h3 className="text-lg font-bold text-foreground mb-3">Protocol Support by Version</h3>
+          <div className="mt-6 p-4 bg-default-100 dark:bg-default-50 rounded-lg">
+            <h4 className="text-sm font-semibold mb-3 text-foreground">
+              Protocol Support by Version:
+            </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               <div>
-                <h4 className="font-semibold text-foreground mb-2">TLS Protocol:</h4>
+                <h5 className="font-semibold text-foreground mb-2">TLS Protocol:</h5>
                 <ul className="space-y-1 text-default-700">
                   <li>
                     <span className="text-primary">•</span> TLS 1.3: Versions 5.0+ (requires ASA
@@ -449,7 +451,7 @@ export function CiscoCompatibilityMatrix() {
                 </ul>
               </div>
               <div>
-                <h4 className="font-semibold text-foreground mb-2">DTLS Protocol:</h4>
+                <h5 className="font-semibold text-foreground mb-2">DTLS Protocol:</h5>
                 <ul className="space-y-1 text-default-700">
                   <li>
                     <span className="text-primary">•</span> DTLS 1.2: All versions

@@ -95,7 +95,7 @@ export function CodeBlock({
 
       {/* Code content with improved contrast */}
       <div className="relative rounded-b-lg overflow-hidden" style={{ maxHeight: maxHeight }}>
-        <pre className="bg-[#1a1b26] dark:bg-[#16161e] p-4 pb-6 overflow-x-auto text-sm font-mono leading-relaxed border border-default-300 dark:border-default-200 border-t-0 rounded-b-lg">
+        <pre className="bg-[#1a1b26] dark:bg-[#16161e] p-4 overflow-x-auto text-sm font-mono leading-relaxed border border-default-300 dark:border-default-200 border-t-0 rounded-b-lg">
           <code className="text-[#a9b1d6] dark:text-[#c0caf5]">
             {showLineNumbers
               ? displayedCode.split('\n').map((line, i) => (

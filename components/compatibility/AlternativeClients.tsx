@@ -3,6 +3,8 @@
 import { motion } from 'framer-motion'
 import { Card, CardBody, Button, Chip } from '@heroui/react'
 import { ExternalLink, Terminal, Monitor, Smartphone, CheckCircle2 } from 'lucide-react'
+import Image from 'next/image'
+import { CodeBlock } from '@/components/shared/CodeBlock'
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -175,13 +177,11 @@ export function AlternativeClients() {
               {client.installation && (
                 <div className="space-y-2 p-3 bg-default-50 rounded-lg">
                   <p className="text-sm font-medium text-default-700">Quick Install:</p>
-                  <div className="space-y-1">
+                  <div className="space-y-3">
                     {Object.entries(client.installation).map(([os, cmd]) => (
                       <div key={os} className="space-y-1">
-                        <p className="text-xs text-default-500 uppercase">{os}:</p>
-                        <code className="block px-3 py-2 bg-default-100 rounded text-xs font-mono text-foreground overflow-x-auto">
-                          {cmd}
-                        </code>
+                        <p className="text-xs text-default-500 uppercase font-semibold">{os}:</p>
+                        <CodeBlock code={cmd} language="bash" />
                       </div>
                     ))}
                   </div>
@@ -192,18 +192,20 @@ export function AlternativeClients() {
               {client.appStores ? (
                 <div className="space-y-3">
                   <p className="text-sm font-medium text-default-700">Download Apps:</p>
-                  <div className="flex flex-col sm:flex-row gap-3">
+                  <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
                     {/* iOS App Store Badge */}
                     <a
                       href={client.appStores.ios}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 hover:opacity-80 transition-opacity"
+                      className="inline-block hover:opacity-80 transition-opacity"
                     >
-                      <img
+                      <Image
                         src="/assets/app-store-badge.svg"
                         alt="Download on the App Store"
-                        className="h-12 w-auto object-contain"
+                        width={135}
+                        height={40}
+                        className="h-10 w-auto"
                       />
                     </a>
                     {/* Google Play Badge */}
@@ -211,12 +213,14 @@ export function AlternativeClients() {
                       href={client.appStores.android}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 hover:opacity-80 transition-opacity"
+                      className="inline-block hover:opacity-80 transition-opacity"
                     >
-                      <img
+                      <Image
                         src="/assets/google-play-badge.svg"
                         alt="Get it on Google Play"
-                        className="h-14 w-auto object-contain"
+                        width={155}
+                        height={46}
+                        className="h-[46px] w-auto"
                       />
                     </a>
                   </div>
