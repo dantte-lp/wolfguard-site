@@ -118,7 +118,7 @@ sudo dnf install -y cmake git pkg-config openssl-devel \\
                 <div>
                   <h3 className="text-xl font-bold text-foreground mb-3">2. Build from Source</h3>
                   <p className="mb-3">Clone the repository and build WolfGuard:</p>
-                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                  <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                     <code className="text-primary">
                       {`# Clone the repository
 git clone https://github.com/dantte-lp/wolfguard.git
@@ -151,7 +151,7 @@ sudo make install`}
                   <p className="mb-3">
                     Create a dedicated system user for running WolfGuard with minimal privileges:
                   </p>
-                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                  <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                     <code className="text-primary">
                       {`# Create wolfguard system user
 sudo useradd -r -s /sbin/nologin -d /var/lib/wolfguard wolfguard
@@ -179,7 +179,7 @@ sudo chmod 750 /etc/wolfguard`}
                     </code>
                     :
                   </p>
-                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                  <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                     <code className="text-primary">
                       {`# WolfGuard Server Configuration
 
@@ -232,7 +232,7 @@ rules_file = /etc/wolfguard/wolfsentry-rules.conf`}
                     5. Generate Certificates (Testing)
                   </h3>
                   <p className="mb-3">For testing purposes, generate self-signed certificates:</p>
-                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                  <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                     <code className="text-primary">
                       {`# Create certificates directory
 sudo mkdir -p /etc/wolfguard/certs
@@ -271,7 +271,7 @@ sudo chmod 600 /etc/wolfguard/certs/*.key`}
                     </code>
                     :
                   </p>
-                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                  <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                     <code className="text-primary">
                       {`[Unit]
 Description=WolfGuard VPN Server
@@ -300,7 +300,7 @@ WantedBy=multi-user.target`}
                     </code>
                   </pre>
                   <p className="mt-3 mb-3">Enable and start the service:</p>
-                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                  <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                     <code className="text-primary">
                       {`# Reload systemd
 sudo systemctl daemon-reload
@@ -366,7 +366,7 @@ sudo iptables-save | sudo tee /etc/iptables/rules.v4`}
                 <div>
                   <h3 className="text-xl font-bold text-foreground mb-3">8. Verification</h3>
                   <p className="mb-3">Verify that WolfGuard is running correctly:</p>
-                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                  <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                     <code className="text-primary">
                       {`# Check service status
 sudo systemctl status wolfguard
@@ -528,7 +528,7 @@ sudo apt install -y docker-compose-plugin`}
                     Quick Start with Podman
                   </h3>
                   <p className="mb-3">Run WolfGuard with a single command:</p>
-                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                  <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                     <code className="text-primary">
                       {`# Pull the official image
 podman pull ghcr.io/dantte-lp/wolfguard:latest
@@ -560,7 +560,7 @@ podman run -d \\
                     Quick Start with Docker
                   </h3>
                   <p className="mb-3">Alternative Docker command:</p>
-                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                  <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                     <code className="text-primary">
                       {`# Pull and run with Docker
 docker run -d \\
@@ -587,7 +587,7 @@ docker run -d \\
                     For production deployments, use Podman Compose or Docker Compose. Create a{' '}
                     <code className="text-primary font-mono text-sm">compose.yaml</code> file:
                   </p>
-                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                  <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                     <code className="text-primary">
                       {`version: '3.8'
 
@@ -647,7 +647,7 @@ volumes:
                     </code>
                   </pre>
                   <p className="mt-3 mb-3">Deploy with Compose:</p>
-                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                  <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                     <code className="text-primary">
                       {`# Using Podman Compose
 podman-compose up -d
@@ -674,7 +674,7 @@ docker compose down`}
                   <p className="mb-3">
                     Create the configuration directory structure with your settings:
                   </p>
-                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                  <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                     <code className="text-primary">
                       {`# Create directory structure
 mkdir -p config certs
@@ -783,7 +783,7 @@ chmod 600 certs/*.key`}
                   <p className="mb-3">
                     For advanced networking or integration with existing infrastructure:
                   </p>
-                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                  <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                     <code className="text-primary">
                       {`# Create custom network
 podman network create --driver bridge wolfguard-net
@@ -814,7 +814,7 @@ podman run -d \\
                   <p className="mb-3">
                     Integrate with Traefik reverse proxy for automatic TLS and routing:
                   </p>
-                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                  <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                     <code className="text-primary">
                       {`version: '3.8'
 
@@ -869,7 +869,7 @@ volumes:
                     Building Custom Container Images
                   </h3>
                   <p className="mb-3">Build your own image from source:</p>
-                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                  <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                     <code className="text-primary">
                       {`# Clone the repository
 git clone https://github.com/dantte-lp/wolfguard.git
@@ -899,7 +899,7 @@ podman run -d \\
                     Monitoring and Maintenance
                   </h3>
                   <p className="mb-3">Monitor your WolfGuard container:</p>
-                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                  <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                     <code className="text-primary">
                       {`# Check container status
 podman ps | grep wolfguard
@@ -928,7 +928,7 @@ podman-compose up -d`}
                 <div>
                   <h3 className="text-xl font-bold text-foreground mb-3">Backup and Recovery</h3>
                   <p className="mb-3">Backup your WolfGuard configuration and data:</p>
-                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                  <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                     <code className="text-primary">
                       {`# Backup volumes
 podman volume export wolfguard-config -o wolfguard-config.tar
@@ -1008,7 +1008,7 @@ sudo firewall-cmd --list-all`}
                     Systemd Integration (Podman)
                   </h3>
                   <p className="mb-3">Run container as a systemd service for automatic startup:</p>
-                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                  <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                     <code className="text-primary">
                       {`# Generate systemd unit file
 cd /path/to/compose
