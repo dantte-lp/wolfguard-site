@@ -20,7 +20,6 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
 
   /* Performance optimizations */
-  swcMinify: true,
   productionBrowserSourceMaps: false,
 
   /* TypeScript */
