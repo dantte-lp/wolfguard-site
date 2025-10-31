@@ -737,6 +737,359 @@ podman volume import nginx-logs nginx-logs-backup.tar
 - Traefik Dashboard: https://tr-01.infra4.dev
 - Production Site: https://wolfguard.infra4.dev
 
+## Traefik Integration
+
+The WolfGuard site is designed to work seamlessly with Traefik reverse proxy for production deployments.
+
+### Overview
+
+Traefik provides:
+
+- Automatic HTTPS/TLS with Let's Encrypt
+- HTTP to HTTPS redirect
+- Security headers (HSTS, CSP, etc.)
+- Rate limiting and DDoS protection
+- Load balancing and health checks
+- Automatic service discovery
+
+### Quick Start with Traefik
+
+#### Option 1: Global Traefik Instance (Recommended)
+
+If you have a global Traefik instance (e.g., at `/opt/projects/repositories/traefik`):
+
+```bash
+# 1. Ensure traefik-public network exists
+podman network create traefik-public 2>/dev/null || true
+
+# 2. Deploy WolfGuard site with production config
+cd /opt/projects/repositories/wolfguard-site
+podman-compose -f deploy/config/compose.prod.yaml up -d
+
+# 3. Verify routing in Traefik dashboard
+# https://traefik.yourdomain.com/dashboard/
+```
+
+The site will be automatically discovered via Docker labels in `compose.prod.yaml`.
+
+#### Option 2: Standalone Traefik
+
+If you need to run Traefik specifically for WolfGuard:
+
+```bash
+# 1. Navigate to Traefik deployment directory
+cd /opt/projects/repositories/wolfguard-site/deploy/traefik
+
+# 2. Configure environment variables
+cp .env.example .env
+nano .env  # Update domain, email, etc.
+
+# 3. Create network
+podman network create traefik-public
+
+# 4. Start Traefik
+podman-compose -f traefik-compose.yaml up -d
+
+# 5. Deploy WolfGuard site
+cd /opt/projects/repositories/wolfguard-site
+podman-compose -f deploy/config/compose.prod.yaml up -d
+
+# 6. Verify deployment
+curl https://wolfguard.io
+curl https://wolfguard.io/health
+```
+
+### Configuration Details
+
+#### Traefik Labels (in compose.prod.yaml)
+
+The production compose file includes these Traefik labels:
+
+```yaml
+labels:
+  # Enable Traefik
+  - 'traefik.enable=true'
+  - 'traefik.docker.network=traefik-public'
+
+  # HTTP Router (redirect to HTTPS)
+  - 'traefik.http.routers.wolfguard-http.rule=Host(`wolfguard.io`) || Host(`www.wolfguard.io`)'
+  - 'traefik.http.routers.wolfguard-http.entrypoints=http'
+  - 'traefik.http.routers.wolfguard-http.middlewares=https-redirect@file'
+
+  # HTTPS Router
+  - 'traefik.http.routers.wolfguard.rule=Host(`wolfguard.io`) || Host(`www.wolfguard.io`)'
+  - 'traefik.http.routers.wolfguard.entrypoints=https'
+  - 'traefik.http.routers.wolfguard.tls.certresolver=cloudflare'
+  - 'traefik.http.routers.wolfguard.middlewares=web-standard@file'
+
+  # Service configuration
+  - 'traefik.http.services.wolfguard.loadbalancer.server.port=8080'
+  - 'traefik.http.services.wolfguard.loadbalancer.healthcheck.path=/health'
+```
+
+#### Domain Configuration
+
+To use a different domain:
+
+1. **Update `compose.prod.yaml`** labels:
+
+   ```yaml
+   - 'traefik.http.routers.wolfguard.rule=Host(`yourdomain.com`) || Host(`www.yourdomain.com`)'
+   - 'traefik.http.routers.wolfguard.tls.domains[0].main=yourdomain.com'
+   - 'traefik.http.routers.wolfguard.tls.domains[0].sans=www.yourdomain.com'
+   ```
+
+2. **Update DNS** records to point to your server's IP address
+
+3. **Verify DNS propagation**:
+   ```bash
+   dig yourdomain.com
+   dig www.yourdomain.com
+   ```
+
+#### SSL/TLS Certificates
+
+**Let's Encrypt (HTTP Challenge)**:
+
+- Simpler setup, no API tokens needed
+- Requires port 80 accessible from internet
+- Good for single domains
+
+**Cloudflare DNS Challenge** (Recommended):
+
+- Supports wildcard certificates (`*.wolfguard.io`)
+- Works behind firewalls (no port 80 needed)
+- Requires Cloudflare API token
+
+Configure in `traefik.yml`:
+
+```yaml
+certificatesResolvers:
+  cloudflare:
+    acme:
+      email: admin@wolfguard.io
+      storage: /letsencrypt/acme.json
+      dnsChallenge:
+        provider: cloudflare
+        delayBeforeCheck: 30
+```
+
+Environment variables needed:
+
+```bash
+CF_API_EMAIL=admin@example.com
+CF_DNS_API_TOKEN=your_cloudflare_token
+```
+
+### Security Features
+
+The Traefik configuration includes:
+
+**Security Headers** (`web-standard@file` middleware):
+
+- HSTS with preload
+- Content Security Policy (CSP)
+- X-Frame-Options: DENY
+- X-Content-Type-Options: nosniff
+- Referrer-Policy: strict-origin-when-cross-origin
+- Permissions-Policy for privacy
+
+**Rate Limiting**:
+
+- Average: 100 requests/second
+- Burst: 50 requests
+- Protects against DDoS attacks
+
+**TLS Configuration**:
+
+- TLS 1.2 and 1.3 only
+- Modern cipher suites
+- Forward secrecy enabled
+- HTTP/2 and HTTP/3 support
+
+### Middleware Customization
+
+To use different middleware, update the router label:
+
+**Standard** (current):
+
+```yaml
+- 'traefik.http.routers.wolfguard.middlewares=web-standard@file'
+```
+
+**Development** (relaxed CSP for HMR):
+
+```yaml
+- 'traefik.http.routers.wolfguard.middlewares=web-development@file'
+```
+
+**Strict** (admin-level security):
+
+```yaml
+- 'traefik.http.routers.wolfguard.middlewares=admin-secure@file'
+```
+
+**Custom chain**:
+
+```yaml
+- 'traefik.http.routers.wolfguard.middlewares=web-standard@file,custom-headers@file'
+```
+
+### Monitoring and Health Checks
+
+**Health Check Endpoint**: `/health`
+
+Traefik automatically monitors this endpoint:
+
+```yaml
+- 'traefik.http.services.wolfguard.loadbalancer.healthcheck.path=/health'
+- 'traefik.http.services.wolfguard.loadbalancer.healthcheck.interval=30s'
+```
+
+**View Traefik Dashboard**:
+
+```
+https://traefik.yourdomain.com/dashboard/
+```
+
+Check for:
+
+- Active routers
+- Service health status
+- Certificate expiry dates
+- Request metrics
+
+### Troubleshooting Traefik
+
+**Site not accessible via domain**:
+
+1. Check container is on traefik-public network:
+
+   ```bash
+   podman network inspect traefik-public | grep wolfguard
+   ```
+
+2. Verify labels are correct:
+
+   ```bash
+   podman inspect wolfguard-site --format '{{json .Config.Labels}}' | python3 -m json.tool | grep traefik
+   ```
+
+3. Check DNS records:
+
+   ```bash
+   dig wolfguard.io
+   ```
+
+4. View Traefik logs:
+   ```bash
+   podman logs traefik | grep -i wolfguard
+   ```
+
+**Certificate issues**:
+
+1. Check ACME logs:
+
+   ```bash
+   podman logs traefik | grep -i acme
+   ```
+
+2. Verify certificate resolver:
+
+   ```bash
+   podman exec traefik cat /letsencrypt/acme.json
+   ```
+
+3. Test with Let's Encrypt staging (if hitting rate limits):
+   Update `traefik.yml`:
+   ```yaml
+   caServer: https://acme-staging-v02.api.letsencrypt.org/directory
+   ```
+
+**Backend unreachable**:
+
+1. Test backend directly:
+
+   ```bash
+   podman exec traefik wget -O- http://wolfguard-site:8080/health
+   ```
+
+2. Check service definition:
+   ```bash
+   podman exec traefik cat /etc/traefik/dynamic.yml
+   ```
+
+**Rate limiting legitimate traffic**:
+
+Adjust in `dynamic/wolfguard-site.yaml`:
+
+```yaml
+wolfguard-rate-limit:
+  rateLimit:
+    average: 200 # Increase from 100
+    burst: 100 # Increase from 50
+```
+
+### Integration with Existing Traefik
+
+If you have an existing Traefik instance at `/opt/projects/repositories/traefik`:
+
+**Option A: Use Docker Provider** (Recommended):
+
+- Traefik automatically discovers containers via labels
+- No manual configuration needed
+- Just deploy with `compose.prod.yaml`
+
+**Option B: Use File Provider**:
+
+1. Copy dynamic configuration:
+
+   ```bash
+   cp /opt/projects/repositories/wolfguard-site/deploy/traefik/dynamic/wolfguard-site.yaml \
+      /opt/projects/repositories/traefik/config/dynamic-wolfguard.yaml
+   ```
+
+2. Update server URL if needed:
+
+   ```yaml
+   services:
+     wolfguard-site:
+       loadBalancer:
+         servers:
+           - url: 'http://wolfguard-site:8080'
+   ```
+
+3. Reload Traefik:
+   ```bash
+   podman restart traefik
+   ```
+
+### Production Checklist
+
+- [ ] DNS records configured and propagated
+- [ ] Firewall allows ports 80/443
+- [ ] Traefik network created: `podman network create traefik-public`
+- [ ] Environment variables configured (if using standalone Traefik)
+- [ ] SSL email address set correctly
+- [ ] Certificate resolver configured (letsencrypt or cloudflare)
+- [ ] Domain names updated in compose.prod.yaml
+- [ ] Health check endpoint responds: `curl http://localhost:8080/health`
+- [ ] Deploy site: `podman-compose -f deploy/config/compose.prod.yaml up -d`
+- [ ] Verify HTTPS redirect: `curl -I http://wolfguard.io`
+- [ ] Check HTTPS access: `curl https://wolfguard.io`
+- [ ] Verify security headers: `curl -I https://wolfguard.io | grep -E "(Strict-Transport|Content-Security)"`
+- [ ] Test health checks in Traefik dashboard
+- [ ] Verify certificate auto-renewal (Let's Encrypt renews at 60 days)
+- [ ] Set up monitoring/alerts for uptime
+- [ ] Configure log rotation for Traefik logs
+
+### Documentation References
+
+- Traefik Integration: `/opt/projects/repositories/wolfguard-site/deploy/traefik/README.md`
+- Dynamic Configuration: `/opt/projects/repositories/wolfguard-site/deploy/traefik/dynamic/wolfguard-site.yaml`
+- Environment Variables: `/opt/projects/repositories/wolfguard-site/deploy/traefik/.env.example`
+- Standalone Traefik: `/opt/projects/repositories/wolfguard-site/deploy/traefik/traefik-compose.yaml`
+
 ## Support
 
 For issues or questions:
@@ -745,3 +1098,4 @@ For issues or questions:
 2. Review logs: `make logs`
 3. Inspect container: `make inspect`
 4. Check Podman docs: https://docs.podman.io/
+5. Traefik Community: https://community.traefik.io/
