@@ -60,7 +60,10 @@ export function RepositoryLinks() {
     <motion.div {...fadeInUp} className="mt-16 space-y-8">
       {/* Section Header */}
       <div className="space-y-3">
-        <h2 className="text-3xl font-bold text-foreground">WolfGuard Repositories</h2>
+        <h2 className="text-3xl font-bold text-foreground">
+          <span className="text-foreground">Wolf</span>
+          <span className="text-primary">Guard</span> Repositories
+        </h2>
         <p className="text-default-600">
           Explore the WolfGuard ecosystem. Each repository welcomes contributions - star the ones
           you are interested in!

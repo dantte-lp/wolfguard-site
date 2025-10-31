@@ -46,7 +46,8 @@ export function CommunityOverview() {
       {/* Hero Section */}
       <div className="space-y-4">
         <h1 className="text-4xl md:text-5xl font-bold text-foreground">
-          Join the WolfGuard Community
+          Join the <span className="text-foreground">Wolf</span>
+          <span className="text-primary">Guard</span> Community
         </h1>
         <p className="text-lg text-default-600 max-w-3xl">
           WolfGuard is an open-source project built by developers, for developers. Whether you are

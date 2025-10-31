@@ -58,7 +58,10 @@ export function WolfGuardConnect() {
       {/* Section Header */}
       <div className="space-y-3">
         <div className="flex items-center gap-3">
-          <h2 className="text-3xl font-bold text-foreground">WolfGuard Connect</h2>
+          <h2 className="text-3xl font-bold text-foreground">
+            <span className="text-foreground">Wolf</span>
+            <span className="text-primary">Guard</span> Connect
+          </h2>
           <Chip color="warning" variant="flat" startContent={<Rocket className="w-3 h-3" />}>
             In Development
           </Chip>

@@ -70,7 +70,8 @@ export function Benefits() {
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Why Choose <span className="text-primary">WolfGuard</span>?
+            Why Choose <span className="text-foreground">Wolf</span>
+            <span className="text-primary">Guard</span>?
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Enterprise-grade VPN security with the flexibility of open-source
