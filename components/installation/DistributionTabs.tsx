@@ -53,10 +53,57 @@ export function DistributionTabs() {
                 Docker and Docker Compose for containerized deployment.
               </p>
 
+              <h3 className="text-xl font-bold mb-6">Installation Methods</h3>
+
               <div className="space-y-8">
-                {/* Install Docker */}
+                {/* Option 1: Package Manager */}
                 <div>
-                  <h4 className="text-xl font-bold mb-3">1. Install Docker & Docker Compose</h4>
+                  <h4 className="text-xl font-bold mb-3 flex items-center gap-2">
+                    <Package className="w-5 h-5 text-primary" />
+                    Option 1: Package Manager (APT)
+                  </h4>
+                  <p className="text-default-600 mb-4">
+                    Install WolfGuard directly using the APT package manager. This is the
+                    recommended method for production systems.
+                  </p>
+                  <CodeBlock
+                    code={`# Add WolfGuard repository
+curl -fsSL https://packages.wolfguard.io/gpg.key | sudo gpg --dearmor -o /usr/share/keyrings/wolfguard.gpg
+echo "deb [signed-by=/usr/share/keyrings/wolfguard.gpg] https://packages.wolfguard.io/debian stable main" | \\
+  sudo tee /etc/apt/sources.list.d/wolfguard.list
+
+# Update package index
+sudo apt update
+
+# Install WolfGuard
+sudo apt install -y wolfguard
+
+# Enable and start service
+sudo systemctl enable wolfguard
+sudo systemctl start wolfguard
+
+# Verify installation
+wolfguard --version
+sudo systemctl status wolfguard`}
+                    language="bash"
+                    collapsible
+                    collapseAt={15}
+                  />
+                </div>
+
+                {/* Option 2: Docker Container */}
+                <div>
+                  <h4 className="text-xl font-bold mb-3 flex items-center gap-2">
+                    <Box className="w-5 h-5 text-primary" />
+                    Option 2: Docker Container
+                  </h4>
+                  <p className="text-default-600 mb-4">
+                    Deploy WolfGuard in a Docker container for easier management and isolation.
+                  </p>
+
+                  <h5 className="text-lg font-semibold mb-3">
+                    Step 1: Install Docker & Docker Compose
+                  </h5>
                   <CodeBlock
                     code={`# Update package index
 sudo apt update
@@ -91,15 +138,12 @@ docker --version
 docker compose version`}
                     language="bash"
                     collapsible
-                    collapseAt={25}
+                    collapseAt={15}
                   />
-                </div>
 
-                {/* Deploy with Compose */}
-                <div>
-                  <h4 className="text-xl font-bold mb-3">
-                    2. Deploy WolfGuard with Docker Compose
-                  </h4>
+                  <h5 className="text-lg font-semibold mb-3">
+                    Step 2: Deploy WolfGuard with Docker Compose
+                  </h5>
                   <p className="text-default-600 mb-3">
                     Create a <code className="text-primary font-mono text-sm">compose.yaml</code>{' '}
                     file following the Compose Specification:
@@ -173,12 +217,11 @@ volumes:
   wolfguard-logs:
     driver: local`}
                     language="yaml"
+                    collapsible
+                    collapseAt={15}
                   />
-                </div>
 
-                {/* Start Services */}
-                <div>
-                  <h4 className="text-xl font-bold mb-3">3. Start Services</h4>
+                  <h5 className="text-lg font-semibold mb-3">Step 3: Start Services</h5>
                   <CodeBlock
                     code={`# Create config directory
 mkdir -p config certs
@@ -195,6 +238,8 @@ docker compose ps
 # Stop services
 docker compose down`}
                     language="bash"
+                    collapsible
+                    collapseAt={15}
                   />
                 </div>
               </div>
@@ -217,13 +262,59 @@ docker compose down`}
               <h3 className="text-2xl font-bold mb-4">RHEL / CentOS / Fedora Installation</h3>
               <p className="text-default-600 mb-6">
                 For Red Hat Enterprise Linux, CentOS Stream, Rocky Linux, AlmaLinux, and Fedora.
-                We&apos;ll use Podman and Podman Compose for containerized deployment.
+                Choose between DNF package manager or Podman containerized deployment.
               </p>
 
+              <h3 className="text-xl font-bold mb-6">Installation Methods</h3>
+
               <div className="space-y-8">
-                {/* Install Podman */}
+                {/* Option 1: Package Manager */}
                 <div>
-                  <h4 className="text-xl font-bold mb-3">1. Install Podman & Podman Compose</h4>
+                  <h4 className="text-xl font-bold mb-3 flex items-center gap-2">
+                    <Package className="w-5 h-5 text-primary" />
+                    Option 1: Package Manager (DNF)
+                  </h4>
+                  <p className="text-default-600 mb-4">
+                    Install WolfGuard directly using the DNF package manager. This is the
+                    recommended method for production systems.
+                  </p>
+                  <CodeBlock
+                    code={`# Add WolfGuard repository
+# For RHEL 8/9, CentOS Stream, Rocky, AlmaLinux
+sudo dnf config-manager --add-repo https://packages.wolfguard.io/rpm/wolfguard.repo
+
+# For Fedora
+sudo dnf config-manager --add-repo https://packages.wolfguard.io/rpm/fedora/wolfguard.repo
+
+# Install WolfGuard
+sudo dnf install -y wolfguard
+
+# Enable and start service
+sudo systemctl enable wolfguard
+sudo systemctl start wolfguard
+
+# Verify installation
+wolfguard --version
+sudo systemctl status wolfguard`}
+                    language="bash"
+                    collapsible
+                    collapseAt={15}
+                  />
+                </div>
+
+                {/* Option 2: Podman Container */}
+                <div>
+                  <h4 className="text-xl font-bold mb-3 flex items-center gap-2">
+                    <Box className="w-5 h-5 text-primary" />
+                    Option 2: Podman Container
+                  </h4>
+                  <p className="text-default-600 mb-4">
+                    Deploy WolfGuard in a Podman container for easier management and isolation.
+                  </p>
+
+                  <h5 className="text-lg font-semibold mb-3">
+                    Step 1: Install Podman & Podman Compose
+                  </h5>
                   <CodeBlock
                     code={`# For RHEL 8/9, CentOS Stream, Rocky, AlmaLinux
 sudo dnf install -y podman podman-compose podman-plugins
@@ -238,14 +329,13 @@ systemctl --user enable --now podman.socket
 podman --version
 podman-compose --version`}
                     language="bash"
+                    collapsible
+                    collapseAt={15}
                   />
-                </div>
 
-                {/* Deploy with Podman Compose */}
-                <div>
-                  <h4 className="text-xl font-bold mb-3">
-                    2. Deploy WolfGuard with Podman Compose
-                  </h4>
+                  <h5 className="text-lg font-semibold mb-3">
+                    Step 2: Deploy WolfGuard with Podman Compose
+                  </h5>
                   <p className="text-default-600 mb-3">
                     Create a <code className="text-primary font-mono text-sm">compose.yaml</code>{' '}
                     file following the Compose Specification:
@@ -323,12 +413,11 @@ volumes:
   wolfguard-logs:
     driver: local`}
                     language="yaml"
+                    collapsible
+                    collapseAt={15}
                   />
-                </div>
 
-                {/* Start Services */}
-                <div>
-                  <h4 className="text-xl font-bold mb-3">3. Start Services with Podman</h4>
+                  <h5 className="text-lg font-semibold mb-3">Step 3: Start Services with Podman</h5>
                   <CodeBlock
                     code={`# Create config directory
 mkdir -p config certs
@@ -350,12 +439,11 @@ podman-compose ps
 # Stop services
 podman-compose down`}
                     language="bash"
+                    collapsible
+                    collapseAt={15}
                   />
-                </div>
 
-                {/* Firewall Configuration */}
-                <div>
-                  <h4 className="text-xl font-bold mb-3">4. Configure Firewall</h4>
+                  <h5 className="text-lg font-semibold mb-3">Step 4: Configure Firewall</h5>
                   <CodeBlock
                     code={`# Open required ports in firewalld
 sudo firewall-cmd --permanent --add-port=443/tcp
@@ -365,6 +453,8 @@ sudo firewall-cmd --reload
 # Verify rules
 sudo firewall-cmd --list-all`}
                     language="bash"
+                    collapsible
+                    collapseAt={15}
                   />
                 </div>
               </div>
@@ -386,14 +476,67 @@ sudo firewall-cmd --list-all`}
             <CardBody className="p-8">
               <h3 className="text-2xl font-bold mb-4">openSUSE / SLES Installation</h3>
               <p className="text-default-600 mb-6">
-                For openSUSE Leap, Tumbleweed, and SUSE Linux Enterprise Server. We&apos;ll use
-                Podman (preferred) or Docker with zypper package manager.
+                For openSUSE Leap, Tumbleweed, and SUSE Linux Enterprise Server. Choose between
+                zypper package manager or container deployment (Podman/Docker).
               </p>
 
+              <h3 className="text-xl font-bold mb-6">Installation Methods</h3>
+
               <div className="space-y-8">
-                {/* Install Podman */}
+                {/* Option 1: Package Manager */}
                 <div>
-                  <h4 className="text-xl font-bold mb-3">1. Install Podman & Podman Compose</h4>
+                  <h4 className="text-xl font-bold mb-3 flex items-center gap-2">
+                    <Package className="w-5 h-5 text-primary" />
+                    Option 1: Package Manager (Zypper)
+                  </h4>
+                  <p className="text-default-600 mb-4">
+                    Install WolfGuard directly using the zypper package manager. This is the
+                    recommended method for production systems.
+                  </p>
+                  <CodeBlock
+                    code={`# Add WolfGuard repository
+# For openSUSE Tumbleweed
+sudo zypper addrepo https://packages.wolfguard.io/rpm/opensuse/tumbleweed wolfguard
+
+# For openSUSE Leap 15.x
+sudo zypper addrepo https://packages.wolfguard.io/rpm/opensuse/leap wolfguard
+
+# For SUSE Linux Enterprise Server (SLES)
+sudo zypper addrepo https://packages.wolfguard.io/rpm/sles wolfguard
+
+# Refresh repositories
+sudo zypper refresh
+
+# Install WolfGuard
+sudo zypper install -y wolfguard
+
+# Enable and start service
+sudo systemctl enable wolfguard
+sudo systemctl start wolfguard
+
+# Verify installation
+wolfguard --version
+sudo systemctl status wolfguard`}
+                    language="bash"
+                    collapsible
+                    collapseAt={15}
+                  />
+                </div>
+
+                {/* Option 2: Container (Podman or Docker) */}
+                <div>
+                  <h4 className="text-xl font-bold mb-3 flex items-center gap-2">
+                    <Box className="w-5 h-5 text-primary" />
+                    Option 2: Container (Podman or Docker)
+                  </h4>
+                  <p className="text-default-600 mb-4">
+                    Deploy WolfGuard in a container for easier management and isolation. SUSE
+                    supports both Podman and Docker.
+                  </p>
+
+                  <h5 className="text-lg font-semibold mb-3">
+                    Step 1A: Install Podman (Recommended)
+                  </h5>
                   <CodeBlock
                     code={`# For openSUSE Tumbleweed
 sudo zypper install -y podman podman-compose
@@ -411,14 +554,13 @@ systemctl --user enable --now podman.socket
 podman --version
 podman-compose --version`}
                     language="bash"
+                    collapsible
+                    collapseAt={15}
                   />
-                </div>
 
-                {/* Alternative: Docker */}
-                <div>
-                  <h4 className="text-xl font-bold mb-3">
-                    Alternative: Install Docker (if preferred)
-                  </h4>
+                  <h5 className="text-lg font-semibold mb-3 mt-6">
+                    Step 1B: Install Docker (Alternative)
+                  </h5>
                   <CodeBlock
                     code={`# Add Docker repository
 sudo zypper addrepo https://download.docker.com/linux/sles/docker-ce.repo
@@ -437,12 +579,11 @@ sudo usermod -aG docker $USER
 docker --version
 docker compose version`}
                     language="bash"
+                    collapsible
+                    collapseAt={15}
                   />
-                </div>
 
-                {/* Deploy with Compose */}
-                <div>
-                  <h4 className="text-xl font-bold mb-3">2. Deploy WolfGuard</h4>
+                  <h5 className="text-lg font-semibold mb-3">Step 2: Deploy WolfGuard</h5>
                   <p className="text-default-600 mb-3">
                     Use the same{' '}
                     <code className="text-primary font-mono text-sm">compose.yaml</code> as shown in
@@ -464,12 +605,11 @@ podman-compose logs -f  # or: docker compose logs -f
 # Check status
 podman-compose ps  # or: docker compose ps`}
                     language="bash"
+                    collapsible
+                    collapseAt={15}
                   />
-                </div>
 
-                {/* Firewall Configuration */}
-                <div>
-                  <h4 className="text-xl font-bold mb-3">3. Configure Firewall</h4>
+                  <h5 className="text-lg font-semibold mb-3">Step 3: Configure Firewall</h5>
                   <CodeBlock
                     code={`# For systems with firewalld
 sudo firewall-cmd --permanent --add-port=443/tcp
@@ -480,6 +620,8 @@ sudo firewall-cmd --reload
 sudo SuSEfirewall2 open EXT TCP 443
 sudo SuSEfirewall2 open EXT UDP 443`}
                     language="bash"
+                    collapsible
+                    collapseAt={15}
                   />
                 </div>
               </div>
@@ -501,14 +643,62 @@ sudo SuSEfirewall2 open EXT UDP 443`}
             <CardBody className="p-8">
               <h3 className="text-2xl font-bold mb-4">Arch Linux Installation</h3>
               <p className="text-default-600 mb-6">
-                For Arch Linux and Arch-based distributions (Manjaro, EndeavourOS, etc.). Install
-                using pacman and deploy with Podman or Docker.
+                For Arch Linux and Arch-based distributions (Manjaro, EndeavourOS, etc.). Choose
+                between pacman package manager or container deployment.
               </p>
 
+              <h3 className="text-xl font-bold mb-6">Installation Methods</h3>
+
               <div className="space-y-8">
-                {/* Install container runtime */}
+                {/* Option 1: Package Manager */}
                 <div>
-                  <h4 className="text-xl font-bold mb-3">1. Install Container Runtime</h4>
+                  <h4 className="text-xl font-bold mb-3 flex items-center gap-2">
+                    <Package className="w-5 h-5 text-primary" />
+                    Option 1: Package Manager (Pacman)
+                  </h4>
+                  <p className="text-default-600 mb-4">
+                    Install WolfGuard from the AUR (Arch User Repository) or official packages. This
+                    is the recommended method for production systems.
+                  </p>
+                  <CodeBlock
+                    code={`# Install build dependencies
+sudo pacman -S base-devel git
+
+# Install from AUR using yay (or your preferred AUR helper)
+yay -S wolfguard-git
+
+# Or install using paru
+paru -S wolfguard-git
+
+# Or install manually from AUR
+git clone https://aur.archlinux.org/wolfguard-git.git
+cd wolfguard-git
+makepkg -si
+
+# Enable and start service
+sudo systemctl enable wolfguard
+sudo systemctl start wolfguard
+
+# Verify installation
+wolfguard --version
+sudo systemctl status wolfguard`}
+                    language="bash"
+                    collapsible
+                    collapseAt={15}
+                  />
+                </div>
+
+                {/* Option 2: Docker Container */}
+                <div>
+                  <h4 className="text-xl font-bold mb-3 flex items-center gap-2">
+                    <Box className="w-5 h-5 text-primary" />
+                    Option 2: Docker Container
+                  </h4>
+                  <p className="text-default-600 mb-4">
+                    Deploy WolfGuard in a Docker container for easier management and isolation.
+                  </p>
+
+                  <h5 className="text-lg font-semibold mb-3">Step 1: Install Container Runtime</h5>
                   <CodeBlock
                     code={`# Option 1: Install Podman (recommended)
 sudo pacman -S podman podman-compose podman-docker
@@ -528,33 +718,11 @@ sudo usermod -aG docker $USER
 podman --version  # or: docker --version
 podman-compose --version  # or: docker compose version`}
                     language="bash"
+                    collapsible
+                    collapseAt={15}
                   />
-                </div>
 
-                {/* Install from AUR (optional) */}
-                <div>
-                  <h4 className="text-xl font-bold mb-3">
-                    2. Alternative: Install from AUR (Advanced Users)
-                  </h4>
-                  <p className="text-default-600 mb-3">
-                    If you prefer to build WolfGuard natively, you can install from the AUR:
-                  </p>
-                  <CodeBlock
-                    code={`# Install build dependencies
-sudo pacman -S base-devel git cmake gcc pkg-config openssl
-
-# Clone WolfGuard from AUR (when available)
-# Note: Package may not be available yet - check AUR
-yay -S wolfguard-git  # or use your preferred AUR helper
-
-# Or build manually from source (see "Build from Source" tab)`}
-                    language="bash"
-                  />
-                </div>
-
-                {/* Deploy with Container */}
-                <div>
-                  <h4 className="text-xl font-bold mb-3">3. Deploy WolfGuard Container</h4>
+                  <h5 className="text-lg font-semibold mb-3">Step 2: Deploy WolfGuard Container</h5>
                   <p className="text-default-600 mb-3">
                     Use the same{' '}
                     <code className="text-primary font-mono text-sm">compose.yaml</code> as shown in
@@ -573,12 +741,11 @@ docker compose up -d
 # View logs
 podman-compose logs -f  # or: docker compose logs -f`}
                     language="bash"
+                    collapsible
+                    collapseAt={15}
                   />
-                </div>
 
-                {/* Firewall Configuration */}
-                <div>
-                  <h4 className="text-xl font-bold mb-3">4. Configure Firewall</h4>
+                  <h5 className="text-lg font-semibold mb-3">Step 3: Configure Firewall</h5>
                   <CodeBlock
                     code={`# If using iptables
 sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT
@@ -595,6 +762,8 @@ sudo ufw allow 443/tcp
 sudo ufw allow 443/udp
 sudo ufw reload`}
                     language="bash"
+                    collapsible
+                    collapseAt={15}
                   />
                 </div>
               </div>
@@ -646,23 +815,49 @@ sudo ufw reload`}
                 {/* Install Build Dependencies */}
                 <div>
                   <h4 className="text-xl font-bold mb-3">1. Install Build Dependencies</h4>
-                  <p className="text-default-600 mb-3">Choose your distribution:</p>
+                  <p className="text-default-600 mb-3">
+                    Install the required build dependencies for your distribution:
+                  </p>
+
+                  <h5 className="text-lg font-semibold mb-3 mt-4">Debian / Ubuntu</h5>
                   <CodeBlock
-                    code={`# Debian/Ubuntu
+                    code={`# Update package index
 sudo apt update
+
+# Install build dependencies
 sudo apt install -y build-essential cmake git pkg-config \\
-  libssl-dev libtool autoconf automake
+  libssl-dev libtool autoconf automake`}
+                    language="bash"
+                    collapsible
+                    collapseAt={15}
+                  />
 
-# RHEL/Fedora
+                  <h5 className="text-lg font-semibold mb-3 mt-4">RHEL / Fedora</h5>
+                  <CodeBlock
+                    code={`# Install development tools group
 sudo dnf groupinstall "Development Tools"
+
+# Install additional dependencies
 sudo dnf install -y cmake git pkg-config openssl-devel \\
-  libtool autoconf automake
+  libtool autoconf automake`}
+                    language="bash"
+                    collapsible
+                    collapseAt={15}
+                  />
 
-# SUSE
+                  <h5 className="text-lg font-semibold mb-3 mt-4">SUSE / openSUSE</h5>
+                  <CodeBlock
+                    code={`# Install build dependencies
 sudo zypper install -y gcc gcc-c++ make cmake git pkg-config \\
-  libopenssl-devel libtool autoconf automake
+  libopenssl-devel libtool autoconf automake`}
+                    language="bash"
+                    collapsible
+                    collapseAt={15}
+                  />
 
-# Arch Linux
+                  <h5 className="text-lg font-semibold mb-3 mt-4">Arch Linux</h5>
+                  <CodeBlock
+                    code={`# Install build dependencies
 sudo pacman -S base-devel cmake git pkg-config openssl`}
                     language="bash"
                     collapsible
@@ -702,6 +897,8 @@ sudo make install
 # Verify installation
 wolfguard --version`}
                     language="bash"
+                    collapsible
+                    collapseAt={15}
                   />
                 </div>
 
@@ -722,6 +919,8 @@ sudo chown -R wolfguard:wolfguard /var/lib/wolfguard
 sudo chown -R wolfguard:wolfguard /var/log/wolfguard
 sudo chmod 750 /etc/wolfguard`}
                     language="bash"
+                    collapsible
+                    collapseAt={15}
                   />
                 </div>
 
@@ -888,6 +1087,8 @@ sudo journalctl -u wolfguard -f
 # Check listening ports
 sudo ss -tulpn | grep wolfguard`}
                     language="bash"
+                    collapsible
+                    collapseAt={15}
                   />
                 </div>
 
@@ -909,6 +1110,8 @@ sudo wolfguard -c /etc/wolfguard/wolfguard.conf --test
 sudo wolfguard-cli status
 sudo wolfguard-cli sessions list`}
                     language="bash"
+                    collapsible
+                    collapseAt={15}
                   />
                 </div>
               </div>
