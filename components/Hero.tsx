@@ -12,10 +12,13 @@ export function Hero() {
 
       {/* Animated grid pattern */}
       <div className="absolute inset-0 opacity-20">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `linear-gradient(hsl(var(--primary) / 0.1) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary) / 0.1) 1px, transparent 1px)`,
-          backgroundSize: '50px 50px',
-        }} />
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `linear-gradient(hsl(var(--primary) / 0.1) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary) / 0.1) 1px, transparent 1px)`,
+            backgroundSize: '50px 50px',
+          }}
+        />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 py-24 text-center">
@@ -56,9 +59,9 @@ export function Hero() {
           transition={{ delay: 0.4, duration: 0.8 }}
         >
           <p className="text-lg text-muted-foreground leading-relaxed">
-            WolfGuard provides enterprise-grade VPN security with modern cryptography.
-            Built with wolfSSL and wolfSentry, providing enterprise-grade encryption
-            and advanced threat protection for your network infrastructure.
+            WolfGuard provides enterprise-grade VPN security with modern cryptography. Built with
+            wolfSSL and wolfSentry, providing enterprise-grade encryption and advanced threat
+            protection for your network infrastructure.
           </p>
         </motion.div>
 
@@ -69,29 +72,33 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.8 }}
         >
-          <Button
-            as={Link}
-            href="/installation"
-            color="primary"
-            size="lg"
-            variant="shadow"
-            className="font-semibold px-8"
-          >
-            Get Started
-          </Button>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              as={Link}
+              href="/installation"
+              color="primary"
+              size="lg"
+              variant="shadow"
+              className="font-semibold px-8"
+            >
+              Get Started
+            </Button>
+          </motion.div>
 
-          <Button
-            as={Link}
-            href="https://github.com/dantte-lp/wolfguard"
-            target="_blank"
-            rel="noopener noreferrer"
-            color="primary"
-            size="lg"
-            variant="bordered"
-            className="font-semibold px-8"
-          >
-            View on GitHub
-          </Button>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              as={Link}
+              href="https://github.com/dantte-lp/wolfguard"
+              target="_blank"
+              rel="noopener noreferrer"
+              color="primary"
+              size="lg"
+              variant="bordered"
+              className="font-semibold px-8"
+            >
+              View on GitHub
+            </Button>
+          </motion.div>
         </motion.div>
 
         {/* Scroll indicator */}
@@ -106,12 +113,7 @@ export function Hero() {
             transition={{ repeat: Infinity, duration: 2 }}
             className="text-primary/50"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"

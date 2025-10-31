@@ -11,8 +11,12 @@ import {
   Link,
   Button,
 } from '@heroui/react'
+import { motion } from 'framer-motion'
 import { useState } from 'react'
 import { ThemeSwitch } from './ThemeSwitch'
+
+const MotionLink = motion(Link)
+const MotionButton = motion(Button)
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -50,13 +54,15 @@ export function Header() {
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         {menuItems.map((item) => (
           <NavbarItem key={item.name}>
-            <Link
+            <MotionLink
               color="foreground"
               href={item.href}
               className="hover:text-primary transition-colors"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               {item.name}
-            </Link>
+            </MotionLink>
           </NavbarItem>
         ))}
       </NavbarContent>
@@ -67,16 +73,18 @@ export function Header() {
           <ThemeSwitch />
         </NavbarItem>
         <NavbarItem>
-          <Button
+          <MotionButton
             as={Link}
             href="https://github.com/dantte-lp/wolfguard"
             target="_blank"
             rel="noopener noreferrer"
             variant="bordered"
             className="border-primary text-primary hover:bg-primary/10"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             GitHub
-          </Button>
+          </MotionButton>
         </NavbarItem>
       </NavbarContent>
 
