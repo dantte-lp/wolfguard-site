@@ -1,0 +1,223 @@
+# ═══════════════════════════════════════════════════════════════════
+# WolfGuard Site - Traefik Dynamic Configuration
+# ═══════════════════════════════════════════════════════════════════
+#
+# This file provides dynamic routing configuration for the WolfGuard
+# website when using a static file provider instead of Docker labels.
+#
+# Usage:
+#   1. Copy this file to your Traefik config directory
+#   2. Update the server URL if needed (see services section)
+#   3. Reload Traefik or wait for automatic file watching
+#
+# Note: If using Docker/Podman provider with labels in compose.prod.yaml,
+# this file is NOT required. This is for standalone/static configurations.
+#
+# ═══════════════════════════════════════════════════════════════════
+
+http:
+  # ═══════════════════════════════════════════════════════════════
+  # Routers - Define routing rules for WolfGuard site
+  # ═══════════════════════════════════════════════════════════════
+  routers:
+    # HTTP Router - Redirect to HTTPS
+    wolfguard-site-http:
+      rule: "Host(`wolfguard.io`) || Host(`www.wolfguard.io`)"
+      entryPoints:
+        - http
+      middlewares:
+        - https-redirect
+      service: wolfguard-site
+      priority: 10
+
+    # HTTPS Router - Main secure route
+    wolfguard-site-https:
+      rule: "Host(`wolfguard.io`) || Host(`www.wolfguard.io`)"
+      entryPoints:
+        - https
+      middlewares:
+        - wolfguard-security
+        - wolfguard-compression
+        - wolfguard-rate-limit
+      service: wolfguard-site
+      tls:
+        certResolver: letsencrypt  # or 'cloudflare' if using DNS challenge
+        domains:
+          - main: wolfguard.io
+            sans:
+              - www.wolfguard.io
+      priority: 10
+
+  # ═══════════════════════════════════════════════════════════════
+  # Services - Backend service configuration
+  # ═══════════════════════════════════════════════════════════════
+  services:
+    wolfguard-site:
+      loadBalancer:
+        servers:
+          # Update this URL based on your deployment:
+          # - Container name: http://wolfguard-site:8080
+          # - Host network: http://localhost:8080
+          # - Remote server: http://192.168.1.100:8080
+          - url: "http://wolfguard-site:8080"
+
+        # Health check configuration
+        healthCheck:
+          path: /health
+          interval: 30s
+          timeout: 10s
+          scheme: http
+
+        # Sticky sessions (if needed for stateful apps)
+        # sticky:
+        #   cookie:
+        #     name: wolfguard_session
+        #     secure: true
+        #     httpOnly: true
+
+  # ═══════════════════════════════════════════════════════════════
+  # Middlewares - Security, performance, and policies
+  # ═══════════════════════════════════════════════════════════════
+  middlewares:
+    # HTTPS Redirect
+    https-redirect:
+      redirectScheme:
+        scheme: https
+        permanent: true
+        port: 443
+
+    # Security Headers for WolfGuard (OWASP Best Practices)
+    wolfguard-security:
+      headers:
+        # HSTS - Force HTTPS for 1 year
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 31536000
+
+        # Frame Protection - Prevent clickjacking
+        frameDeny: true
+        customFrameOptionsValue: "DENY"
+
+        # XSS Protection
+        browserXssFilter: true
+
+        # Content Type Sniffing Protection
+        contentTypeNosniff: true
+
+        # Referrer Policy
+        referrerPolicy: "strict-origin-when-cross-origin"
+
+        # Permissions Policy (formerly Feature Policy)
+        permissionsPolicy: "camera=(), microphone=(), geolocation=(), payment=()"
+
+        # Content Security Policy
+        # Adjust these directives based on your actual requirements
+        contentSecurityPolicy: |
+          default-src 'self';
+          script-src 'self' 'unsafe-inline' 'unsafe-eval';
+          style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+          img-src 'self' data: https:;
+          font-src 'self' data: https://fonts.gstatic.com;
+          connect-src 'self' https:;
+          frame-ancestors 'none';
+          base-uri 'self';
+          form-action 'self'
+
+        # Custom response headers
+        customResponseHeaders:
+          X-Robots-Tag: "index, follow"  # Allow search engine indexing
+          X-Content-Type-Options: "nosniff"
+
+    # Compression - Improve performance
+    wolfguard-compression:
+      compress:
+        excludedContentTypes:
+          - "text/event-stream"  # Don't compress SSE
+        minResponseBodyBytes: 1024  # Only compress responses > 1KB
+
+    # Rate Limiting - DDoS Protection
+    wolfguard-rate-limit:
+      rateLimit:
+        average: 100   # 100 requests per second average
+        period: 1s
+        burst: 50      # Allow bursts up to 50
+
+    # Circuit Breaker - Fault tolerance
+    wolfguard-circuit-breaker:
+      circuitBreaker:
+        expression: "NetworkErrorRatio() > 0.5 || ResponseCodeRatio(500, 600, 0, 600) > 0.25"
+        checkPeriod: "3s"
+        fallbackDuration: "10s"
+        recoveryDuration: "30s"
+
+    # Retry Policy - Resilience
+    wolfguard-retry:
+      retry:
+        attempts: 3
+        initialInterval: "100ms"
+
+    # IP Whitelist (example - disabled by default)
+    # wolfguard-whitelist:
+    #   ipWhiteList:
+    #     sourceRange:
+    #       - "127.0.0.1/32"
+    #       - "192.168.0.0/16"
+    #       - "10.0.0.0/8"
+
+# ═══════════════════════════════════════════════════════════════════
+# TLS Configuration (Optional - can use global TLS options)
+# ═══════════════════════════════════════════════════════════════════
+tls:
+  options:
+    wolfguard-tls:
+      minVersion: VersionTLS12
+      maxVersion: VersionTLS13
+      cipherSuites:
+        # TLS 1.3 (Recommended)
+        - TLS_AES_256_GCM_SHA384
+        - TLS_AES_128_GCM_SHA256
+        - TLS_CHACHA20_POLY1305_SHA256
+        # TLS 1.2 (Compatibility)
+        - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
+        - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305
+      curvePreferences:
+        - CurveP521
+        - CurveP384
+        - CurveP256
+      sniStrict: true
+      alpnProtocols:
+        - h2          # HTTP/2
+        - http/1.1    # HTTP/1.1
+
+# ═══════════════════════════════════════════════════════════════════
+# Notes:
+# ═══════════════════════════════════════════════════════════════════
+#
+# 1. Domain Configuration:
+#    - Update 'wolfguard.io' and 'www.wolfguard.io' with your actual domain
+#    - Ensure DNS records point to your server's IP address
+#
+# 2. Certificate Resolver:
+#    - 'letsencrypt' for HTTP-01 challenge (simpler, port 80 required)
+#    - 'cloudflare' for DNS-01 challenge (supports wildcards, requires API token)
+#    - Configure resolver in main traefik.yml
+#
+# 3. Backend URL:
+#    - 'http://wolfguard-site:8080' assumes container name 'wolfguard-site'
+#    - Update based on your actual deployment (host network, remote, etc.)
+#
+# 4. CSP Adjustments:
+#    - The CSP includes 'unsafe-inline' and 'unsafe-eval' for Next.js
+#    - Tighten these in production after testing
+#    - Consider using nonces for scripts instead
+#
+# 5. Middleware Customization:
+#    - Add or remove middlewares in the router configuration
+#    - Create custom middleware chains for specific needs
+#
+# ═══════════════════════════════════════════════════════════════════

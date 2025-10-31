@@ -1,0 +1,189 @@
+# ═══════════════════════════════════════════════════════════════════
+# Standalone Traefik for WolfGuard Site
+# ═══════════════════════════════════════════════════════════════════
+#
+# This is an optional standalone Traefik configuration for the
+# WolfGuard site. Use this if you don't have a global Traefik instance.
+#
+# Usage:
+#   1. Configure environment variables in .env
+#   2. Create Traefik network: podman network create traefik-public
+#   3. Start Traefik: podman-compose -f traefik-compose.yaml up -d
+#   4. Deploy WolfGuard: podman-compose -f ../config/compose.prod.yaml up -d
+#
+# ═══════════════════════════════════════════════════════════════════
+
+version: '3.8'
+
+services:
+  traefik:
+    image: docker.io/traefik:v3.0
+    container_name: traefik-wolfguard
+    restart: unless-stopped
+
+    # ───────────────────────────────────────────────────────────────
+    # Security Options
+    # ───────────────────────────────────────────────────────────────
+    security_opt:
+      - no-new-privileges:true
+
+    # Drop all capabilities except required ones
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE  # Required for binding to ports 80/443
+
+    # ───────────────────────────────────────────────────────────────
+    # Network Configuration
+    # ───────────────────────────────────────────────────────────────
+    networks:
+      - traefik-public
+
+    ports:
+      - "80:80"      # HTTP
+      - "443:443"    # HTTPS
+      - "8080:8080"  # Dashboard (disable in production or use auth)
+
+    # ───────────────────────────────────────────────────────────────
+    # Environment Variables
+    # ───────────────────────────────────────────────────────────────
+    environment:
+      # Cloudflare credentials (if using DNS challenge)
+      - CF_API_EMAIL=${CF_API_EMAIL:-}
+      - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN:-}
+
+      # Timezone
+      - TZ=${TZ:-UTC}
+
+    # ───────────────────────────────────────────────────────────────
+    # Volumes
+    # ───────────────────────────────────────────────────────────────
+    volumes:
+      # System time (read-only)
+      - /etc/localtime:/etc/localtime:ro
+
+      # Podman/Docker socket (for container discovery)
+      - /var/run/podman/podman.sock:/var/run/docker.sock:ro
+
+      # Static configuration
+      - ./traefik.yml:/etc/traefik/traefik.yml:ro
+
+      # Dynamic configuration directory
+      - ./dynamic:/etc/traefik/dynamic:ro
+
+      # Let's Encrypt certificates (persistent)
+      - traefik-certificates:/letsencrypt
+
+      # Logs (optional)
+      - traefik-logs:/var/log/traefik
+
+    # ───────────────────────────────────────────────────────────────
+    # Traefik Labels (Dashboard Configuration)
+    # ───────────────────────────────────────────────────────────────
+    labels:
+      # Enable Traefik for itself
+      - "traefik.enable=true"
+
+      # Dashboard Router
+      - "traefik.http.routers.dashboard.rule=Host(`${TRAEFIK_DASHBOARD_DOMAIN:-traefik.localhost}`)"
+      - "traefik.http.routers.dashboard.entrypoints=https"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.tls.certresolver=${CERT_RESOLVER:-letsencrypt}"
+
+      # Dashboard Middleware (Basic Auth)
+      - "traefik.http.routers.dashboard.middlewares=dashboard-auth"
+      - "traefik.http.middlewares.dashboard-auth.basicauth.users=${TRAEFIK_DASHBOARD_PASSWORD_HASH:-admin:$$apr1$$8EVjn/nj$$GiLUZqcbueTFeD23SuB6x0}"
+
+      # Metadata
+      - "com.wolfguard.project=traefik"
+      - "com.wolfguard.description=Reverse proxy for WolfGuard site"
+      - "com.wolfguard.environment=${ENVIRONMENT:-production}"
+
+    # ───────────────────────────────────────────────────────────────
+    # Health Check
+    # ───────────────────────────────────────────────────────────────
+    healthcheck:
+      test: ["CMD", "traefik", "healthcheck", "--ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+    # ───────────────────────────────────────────────────────────────
+    # Resource Limits
+    # ───────────────────────────────────────────────────────────────
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 64M
+
+    # ───────────────────────────────────────────────────────────────
+    # Logging
+    # ───────────────────────────────────────────────────────────────
+    logging:
+      driver: k8s-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+        labels: "com.wolfguard.project,com.wolfguard.environment"
+
+# ═══════════════════════════════════════════════════════════════════
+# Volumes
+# ═══════════════════════════════════════════════════════════════════
+volumes:
+  traefik-certificates:
+    driver: local
+    labels:
+      - "com.wolfguard.project=traefik"
+      - "com.wolfguard.type=certificates"
+
+  traefik-logs:
+    driver: local
+    labels:
+      - "com.wolfguard.project=traefik"
+      - "com.wolfguard.type=logs"
+
+# ═══════════════════════════════════════════════════════════════════
+# Networks
+# ═══════════════════════════════════════════════════════════════════
+networks:
+  traefik-public:
+    external: true
+    name: ${TRAEFIK_NETWORK:-traefik-public}
+
+# ═══════════════════════════════════════════════════════════════════
+# Notes:
+# ═══════════════════════════════════════════════════════════════════
+#
+# 1. First-time Setup:
+#    - Create network: podman network create traefik-public
+#    - Copy .env.example to .env and configure
+#    - Ensure DNS records are configured
+#    - Start Traefik: podman-compose up -d
+#
+# 2. Dashboard Access:
+#    - Configure TRAEFIK_DASHBOARD_DOMAIN in .env
+#    - Access at: https://your-domain/dashboard/
+#    - Default credentials: admin/admin (change in .env!)
+#
+# 3. Security:
+#    - Disable dashboard port 8080 in production
+#    - Use strong password for dashboard
+#    - Enable IP whitelisting if needed
+#    - Regularly update Traefik image
+#
+# 4. Certificate Storage:
+#    - Certificates stored in 'traefik-certificates' volume
+#    - Backup acme.json regularly: podman volume export
+#    - Permissions: acme.json should be 600
+#
+# 5. Integration with WolfGuard:
+#    - WolfGuard service discovered automatically via Docker labels
+#    - See compose.prod.yaml for service configuration
+#    - Both containers must be on traefik-public network
+#
+# ═══════════════════════════════════════════════════════════════════

@@ -1,0 +1,217 @@
+# ═══════════════════════════════════════════════════════════════════
+# Traefik Static Configuration for WolfGuard Site
+# ═══════════════════════════════════════════════════════════════════
+#
+# This is the static configuration file for Traefik when running as
+# a standalone instance for the WolfGuard site.
+#
+# ═══════════════════════════════════════════════════════════════════
+
+# ───────────────────────────────────────────────────────────────────
+# Global Configuration
+# ───────────────────────────────────────────────────────────────────
+global:
+  checkNewVersion: true
+  sendAnonymousUsage: false
+
+# ───────────────────────────────────────────────────────────────────
+# API and Dashboard
+# ───────────────────────────────────────────────────────────────────
+api:
+  dashboard: true
+  insecure: false  # Disable insecure dashboard access
+  debug: false     # Disable debug endpoints in production
+
+# ───────────────────────────────────────────────────────────────────
+# Ping Endpoint (for health checks)
+# ───────────────────────────────────────────────────────────────────
+ping:
+  entryPoint: "ping"
+
+# ───────────────────────────────────────────────────────────────────
+# Entry Points
+# ───────────────────────────────────────────────────────────────────
+entryPoints:
+  # HTTP (port 80) - Redirect to HTTPS
+  http:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: https
+          scheme: https
+          permanent: true
+    # Trusted IPs for X-Forwarded-* headers
+    forwardedHeaders:
+      trustedIPs:
+        - "127.0.0.1/32"
+        - "10.0.0.0/8"
+        - "172.16.0.0/12"
+        - "192.168.0.0/16"
+
+  # HTTPS (port 443) - Main secure endpoint
+  https:
+    address: ":443"
+    http:
+      tls:
+        certResolver: letsencrypt  # Default cert resolver
+      # HTTP/2 configuration
+      http2:
+        maxConcurrentStreams: 250
+      # HTTP/3 configuration (QUIC)
+      http3:
+        advertisedPort: 443
+    # Trusted IPs for X-Forwarded-* headers
+    forwardedHeaders:
+      trustedIPs:
+        - "127.0.0.1/32"
+        - "10.0.0.0/8"
+        - "172.16.0.0/12"
+        - "192.168.0.0/16"
+
+  # Ping endpoint (internal health checks)
+  ping:
+    address: ":8082"
+
+# ───────────────────────────────────────────────────────────────────
+# Certificate Resolvers (Let's Encrypt)
+# ───────────────────────────────────────────────────────────────────
+certificatesResolvers:
+  # HTTP-01 Challenge (simpler, requires port 80)
+  letsencrypt:
+    acme:
+      email: "admin@wolfguard.io"  # Update with your email
+      storage: /letsencrypt/acme.json
+      caServer: https://acme-v02.api.letsencrypt.org/directory
+      # Use staging for testing to avoid rate limits:
+      # caServer: https://acme-staging-v02.api.letsencrypt.org/directory
+      httpChallenge:
+        entryPoint: http
+      # Key type: RSA-4096 or EC-384
+      keyType: EC384
+
+  # DNS-01 Challenge (supports wildcards, requires API token)
+  cloudflare:
+    acme:
+      email: "admin@wolfguard.io"  # Update with your email
+      storage: /letsencrypt/acme-cloudflare.json
+      caServer: https://acme-v02.api.letsencrypt.org/directory
+      dnsChallenge:
+        provider: cloudflare
+        delayBeforeCheck: 30  # Wait 30s for DNS propagation
+        resolvers:
+          - "1.1.1.1:53"
+          - "8.8.8.8:53"
+      keyType: EC384
+
+# ───────────────────────────────────────────────────────────────────
+# Providers
+# ───────────────────────────────────────────────────────────────────
+providers:
+  # Docker/Podman provider (automatic service discovery)
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false  # Only expose services with traefik.enable=true
+    network: traefik-public  # Default network for backend services
+    watch: true              # Watch for container changes
+
+  # File provider (for static/dynamic configuration)
+  file:
+    directory: /etc/traefik/dynamic
+    watch: true  # Watch for file changes
+
+# ───────────────────────────────────────────────────────────────────
+# Logging
+# ───────────────────────────────────────────────────────────────────
+log:
+  level: INFO  # DEBUG, INFO, WARN, ERROR
+  format: json # json or common (CLF)
+  filePath: /var/log/traefik/traefik.log
+  maxSize: 100  # Max size in MB
+  maxBackups: 3
+  maxAge: 28    # Days
+  compress: true
+
+# ───────────────────────────────────────────────────────────────────
+# Access Logs
+# ───────────────────────────────────────────────────────────────────
+accessLog:
+  filePath: /var/log/traefik/access.log
+  format: json
+  bufferingSize: 100
+  fields:
+    defaultMode: keep
+    names:
+      ClientUsername: drop  # Drop sensitive fields
+    headers:
+      defaultMode: keep
+      names:
+        Authorization: drop  # Don't log auth headers
+        Cookie: drop         # Don't log cookies
+  filters:
+    statusCodes:
+      - "200-299"  # Success
+      - "400-499"  # Client errors
+      - "500-599"  # Server errors
+    retryAttempts: true
+    minDuration: "10ms"
+
+# ───────────────────────────────────────────────────────────────────
+# Metrics (Optional - Prometheus)
+# ───────────────────────────────────────────────────────────────────
+# metrics:
+#   prometheus:
+#     entryPoint: metrics
+#     addEntryPointsLabels: true
+#     addRoutersLabels: true
+#     addServicesLabels: true
+#     buckets:
+#       - 0.1
+#       - 0.3
+#       - 1.2
+#       - 5.0
+
+# ───────────────────────────────────────────────────────────────────
+# Tracing (Optional - Jaeger/Zipkin/Datadog)
+# ───────────────────────────────────────────────────────────────────
+# tracing:
+#   serviceName: traefik-wolfguard
+#   jaeger:
+#     samplingServerURL: http://jaeger:5778/sampling
+#     localAgentHostPort: jaeger:6831
+
+# ═══════════════════════════════════════════════════════════════════
+# Configuration Notes:
+# ═══════════════════════════════════════════════════════════════════
+#
+# 1. Certificate Email:
+#    - Update 'email' in certificatesResolvers with your actual email
+#    - This email receives expiry notifications from Let's Encrypt
+#
+# 2. Testing Certificates:
+#    - Use Let's Encrypt staging server for testing
+#    - Staging: https://acme-staging-v02.api.letsencrypt.org/directory
+#    - Production: https://acme-v02.api.letsencrypt.org/directory
+#    - Rate limit: 50 certificates/week (production), unlimited (staging)
+#
+# 3. DNS Challenge (Cloudflare):
+#    - Requires CF_API_EMAIL and CF_DNS_API_TOKEN environment variables
+#    - Supports wildcard certificates: *.wolfguard.io
+#    - Create token at: https://dash.cloudflare.com/profile/api-tokens
+#
+# 4. Security:
+#    - Dashboard disabled on insecure port (8080)
+#    - Access via HTTPS with basic auth (configured in labels)
+#    - TLS version: 1.2+ (configured in dynamic config)
+#
+# 5. Performance:
+#    - HTTP/2 enabled (maxConcurrentStreams: 250)
+#    - HTTP/3 (QUIC) enabled on port 443
+#    - Access log buffering (bufferingSize: 100)
+#
+# 6. Docker Provider:
+#    - Services discovered automatically via labels
+#    - Only services with traefik.enable=true are exposed
+#    - Default network: traefik-public
+#
+# ═══════════════════════════════════════════════════════════════════
