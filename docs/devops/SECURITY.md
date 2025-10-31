@@ -477,12 +477,13 @@ podman inspect docker.io/library/nginx:1.27-alpine --format '{{.RepoDigests}}'
 
 ```bash
 # Builder stage (not in final image)
-node:22-alpine: ~140MB
+node:lts-trixie-slim: ~180MB (Debian-based, better compatibility)
 
-# Final image
-nginx:1.27-alpine: ~43MB
-+ React build output: ~2-5MB
-= Total: ~45-48MB
+# Final image (Next.js standalone)
+node:lts-trixie-slim: ~180MB
++ Next.js standalone: ~30-40MB
++ Dependencies: ~50-60MB
+= Total: ~270-280MB
 ```
 
 ### 3. Image Scanning

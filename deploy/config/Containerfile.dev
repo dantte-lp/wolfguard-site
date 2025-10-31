@@ -3,7 +3,7 @@
 # This container is for development purposes only
 # Uses rootless configuration to prevent permission issues
 
-FROM docker.io/library/node:22-trixie-slim
+FROM docker.io/library/node:lts-trixie-slim
 
 # OCI Labels - Development Stage
 LABEL org.opencontainers.image.title="WolfGuard Site Development"

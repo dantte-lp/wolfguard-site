@@ -32,15 +32,15 @@ The WolfGuard website is deployed as a containerized Next.js application using:
 ┌─────────────────────────────────────────────────────────────┐
 │                    Multi-Stage Build                        │
 ├─────────────────────────────────────────────────────────────┤
-│  Stage 1: Dependencies (node:22-alpine)                     │
+│  Stage 1: Dependencies (node:lts-trixie-slim)               │
 │  - Install production dependencies only                      │
 ├─────────────────────────────────────────────────────────────┤
-│  Stage 2: Build (node:22-alpine)                            │
+│  Stage 2: Build (node:lts-trixie-slim)                      │
 │  - Install all dependencies                                  │
 │  - Build Next.js application                                 │
 │  - Generate standalone output                                │
 ├─────────────────────────────────────────────────────────────┤
-│  Stage 3: Runtime (node:22-alpine)                          │
+│  Stage 3: Runtime (node:lts-trixie-slim)                    │
 │  - Copy standalone build                                     │
 │  - Run as non-root user (nextjs:nodejs)                     │
 │  - Port 3000                                                 │

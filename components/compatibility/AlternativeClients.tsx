@@ -10,7 +10,24 @@ const fadeInUp = {
   transition: { duration: 0.5, delay: 0.4 },
 }
 
-const alternativeClients = [
+interface AlternativeClient {
+  name: string
+  platform: string
+  type: string
+  icon: typeof Terminal
+  description: string
+  features: string[]
+  status: string
+  statusColor: 'success' | 'primary'
+  website?: string
+  installation?: Record<string, string>
+  appStores?: {
+    ios: string
+    android: string
+  }
+}
+
+const alternativeClients: AlternativeClient[] = [
   {
     name: 'OpenConnect',
     platform: 'Linux, macOS, Windows, BSD',
@@ -86,6 +103,10 @@ const alternativeClients = [
     statusColor: 'primary' as const,
     website:
       'https://www.cisco.com/c/en/us/support/security/anyconnect-secure-mobility-client/series.html',
+    appStores: {
+      ios: 'https://apps.apple.com/us/app/cisco-secure-client/id1135064690',
+      android: 'https://play.google.com/store/apps/details?id=com.cisco.anyconnect.vpn.android.avf',
+    },
   },
 ]
 
@@ -167,21 +188,72 @@ export function AlternativeClients() {
                 </div>
               )}
 
-              {/* Website Link */}
-              {client.website && (
-                <Button
-                  as="a"
-                  href={client.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variant="flat"
-                  color="primary"
-                  size="sm"
-                  endContent={<ExternalLink className="w-3 h-3" />}
-                  className="w-full"
-                >
-                  Official Website
-                </Button>
+              {/* App Store Badges */}
+              {client.appStores ? (
+                <div className="space-y-3">
+                  <p className="text-sm font-medium text-default-700">Download Apps:</p>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    {/* iOS App Store Badge */}
+                    <a
+                      href={client.appStores.ios}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 hover:opacity-80 transition-opacity"
+                    >
+                      <img
+                        src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
+                        alt="Download on the App Store"
+                        className="h-12 w-full object-contain"
+                      />
+                    </a>
+                    {/* Google Play Badge */}
+                    <a
+                      href={client.appStores.android}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 hover:opacity-80 transition-opacity"
+                    >
+                      <img
+                        src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+                        alt="Get it on Google Play"
+                        className="h-12 w-full object-contain"
+                      />
+                    </a>
+                  </div>
+                  {/* Website Link */}
+                  {client.website && (
+                    <Button
+                      as="a"
+                      href={client.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      variant="flat"
+                      color="default"
+                      size="sm"
+                      endContent={<ExternalLink className="w-3 h-3" />}
+                      className="w-full mt-2"
+                    >
+                      Official Website
+                    </Button>
+                  )}
+                </div>
+              ) : (
+                /* Regular Website Link */
+                client.website && (
+                  <Button
+                    as="a"
+                    href={client.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    variant="flat"
+                    color="primary"
+                    size="sm"
+                    endContent={<ExternalLink className="w-3 h-3" />}
+                    className="w-full"
+                  >
+                    Official Website
+                  </Button>
+                )
               )}
             </CardBody>
           </Card>
