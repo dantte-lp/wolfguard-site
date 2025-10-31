@@ -1,17 +1,55 @@
-# WolfGuard Website
-
 <div align="center">
 
-[![CI Status](https://github.com/dantte-lp/wolfguard-site/workflows/CI%20-%20Pull%20Request%20Validation/badge.svg)](https://github.com/dantte-lp/wolfguard-site/actions)
-[![CD Status](https://github.com/dantte-lp/wolfguard-site/workflows/CD%20-%20Main%20Branch%20Deployment/badge.svg)](https://github.com/dantte-lp/wolfguard-site/actions)
-[![License: GPL-3.0](https://img.shields.io/badge/License-GPL%203.0-blue.svg)](./LICENSE)
-[![Node.js Version](https://img.shields.io/badge/node-%3E%3D22.0.0-brightgreen.svg)](https://nodejs.org/)
-[![Next.js](https://img.shields.io/badge/Next.js-15.5.6-black.svg)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-blue.svg)](https://www.typescriptlang.org/)
+<img src="./public/logo.svg" alt="WolfGuard Logo" width="200" height="200" />
+
+# WolfGuard Website
 
 Official website for **WolfGuard** - an open-source VPN server with TLS 1.3/DTLS 1.3 support and Cisco Secure Client compatibility.
 
 [Website](https://wolfguard.io) • [Documentation](https://docs.wolfguard.io) • [GitHub](https://github.com/dantte-lp/wolfguard-site)
+
+---
+
+### Build Status & CI/CD
+
+[![CI Status](https://github.com/dantte-lp/wolfguard-site/workflows/CI%20-%20Pull%20Request%20Validation/badge.svg)](https://github.com/dantte-lp/wolfguard-site/actions/workflows/ci.yml)
+[![CD Status](https://github.com/dantte-lp/wolfguard-site/workflows/CD%20-%20Main%20Branch%20Deployment/badge.svg)](https://github.com/dantte-lp/wolfguard-site/actions/workflows/cd.yml)
+[![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-Active-success.svg)](https://github.com/dantte-lp/wolfguard-site/actions)
+
+### Version & Release
+
+[![Release](https://img.shields.io/github/v/release/dantte-lp/wolfguard-site?include_prereleases)](https://github.com/dantte-lp/wolfguard-site/releases)
+[![GitHub tag](https://img.shields.io/github/tag/dantte-lp/wolfguard-site.svg)](https://github.com/dantte-lp/wolfguard-site/tags)
+[![npm version](https://img.shields.io/badge/version-1.0.0-blue.svg)](./package.json)
+
+### Technology Stack
+
+[![Next.js](https://img.shields.io/badge/Next.js-15.5.6-black.svg?logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19.2.0-61DAFB.svg?logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6.svg?logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4.1.16-38B2AC.svg?logo=tailwind-css)](https://tailwindcss.com/)
+[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22.0.0-339933.svg?logo=node.js)](https://nodejs.org/)
+
+### Code Quality & Security
+
+[![ESLint](https://img.shields.io/badge/ESLint-Enabled-4B32C3.svg?logo=eslint)](https://eslint.org/)
+[![Prettier](https://img.shields.io/badge/Prettier-Enabled-F7B93E.svg?logo=prettier)](https://prettier.io/)
+[![TypeScript Strict](https://img.shields.io/badge/TypeScript-Strict%20Mode-3178C6.svg)](./tsconfig.json)
+[![License](https://img.shields.io/badge/License-GPL%203.0-blue.svg)](./LICENSE)
+
+### Container & Deployment
+
+[![Docker](https://img.shields.io/badge/Docker-Supported-2496ED.svg?logo=docker)](https://www.docker.com/)
+[![Podman](https://img.shields.io/badge/Podman-Supported-892CA0.svg?logo=podman)](https://podman.io/)
+[![Container Registry](https://img.shields.io/badge/GHCR-ghcr.io-2088FF.svg?logo=github)](https://github.com/dantte-lp/wolfguard-site/pkgs/container/wolfguard-site)
+
+### Project Stats
+
+[![GitHub stars](https://img.shields.io/github/stars/dantte-lp/wolfguard-site?style=social)](https://github.com/dantte-lp/wolfguard-site/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/dantte-lp/wolfguard-site?style=social)](https://github.com/dantte-lp/wolfguard-site/network/members)
+[![GitHub issues](https://img.shields.io/github/issues/dantte-lp/wolfguard-site)](https://github.com/dantte-lp/wolfguard-site/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/dantte-lp/wolfguard-site)](https://github.com/dantte-lp/wolfguard-site/pulls)
+[![Contributors](https://img.shields.io/github/contributors/dantte-lp/wolfguard-site)](https://github.com/dantte-lp/wolfguard-site/graphs/contributors)
 
 </div>
 
