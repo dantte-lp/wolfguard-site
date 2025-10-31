@@ -1,0 +1,18 @@
+---
+all:
+  children:
+    web_servers:
+      hosts:
+        localhost:
+          ansible_connection: local
+          ansible_python_interpreter: /usr/bin/python3
+
+    production:
+      hosts:
+        localhost:
+          ansible_connection: local
+
+  vars:
+    ansible_user: root
+    ansible_become: true
+    ansible_become_method: sudo

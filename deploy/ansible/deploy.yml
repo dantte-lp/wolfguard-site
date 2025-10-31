@@ -1,0 +1,97 @@
+---
+- name: Deploy WolfGuard Website
+  hosts: web_servers
+  become: true
+  gather_facts: true
+
+  vars:
+    container_name: wolfguard-site
+    container_image: "ghcr.io/dantte-lp/wolfguard-site:latest"
+    container_port: 3000
+    traefik_network: traefik-network
+    domain: wolfguard.io
+
+  tasks:
+    - name: Ensure Podman is installed
+      package:
+        name: podman
+        state: present
+
+    - name: Login to GitHub Container Registry
+      containers.podman.podman_login:
+        username: "{{ lookup('env', 'GITHUB_ACTOR') }}"
+        password: "{{ lookup('env', 'GITHUB_TOKEN') }}"
+        registry: ghcr.io
+      when: lookup('env', 'GITHUB_TOKEN') != ''
+
+    - name: Pull latest container image
+      containers.podman.podman_image:
+        name: "{{ container_image }}"
+        force: true
+        state: present
+
+    - name: Stop existing container
+      containers.podman.podman_container:
+        name: "{{ container_name }}"
+        state: stopped
+      ignore_errors: true
+
+    - name: Remove existing container
+      containers.podman.podman_container:
+        name: "{{ container_name }}"
+        state: absent
+      ignore_errors: true
+
+    - name: Create Traefik network if not exists
+      containers.podman.podman_network:
+        name: "{{ traefik_network }}"
+        state: present
+
+    - name: Deploy new container
+      containers.podman.podman_container:
+        name: "{{ container_name }}"
+        image: "{{ container_image }}"
+        state: started
+        restart_policy: always
+        network: "{{ traefik_network }}"
+        env:
+          NODE_ENV: production
+          PORT: "{{ container_port }}"
+        label:
+          traefik.enable: "true"
+          traefik.http.routers.wolfguard-site.rule: "Host(`{{ domain }}`)"
+          traefik.http.routers.wolfguard-site.entrypoints: "websecure"
+          traefik.http.routers.wolfguard-site.tls: "true"
+          traefik.http.routers.wolfguard-site.tls.certresolver: "letsencrypt"
+          traefik.http.services.wolfguard-site.loadbalancer.server.port: "{{ container_port }}"
+        ports:
+          - "{{ container_port }}:{{ container_port }}"
+
+    - name: Wait for container to be ready
+      wait_for:
+        host: localhost
+        port: "{{ container_port }}"
+        delay: 5
+        timeout: 60
+        state: started
+
+    - name: Verify container is running
+      containers.podman.podman_container_info:
+        name: "{{ container_name }}"
+      register: container_info
+
+    - name: Display deployment status
+      debug:
+        msg: "Container {{ container_name }} is {{ container_info.containers[0].State.Status }}"
+
+    - name: Clean up old images
+      shell: |
+        podman image prune -f
+      changed_when: false
+
+  handlers:
+    - name: Restart Traefik
+      systemd:
+        name: traefik
+        state: restarted
+      when: ansible_service_mgr == 'systemd'

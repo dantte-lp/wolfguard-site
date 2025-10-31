@@ -1,0 +1,143 @@
+name: CD - Main Branch Deployment
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+
+env:
+  REGISTRY: ghcr.io
+  CONTAINER_NAME: wolfguard-site
+
+jobs:
+  build-container:
+    name: Build Container Image
+    runs-on: [self-hosted, linux]
+
+    outputs:
+      image-tag: steps.meta.outputs.tags
+      image-digest: steps.build.outputs.digest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build production bundle
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Generate image metadata
+        id: meta
+        run: |
+          IMAGE_TAG="ghcr.io/${GITHUB_REPOSITORY}:$(git rev-parse --short HEAD)"
+          IMAGE_LATEST="ghcr.io/${GITHUB_REPOSITORY}:latest"
+          echo "tags=${IMAGE_TAG}" >> ${GITHUB_OUTPUT}
+          echo "latest=${IMAGE_LATEST}" >> ${GITHUB_OUTPUT}
+
+      - name: Create Containerfile
+        run: |
+          cat > Containerfile << 'DOCKERFILE'
+          FROM node:22-alpine AS base
+          FROM base AS deps
+          RUN apk add --no-cache libc6-compat
+          WORKDIR /app
+          COPY package*.json ./
+          RUN npm ci --only=production
+          FROM base AS runner
+          WORKDIR /app
+          ENV NODE_ENV=production
+          ENV PORT=3000
+          RUN addgroup --system --gid 1001 nodejs
+          RUN adduser --system --uid 1001 nextjs
+          COPY --from=deps /app/node_modules ./node_modules
+          COPY --chown=nextjs:nodejs .next/standalone ./
+          COPY --chown=nextjs:nodejs .next/static ./.next/static
+          COPY --chown=nextjs:nodejs public ./public
+          USER nextjs
+          EXPOSE 3000
+          CMD ["node", "server.js"]
+          DOCKERFILE
+
+      - name: Build container with Buildah
+        id: build
+        run: |
+          IMAGE_TAG=$(echo "${GITHUB_OUTPUT}" | grep "^tags=" | cut -d= -f2)
+          buildah bud -t ${IMAGE_TAG} -t ghcr.io/${GITHUB_REPOSITORY}:latest -f Containerfile .
+
+      - name: Test container
+        run: |
+          IMAGE_TAG=$(echo "${GITHUB_OUTPUT}" | grep "^tags=" | cut -d= -f2)
+          CONTAINER_ID=$(buildah from ${IMAGE_TAG})
+          buildah run ${CONTAINER_ID} node --version
+          buildah rm ${CONTAINER_ID}
+
+      - name: Login to GitHub Container Registry  
+        run: |
+          echo "${GITHUB_TOKEN}" | buildah login ghcr.io -u ${GITHUB_ACTOR} --password-stdin
+        env:
+          GITHUB_TOKEN: secrets.GITHUB_TOKEN
+          GITHUB_ACTOR: github.actor
+
+      - name: Push to registry
+        run: |
+          IMAGE_TAG=$(echo "${GITHUB_OUTPUT}" | grep "^tags=" | cut -d= -f2)
+          buildah push ${IMAGE_TAG}
+          buildah push ghcr.io/${GITHUB_REPOSITORY}:latest
+
+  deploy:
+    name: Deploy to Server
+    runs-on: [self-hosted, linux]
+    needs: [build-container]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy with Ansible
+        run: |
+          cd deploy/ansible
+          ansible-playbook -i inventory.yml deploy.yml
+
+  health-check:
+    name: Post-Deployment Health Check
+    runs-on: [self-hosted, linux]
+    needs: [deploy]
+
+    steps:
+      - name: Wait for service
+        run: sleep 10
+
+      - name: Check container status
+        run: podman ps | grep wolfguard-site
+
+      - name: HTTP health check
+        run: |
+          for i in {1..5}; do
+            if curl -f http://localhost:3000; then
+              echo "Health check passed"
+              exit 0
+            fi
+            sleep 5
+          done
+          exit 1

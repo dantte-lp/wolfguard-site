@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://docs.wolfguard.io
+    about: Check the documentation for help
+  - name: Security Vulnerability
+    url: https://github.com/dantte-lp/wolfguard-site/security/advisories/new
+    about: Report security vulnerabilities privately
+  - name: General Question
+    url: https://github.com/dantte-lp/wolfguard-site/discussions
+    about: Ask questions and discuss with the community

@@ -1,6 +1,19 @@
 # WolfGuard Website
 
+<div align="center">
+
+[![CI Status](https://github.com/dantte-lp/wolfguard-site/workflows/CI%20-%20Pull%20Request%20Validation/badge.svg)](https://github.com/dantte-lp/wolfguard-site/actions)
+[![CD Status](https://github.com/dantte-lp/wolfguard-site/workflows/CD%20-%20Main%20Branch%20Deployment/badge.svg)](https://github.com/dantte-lp/wolfguard-site/actions)
+[![License: GPL-3.0](https://img.shields.io/badge/License-GPL%203.0-blue.svg)](./LICENSE)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D22.0.0-brightgreen.svg)](https://nodejs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-15.5.6-black.svg)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-blue.svg)](https://www.typescriptlang.org/)
+
 Official website for **WolfGuard** - an open-source VPN server with TLS 1.3/DTLS 1.3 support and Cisco Secure Client compatibility.
+
+[Website](https://wolfguard.io) • [Documentation](https://docs.wolfguard.io) • [GitHub](https://github.com/dantte-lp/wolfguard-site)
+
+</div>
 
 ## Tech Stack
 
@@ -284,21 +297,52 @@ make prune
 
 ## Documentation
 
+### For Users
+
+- **Quick Start**: See above for getting started
+- **User Guide**: [docs/users/](./docs/users/)
+
+### For Developers
+
+- **Development Guide**: [docs/developers/DEVELOPMENT.md](./docs/developers/DEVELOPMENT.md)
+- **Contributing**: [CONTRIBUTING.md](./CONTRIBUTING.md)
 - **Technical Specifications**: [docs/TECHNICAL_SPECIFICATIONS_FOR_WEBSITE_DEVELOPMENT.md](./docs/TECHNICAL_SPECIFICATIONS_FOR_WEBSITE_DEVELOPMENT.md)
+
+### For DevOps
+
+- **Deployment Guide**: [docs/devops/DEPLOYMENT.md](./docs/devops/DEPLOYMENT.md)
+- **Infrastructure Guide**: [docs/devops/INFRASTRUCTURE.md](./docs/devops/INFRASTRUCTURE.md)
+- **Ansible Playbooks**: [deploy/ansible/](./deploy/ansible/)
+
+### Other Resources
+
 - **Dependencies**: [DEPENDENCIES_VERSIONS.md](./DEPENDENCIES_VERSIONS.md)
 - **Scrum Plan**: [SCRUM_PLAN.md](./SCRUM_PLAN.md)
+- **Security Policy**: [SECURITY.md](./SECURITY.md)
 
 ## Contributing
 
-1. Read the [Technical Specifications](./docs/TECHNICAL_SPECIFICATIONS_FOR_WEBSITE_DEVELOPMENT.md)
-2. Check [open issues](https://github.com/dantte-lp/wolfguard-site/issues)
-3. Create a feature branch
-4. Follow the development workflow
-5. Submit a Pull Request
+We welcome contributions! Please see our [Contributing Guide](./CONTRIBUTING.md) for details.
+
+### Quick Contributing Guide
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Run tests and checks (`make check-all`)
+5. Commit your changes (`git commit -m 'feat: add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed guidelines.
+
+## Security
+
+Found a security vulnerability? Please see our [Security Policy](./SECURITY.md) for reporting instructions.
 
 ## License
 
-GPLv2 - See LICENSE file for details
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](./LICENSE) file for details.
 
 ## Links
 
