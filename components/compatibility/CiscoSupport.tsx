@@ -14,12 +14,16 @@ const supportedVersions = [
   {
     version: '5.x',
     status: 'Fully Supported',
-    features: ['TLS 1.3', 'DTLS 1.3', 'Certificate Auth', 'Password Auth'],
+    features: ['TLS 1.3', 'TLS 1.2', 'DTLS 1.2', 'Certificate Auth', 'Password Auth', 'SAML/SSO'],
+    notes:
+      'Latest version (5.1.12.146) includes TLS 1.3 support with improved performance and security. DTLS 1.2 for UDP connections.',
   },
   {
     version: '4.x',
     status: 'Supported',
-    features: ['TLS 1.2+', 'DTLS 1.2', 'All Auth Methods'],
+    features: ['TLS 1.2', 'DTLS 1.2', 'Certificate Auth', 'Password Auth', 'Legacy Protocol'],
+    notes:
+      'Legacy AnyConnect client with TLS 1.2 and DTLS 1.2 support. Reliable but lacks modern protocol features.',
   },
 ]
 
@@ -83,10 +87,58 @@ export function CiscoSupport() {
                   ))}
                 </div>
               </div>
+              {version.notes && (
+                <div className="pt-3 border-t border-border">
+                  <p className="text-xs text-default-500">{version.notes}</p>
+                </div>
+              )}
             </CardBody>
           </Card>
         ))}
       </div>
+
+      {/* Protocol Limitations Notice */}
+      <Card className="bg-warning-50 border-2 border-warning-200 dark:bg-warning-950/20 dark:border-warning-800">
+        <CardBody className="p-6 space-y-3">
+          <div className="flex items-start gap-3">
+            <Info className="w-5 h-5 text-warning-600 flex-shrink-0 mt-0.5" />
+            <div className="space-y-2">
+              <h4 className="text-lg font-semibold text-foreground">Protocol Limitations</h4>
+              <p className="text-sm text-default-700">
+                While WolfGuard server supports modern protocols including <strong>TLS 1.3</strong>,{' '}
+                <strong>DTLS 1.3</strong>, and <strong>QUIC</strong>, current Cisco clients are
+                limited to older protocol versions:
+              </p>
+              <ul className="text-sm text-default-700 space-y-1.5 ml-4">
+                <li className="flex items-start gap-2">
+                  <span className="text-warning-600 mt-0.5">•</span>
+                  <span>
+                    <strong>Cisco 5.x</strong>: Supports TLS 1.3 for TCP, but only DTLS 1.2 for UDP
+                    (not DTLS 1.3)
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-warning-600 mt-0.5">•</span>
+                  <span>
+                    <strong>Cisco 4.x</strong>: Limited to TLS 1.2 and DTLS 1.2 only
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-warning-600 mt-0.5">•</span>
+                  <span>
+                    <strong>No QUIC support</strong>: Neither version supports next-generation QUIC
+                    protocol
+                  </span>
+                </li>
+              </ul>
+              <p className="text-sm text-primary-600 dark:text-primary-400 font-medium mt-3">
+                The upcoming WolfGuard Connect client will unlock full server capabilities with DTLS
+                1.3 and QUIC support.
+              </p>
+            </div>
+          </div>
+        </CardBody>
+      </Card>
 
       {/* Features Grid */}
       <Card className="bg-background/60 backdrop-blur-sm border border-border">
