@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Card, CardBody } from '@heroui/react'
-import { CheckCircle2, Network, Shield } from 'lucide-react'
+import { CheckCircle2, Network, Shield, Zap, Lock, Globe } from 'lucide-react'
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -34,6 +34,21 @@ const compatibilityHighlights = [
     title: 'Modern Protocols',
     description: 'TLS 1.3 and DTLS 1.3 support for enhanced security',
   },
+  {
+    icon: Zap,
+    title: 'High Performance',
+    description: 'Optimized with wolfSSL for minimal overhead and maximum throughput',
+  },
+  {
+    icon: Lock,
+    title: 'FIPS Certified',
+    description: 'wolfSSL FIPS 140-3 certified cryptography for compliance requirements',
+  },
+  {
+    icon: Globe,
+    title: 'Cross-Platform',
+    description: 'Linux, Windows, macOS support with consistent functionality',
+  },
 ]
 
 export function CompatibilityOverview() {
@@ -55,8 +70,11 @@ export function CompatibilityOverview() {
         </p>
       </motion.div>
 
-      {/* Compatibility Highlights */}
-      <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* Compatibility Highlights - 2x3 grid */}
+      <motion.div
+        variants={staggerContainer}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+      >
         {compatibilityHighlights.map((item) => (
           <motion.div key={item.title} variants={fadeInUp}>
             <Card className="h-full bg-background/60 backdrop-blur-sm border border-border hover:border-primary/50 transition-all duration-300">
