@@ -205,7 +205,7 @@ export function AlternativeClients() {
                         alt="Download on the App Store"
                         width={135}
                         height={40}
-                        className="h-10 w-auto"
+                        style={{ height: '40px', width: 'auto' }}
                       />
                     </a>
                     {/* Google Play Badge */}
@@ -220,7 +220,7 @@ export function AlternativeClients() {
                         alt="Get it on Google Play"
                         width={155}
                         height={46}
-                        className="h-[46px] w-auto"
+                        style={{ height: '46px', width: 'auto' }}
                       />
                     </a>
                   </div>
