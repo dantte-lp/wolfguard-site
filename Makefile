@@ -17,9 +17,9 @@ BUILD_DATE := $(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
 GIT_COMMIT := $(shell git rev-parse --short HEAD 2>/dev/null || echo "dev")
 
 # File paths
-CONTAINERFILE := deploy/config/Containerfile
+CONTAINERFILE := deploy/config/Containerfile.prod
 CONTAINERFILE_DEV := deploy/config/Containerfile.dev
-COMPOSE_DEV := docker-compose.dev.yaml
+COMPOSE_DEV := deploy/config/compose.dev.yaml
 COMPOSE_PROD := deploy/config/compose.yaml
 COMPOSE_PROD_TRAEFIK := deploy/config/compose.prod.yaml
 
