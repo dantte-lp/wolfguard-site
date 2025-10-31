@@ -1,4 +1,104 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+/* HeroUI plugin integration for Tailwind CSS 4 */
 @plugin '../heroui.config.ts';
-@source '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
+
+/* Custom dark mode variant */
 @custom-variant dark (&:is(.dark *));
+
+/* Theme customization for Tailwind CSS 4 */
+@theme {
+  /* Cybersecurity theme colors */
+  --color-cyber-dark: #0a0e27;
+  --color-cyber-darker: #050714;
+  --color-cyber-purple: #6b21ff;
+  --color-cyber-blue: #0ea5e9;
+  --color-cyber-cyan: #06b6d4;
+  --color-cyber-green: #10b981;
+  --color-cyber-neon-green: #39ff14;
+  --color-cyber-neon-blue: #00d9ff;
+  --color-cyber-neon-purple: #bf00ff;
+  --color-cyber-neon-pink: #ff006e;
+
+  /* WolfGuard brand colors */
+  --color-wolfguard-primary: #6b21ff;
+  --color-wolfguard-secondary: #0ea5e9;
+  --color-wolfguard-accent: #39ff14;
+  --color-wolfguard-dark: #0a0e27;
+  --color-wolfguard-light: #f8fafc;
+
+  /* Font families */
+  --font-family-sans:
+    Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
+    Arial, sans-serif;
+  --font-family-mono: 'JetBrains Mono', 'Fira Code', Consolas, Monaco, 'Courier New', monospace;
+
+  /* Box shadows for neon effects */
+  --box-shadow-neon-green: 0 0 10px #39ff14, 0 0 20px #39ff14, 0 0 30px #39ff14;
+  --box-shadow-neon-blue: 0 0 10px #00d9ff, 0 0 20px #00d9ff, 0 0 30px #00d9ff;
+  --box-shadow-neon-purple: 0 0 10px #bf00ff, 0 0 20px #bf00ff, 0 0 30px #bf00ff;
+
+  /* Custom animations */
+  --animate-fade-in: fadeIn 0.5s ease-in;
+  --animate-slide-up: slideUp 0.5s ease-out;
+  --animate-slide-down: slideDown 0.5s ease-out;
+  --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Keyframe animations */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  0% {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Base styles */
+@layer base {
+  * {
+    border-color: hsl(var(--heroui-default-200));
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Utility classes for custom colors */
+@layer utilities {
+  .shadow-neon-green {
+    box-shadow: var(--box-shadow-neon-green);
+  }
+
+  .shadow-neon-blue {
+    box-shadow: var(--box-shadow-neon-blue);
+  }
+
+  .shadow-neon-purple {
+    box-shadow: var(--box-shadow-neon-purple);
+  }
+}
