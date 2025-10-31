@@ -85,7 +85,7 @@ export function PlatformTabs() {
                   <div className="space-y-4">
                     <div>
                       <p className="text-sm font-semibold text-foreground mb-2">Ubuntu/Debian:</p>
-                      <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                      <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                         <code className="text-primary">
                           {`sudo apt update
 sudo apt install -y build-essential cmake git pkg-config \\
@@ -95,7 +95,7 @@ sudo apt install -y build-essential cmake git pkg-config \\
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-foreground mb-2">RHEL/Fedora:</p>
-                      <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                      <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                         <code className="text-primary">
                           {`sudo dnf groupinstall "Development Tools"
 sudo dnf install -y cmake git pkg-config openssl-devel \\
@@ -105,7 +105,7 @@ sudo dnf install -y cmake git pkg-config openssl-devel \\
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-foreground mb-2">Arch Linux:</p>
-                      <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                      <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                         <code className="text-primary">
                           {`sudo pacman -S base-devel cmake git pkg-config openssl`}
                         </code>
@@ -329,7 +329,7 @@ sudo systemctl status wolfguard`}
                   <div className="space-y-4">
                     <div>
                       <p className="text-sm font-semibold text-foreground mb-2">UFW (Ubuntu):</p>
-                      <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                      <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                         <code className="text-primary">
                           {`sudo ufw allow 443/tcp comment 'WolfGuard TLS'
 sudo ufw allow 443/udp comment 'WolfGuard DTLS'
@@ -341,7 +341,7 @@ sudo ufw reload`}
                       <p className="text-sm font-semibold text-foreground mb-2">
                         firewalld (RHEL/Fedora):
                       </p>
-                      <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                      <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                         <code className="text-primary">
                           {`sudo firewall-cmd --permanent --add-port=443/tcp
 sudo firewall-cmd --permanent --add-port=443/udp
@@ -351,7 +351,7 @@ sudo firewall-cmd --reload`}
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-foreground mb-2">iptables:</p>
-                      <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                      <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                         <code className="text-primary">
                           {`sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT
 sudo iptables -A INPUT -p udp --dport 443 -j ACCEPT
@@ -489,7 +489,7 @@ openssl s_client -connect localhost:443 -showcerts`}
                         <li>No daemon requirement</li>
                         <li>Native systemd integration</li>
                       </ul>
-                      <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                      <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                         <code className="text-primary">
                           {`# Ubuntu/Debian
 sudo apt update && sudo apt install -y podman podman-compose
@@ -508,7 +508,7 @@ sudo pacman -S podman podman-compose`}
                         <li>Wide ecosystem support</li>
                         <li>Familiar tooling</li>
                       </ul>
-                      <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                      <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                         <code className="text-primary">
                           {`# Install Docker Engine
 curl -fsSL https://get.docker.com -o get-docker.sh
@@ -733,7 +733,7 @@ chmod 600 certs/*.key`}
                   </p>
                   <div className="overflow-x-auto">
                     <table className="min-w-full text-sm">
-                      <thead className="bg-black/40">
+                      <thead className="bg-default-100 dark:bg-default-50">
                         <tr>
                           <th className="px-4 py-2 text-left text-foreground font-semibold">
                             Variable
@@ -955,7 +955,7 @@ podman volume import wolfguard-data wolfguard-data.tar`}
                       <p className="font-semibold text-foreground mb-2">
                         Container won&apos;t start:
                       </p>
-                      <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                      <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                         <code className="text-primary">
                           {`# Check logs for errors
 podman logs wolfguard
@@ -970,7 +970,7 @@ ls -lZ config/ certs/`}
                     </div>
                     <div>
                       <p className="font-semibold text-foreground mb-2">Permission issues:</p>
-                      <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                      <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                         <code className="text-primary">
                           {`# For SELinux systems, use :Z or :z flag
 podman run -v ./config:/etc/wolfguard:Z ...
@@ -986,7 +986,7 @@ chmod 600 certs/*.key`}
                     </div>
                     <div>
                       <p className="font-semibold text-foreground mb-2">Networking issues:</p>
-                      <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                      <pre className="bg-default-100 dark:bg-default-50 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                         <code className="text-primary">
                           {`# Test connectivity from host
 openssl s_client -connect localhost:443

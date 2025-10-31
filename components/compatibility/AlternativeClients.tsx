@@ -22,6 +22,7 @@ const alternativeClients = [
       'NetworkManager GUI integration (Linux)',
       'macOS Tunnelblick support',
       'Full protocol compatibility',
+      'OTP support via --token-mode',
     ],
     status: 'Recommended',
     statusColor: 'success' as const,
@@ -43,6 +44,7 @@ const alternativeClients = [
       'Easy connection management',
       'Profile configuration',
       'System tray integration',
+      'OTP/TOTP support',
     ],
     status: 'Supported',
     statusColor: 'primary' as const,
@@ -59,6 +61,7 @@ const alternativeClients = [
       'GNOME and KDE support',
       'Auto-connect on boot',
       'Connection profiles',
+      'TOTP/HOTP configuration',
     ],
     status: 'Recommended',
     statusColor: 'success' as const,
@@ -202,11 +205,15 @@ export function AlternativeClients() {
                   <th className="text-center py-3 px-4 font-semibold text-foreground">
                     Password Auth
                   </th>
+                  <th className="text-center py-3 px-4 font-semibold text-foreground">OTP/2FA</th>
                 </tr>
               </thead>
               <tbody className="text-default-700">
                 <tr className="border-b border-border/50">
                   <td className="py-3 px-4">Cisco Secure Client 5.x</td>
+                  <td className="text-center">
+                    <CheckCircle2 className="w-5 h-5 text-success inline" />
+                  </td>
                   <td className="text-center">
                     <CheckCircle2 className="w-5 h-5 text-success inline" />
                   </td>
@@ -234,9 +241,15 @@ export function AlternativeClients() {
                   <td className="text-center">
                     <CheckCircle2 className="w-5 h-5 text-success inline" />
                   </td>
+                  <td className="text-center">
+                    <CheckCircle2 className="w-5 h-5 text-success inline" />
+                  </td>
                 </tr>
                 <tr className="border-b border-border/50">
                   <td className="py-3 px-4">NetworkManager Plugin</td>
+                  <td className="text-center">
+                    <CheckCircle2 className="w-5 h-5 text-success inline" />
+                  </td>
                   <td className="text-center">
                     <CheckCircle2 className="w-5 h-5 text-success inline" />
                   </td>
@@ -264,9 +277,21 @@ export function AlternativeClients() {
                   <td className="text-center">
                     <CheckCircle2 className="w-5 h-5 text-success inline" />
                   </td>
+                  <td className="text-center">
+                    <CheckCircle2 className="w-5 h-5 text-success inline" />
+                  </td>
                 </tr>
               </tbody>
             </table>
+          </div>
+          <div className="mt-4 p-4 bg-primary/5 border border-primary/20 rounded-lg">
+            <p className="text-sm text-default-700">
+              <strong>OTP/2FA Support:</strong> All clients support One-Time Password authentication
+              via RADIUS integration. WolfGuard server can authenticate users using TOTP (Time-based
+              One-Time Password) or HOTP (HMAC-based One-Time Password) tokens. Compatible with
+              Google Authenticator, Microsoft Authenticator, Authy, and other RFC 6238/4226
+              compliant authenticator apps.
+            </p>
           </div>
         </CardBody>
       </Card>

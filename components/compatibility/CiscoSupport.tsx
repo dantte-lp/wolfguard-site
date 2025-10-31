@@ -14,14 +14,29 @@ const supportedVersions = [
   {
     version: '5.x',
     status: 'Fully Supported',
-    features: ['TLS 1.3', 'TLS 1.2', 'DTLS 1.2', 'Certificate Auth', 'Password Auth', 'SAML/SSO'],
+    features: [
+      'TLS 1.3',
+      'TLS 1.2',
+      'DTLS 1.2',
+      'Certificate Auth',
+      'Password Auth',
+      'OTP/2FA',
+      'SAML/SSO',
+    ],
     notes:
       'Latest version (5.1.12.146) includes TLS 1.3 support with improved performance and security. DTLS 1.2 for UDP connections.',
   },
   {
     version: '4.x',
     status: 'Supported',
-    features: ['TLS 1.2', 'DTLS 1.2', 'Certificate Auth', 'Password Auth', 'Legacy Protocol'],
+    features: [
+      'TLS 1.2',
+      'DTLS 1.2',
+      'Certificate Auth',
+      'Password Auth',
+      'OTP/2FA',
+      'Legacy Protocol',
+    ],
     notes:
       'Legacy AnyConnect client with TLS 1.2 and DTLS 1.2 support. Reliable but lacks modern protocol features.',
   },
@@ -29,6 +44,7 @@ const supportedVersions = [
 
 const supportedFeatures = [
   'Multi-factor authentication (MFA)',
+  'One-Time Password (OTP) via RADIUS - TOTP/HOTP',
   'Certificate-based authentication',
   'Username/password authentication',
   'Client certificate validation',
