@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Card, CardBody } from '@heroui/react'
-import { CheckCircle2, Network, Shield, Zap, Lock, Globe } from 'lucide-react'
+import { CheckCircle2, Network, Shield, Zap, Lock, Globe, Container } from 'lucide-react'
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -48,6 +48,11 @@ const compatibilityHighlights = [
     icon: Globe,
     title: 'Cross-Platform',
     description: 'Linux, Windows, macOS support with consistent functionality',
+  },
+  {
+    icon: Container,
+    title: 'Container Ready',
+    description: 'Docker and Podman support with official container images for easy deployment',
   },
 ]
 
