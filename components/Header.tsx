@@ -13,17 +13,15 @@ import {
 } from '@heroui/react'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
-import { useTheme } from 'next-themes'
-import Image from 'next/image'
 import { Github } from 'lucide-react'
 import { ThemeSwitch } from './ThemeSwitch'
+import { ThemeAwareLogo } from './ThemeAwareLogo'
 
 const MotionLink = motion(Link)
 const MotionButton = motion(Button)
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { resolvedTheme } = useTheme()
 
   const menuItems = [
     { name: 'Home', href: '/' },
@@ -48,14 +46,7 @@ export function Header() {
         />
         <NavbarBrand>
           <Link href="/" className="flex items-center gap-2">
-            <Image
-              src={resolvedTheme === 'dark' ? '/logo-dark.svg' : '/logo-light.svg'}
-              alt="WolfGuard Logo"
-              width={150}
-              height={36}
-              priority
-              className="h-9 w-auto"
-            />
+            <ThemeAwareLogo width={150} height={36} priority className="h-9" />
           </Link>
         </NavbarBrand>
       </NavbarContent>
