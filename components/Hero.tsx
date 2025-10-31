@@ -29,8 +29,8 @@ export function Hero() {
         >
           {/* Main headline */}
           <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-            <span className="text-primary">Wolf</span>
-            <span className="text-foreground">Guard</span>
+            <span className="text-foreground">Wolf</span>
+            <span className="text-primary">Guard</span>
           </h1>
 
           <motion.p
