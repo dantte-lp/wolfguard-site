@@ -80,7 +80,7 @@
 /* Base styles */
 @layer base {
   * {
-    border-color: hsl(var(--heroui-default-200));
+    border-color: hsl(var(--heroui-default-200) / 1);
   }
 
   body {
