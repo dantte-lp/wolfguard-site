@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Card, CardBody } from '@heroui/react'
-import { Shield, Check, Zap, Globe, Github } from 'lucide-react'
+import { Shield, Check, Zap, Server, Github, BookOpen } from 'lucide-react'
 
 const benefits = [
   {
@@ -24,16 +24,22 @@ const benefits = [
       'High-speed operation powered by wolfSSL optimizations and modern protocols with minimal overhead.',
   },
   {
-    icon: Globe,
-    title: 'Cross-Platform',
+    icon: Server,
+    title: 'Enterprise-Ready',
     description:
-      'Deploy on Linux, macOS, or Windows, with seamless container support for modern infrastructure.',
+      'Linux-based server deployment with container support, perfect for production environments and modern infrastructure.',
   },
   {
     icon: Github,
     title: 'Open-Source',
     description:
       'Transparent GPLv3 licensed code, auditable security, and community-driven development.',
+  },
+  {
+    icon: BookOpen,
+    title: 'Documentation',
+    description:
+      'Comprehensive guides, API references, and installation instructions to get you started quickly and efficiently.',
   },
 ]
 
@@ -93,9 +99,7 @@ export function Benefits() {
                     <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">
                       {benefit.title}
                     </h3>
-                    <p className="text-muted-foreground leading-relaxed">
-                      {benefit.description}
-                    </p>
+                    <p className="text-muted-foreground leading-relaxed">{benefit.description}</p>
                   </CardBody>
                 </Card>
               </motion.div>

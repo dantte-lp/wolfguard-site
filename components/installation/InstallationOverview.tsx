@@ -28,9 +28,9 @@ export function InstallationOverview() {
             <div>
               <h3 className="text-lg font-bold mb-2">Before You Begin</h3>
               <p className="text-muted-foreground leading-relaxed mb-3">
-                WolfGuard is currently in active development (version 1.0.0-alpha). While
-                the server is functional and compatible with Cisco Secure Client, some
-                features are still being refined.
+                WolfGuard is currently in active development (version 1.0.0-alpha). While the server
+                is functional and compatible with Cisco Secure Client, some features are still being
+                refined.
               </p>
               <div className="flex flex-wrap gap-2">
                 <Chip color="primary" variant="flat" size="sm">
@@ -50,13 +50,20 @@ export function InstallationOverview() {
 
       <Card>
         <CardBody className="p-6">
-          <h3 className="text-lg font-bold mb-3">Choose Your Platform</h3>
-          <p className="text-muted-foreground leading-relaxed">
-            WolfGuard supports multiple platforms and deployment methods. Select the
-            appropriate tab below for detailed installation instructions for your
-            environment. For production deployments, we recommend using the container-based
-            approach for easier management and updates.
+          <h3 className="text-lg font-bold mb-3">Server Deployment Options</h3>
+          <p className="text-muted-foreground leading-relaxed mb-4">
+            WolfGuard server runs on Linux systems or in containers. Select the appropriate tab
+            below for detailed installation instructions. For production deployments, we recommend
+            using the container-based approach for easier management and updates.
           </p>
+          <div className="p-4 bg-primary/5 rounded-lg border border-primary/20">
+            <p className="text-sm text-muted-foreground">
+              <span className="text-foreground font-semibold">Note:</span> WolfGuard server is
+              designed for Linux environments only. Client applications for Windows, macOS, iOS, and
+              Android will connect to the server using Cisco Secure Client or the upcoming WolfGuard
+              Connect client.
+            </p>
+          </div>
         </CardBody>
       </Card>
     </motion.section>
