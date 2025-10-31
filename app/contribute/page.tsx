@@ -1,4 +1,5 @@
 import { CommunityOverview } from '@/components/contribute/CommunityOverview'
+import { LatestActivity } from '@/components/contribute/LatestActivity'
 import { RepositoryLinks } from '@/components/contribute/RepositoryLinks'
 import { CommunicationChannels } from '@/components/contribute/CommunicationChannels'
 import { ContributeGuidelines } from '@/components/contribute/ContributeGuidelines'
@@ -12,6 +13,7 @@ export default function ContributePage() {
     <main className="min-h-screen py-24 px-6">
       <div className="max-w-5xl mx-auto">
         <CommunityOverview />
+        <LatestActivity />
         <ContributeGuidelines />
         <RepositoryLinks />
         <CommunicationChannels />

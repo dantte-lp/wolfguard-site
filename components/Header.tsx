@@ -13,6 +13,9 @@ import {
 } from '@heroui/react'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
+import { useTheme } from 'next-themes'
+import Image from 'next/image'
+import { Github } from 'lucide-react'
 import { ThemeSwitch } from './ThemeSwitch'
 
 const MotionLink = motion(Link)
@@ -20,6 +23,7 @@ const MotionButton = motion(Button)
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { resolvedTheme } = useTheme()
 
   const menuItems = [
     { name: 'Home', href: '/' },
@@ -43,9 +47,15 @@ export function Header() {
           className="sm:hidden"
         />
         <NavbarBrand>
-          <Link href="/" className="font-bold text-xl text-foreground">
-            <span className="text-primary">Wolf</span>
-            <span className="text-foreground">Guard</span>
+          <Link href="/" className="flex items-center gap-2">
+            <Image
+              src={resolvedTheme === 'dark' ? '/logo-dark.svg' : '/logo-light.svg'}
+              alt="WolfGuard Logo"
+              width={150}
+              height={36}
+              priority
+              className="h-9 w-auto"
+            />
           </Link>
         </NavbarBrand>
       </NavbarContent>
@@ -80,10 +90,11 @@ export function Header() {
             rel="noopener noreferrer"
             variant="bordered"
             className="border-primary text-primary hover:bg-primary/10"
+            startContent={<Github className="w-4 h-4" />}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            GitHub
+            <span className="hidden sm:inline">GitHub</span>
           </MotionButton>
         </NavbarItem>
       </NavbarContent>
@@ -111,6 +122,7 @@ export function Header() {
             variant="flat"
             color="primary"
             className="w-full mt-4"
+            startContent={<Github className="w-4 h-4" />}
           >
             GitHub
           </Button>
