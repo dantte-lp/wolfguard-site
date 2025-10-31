@@ -1,12 +1,9 @@
-import { Metadata } from 'next'
 import { InstallationOverview } from '@/components/installation/InstallationOverview'
 import { PlatformTabs } from '@/components/installation/PlatformTabs'
+import { generateMetadata, pageMetadata } from '@/lib/metadata'
 
-export const metadata: Metadata = {
-  title: 'Installation | WolfGuard',
-  description:
-    'Install WolfGuard VPN Server on Linux, Windows, macOS, or using containers. Step-by-step installation guides for all platforms.',
-}
+// Enhanced SEO metadata for installation page
+export const metadata = generateMetadata(pageMetadata.installation)
 
 export default function InstallationPage() {
   return (

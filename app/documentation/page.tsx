@@ -1,12 +1,9 @@
-import { Metadata } from 'next'
 import { DocumentationOverview } from '@/components/documentation/DocumentationOverview'
 import { DocumentationAccess } from '@/components/documentation/DocumentationAccess'
+import { generateMetadata, pageMetadata } from '@/lib/metadata'
 
-export const metadata: Metadata = {
-  title: 'Documentation | WolfGuard',
-  description:
-    'Complete technical documentation for WolfGuard VPN Server. Architecture, API reference, user guides, configuration, and troubleshooting.',
-}
+// Enhanced SEO metadata for documentation page
+export const metadata = generateMetadata(pageMetadata.documentation)
 
 export default function DocumentationPage() {
   return (

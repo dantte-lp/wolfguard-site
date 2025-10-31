@@ -1,14 +1,11 @@
-import { Metadata } from 'next'
 import { AboutOverview } from '@/components/about/AboutOverview'
 import { ProjectHistory } from '@/components/about/ProjectHistory'
 import { Architecture } from '@/components/about/Architecture'
 import { Philosophy } from '@/components/about/Philosophy'
+import { generateMetadata, pageMetadata } from '@/lib/metadata'
 
-export const metadata: Metadata = {
-  title: 'About | WolfGuard',
-  description:
-    'Learn about WolfGuard VPN Server - our mission, history, architecture, and open-source philosophy.',
-}
+// Enhanced SEO metadata for about page
+export const metadata = generateMetadata(pageMetadata.about)
 
 export default function AboutPage() {
   return (

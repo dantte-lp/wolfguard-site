@@ -4,6 +4,7 @@ import './globals.css'
 import { Providers } from '@/components/providers'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
+import { siteConfig, generateMetadata, pageMetadata } from '@/lib/metadata'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -17,56 +18,21 @@ const jetbrainsMono = JetBrains_Mono({
   display: 'swap',
 })
 
+// Enhanced SEO metadata using centralized configuration
 export const metadata: Metadata = {
+  ...generateMetadata(pageMetadata.home),
+  metadataBase: new URL(siteConfig.url),
   title: {
     default: 'WolfGuard - Secure VPN Server',
     template: '%s | WolfGuard',
   },
-  description:
-    'WolfGuard is an open-source VPN server with TLS 1.3/DTLS 1.3 support, compatible with Cisco Secure Client (AnyConnect). Built with wolfSSL for enterprise-grade security.',
-  keywords: [
-    'vpn server',
-    'TLS 1.3',
-    'DTLS 1.3',
-    'Cisco AnyConnect',
-    'wolfSSL',
-    'cybersecurity',
-    'open source',
-    'VPN',
-    'secure connection',
-    'wolfSentry',
-  ],
-  authors: [{ name: 'WolfGuard Team' }],
-  creator: 'WolfGuard Team',
-  publisher: 'WolfGuard',
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    url: 'https://wolfguard.io',
-    title: 'WolfGuard - Secure VPN Server',
-    description: 'Open-source VPN server with TLS 1.3 and Cisco Secure Client support',
-    siteName: 'WolfGuard',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'WolfGuard - Secure VPN Server',
-    description: 'Open-source VPN server with TLS 1.3 and Cisco Secure Client support',
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
+  verification: {
+    google: 'TODO', // TODO: Add Google Search Console verification
   },
 }
 
@@ -81,6 +47,47 @@ export default function RootLayout({
       className={`${inter.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
+      <head>
+        {/* Structured Data for SEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              name: 'WolfGuard',
+              description: siteConfig.description,
+              url: siteConfig.url,
+              inLanguage: 'en-US',
+              publisher: {
+                '@type': 'Organization',
+                name: 'WolfGuard Team',
+              },
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'SoftwareApplication',
+              name: 'WolfGuard VPN Server',
+              applicationCategory: 'SecurityApplication',
+              operatingSystem: 'Linux, Windows, macOS, BSD',
+              description:
+                'Open-source VPN server with TLS 1.3/DTLS 1.3 support, compatible with Cisco Secure Client',
+              offers: {
+                '@type': 'Offer',
+                price: '0',
+                priceCurrency: 'USD',
+              },
+              downloadUrl: 'https://github.com/dantte-lp/wolfguard',
+              url: siteConfig.url,
+            }),
+          }}
+        />
+      </head>
       <body className="min-h-screen bg-background font-sans antialiased flex flex-col">
         <Providers>
           <Header />

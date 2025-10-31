@@ -1,14 +1,11 @@
-import { Metadata } from 'next'
 import { CompatibilityOverview } from '@/components/compatibility/CompatibilityOverview'
 import { CiscoSupport } from '@/components/compatibility/CiscoSupport'
 import { AlternativeClients } from '@/components/compatibility/AlternativeClients'
 import { WolfGuardConnect } from '@/components/compatibility/WolfGuardConnect'
+import { generateMetadata, pageMetadata } from '@/lib/metadata'
 
-export const metadata: Metadata = {
-  title: 'Compatibility | WolfGuard',
-  description:
-    'WolfGuard VPN Server compatibility with Cisco Secure Client, OpenConnect, and other AnyConnect-compatible clients. Future roadmap for WolfGuard Connect.',
-}
+// Enhanced SEO metadata for compatibility page
+export const metadata = generateMetadata(pageMetadata.compatibility)
 
 export default function CompatibilityPage() {
   return (
