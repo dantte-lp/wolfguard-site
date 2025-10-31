@@ -453,24 +453,634 @@ openssl s_client -connect localhost:443 -showcerts`}
         >
           <Card className="mt-6">
             <CardBody className="p-8">
-              <h2 className="text-2xl font-bold mb-4">Container Deployment</h2>
-              <div className="space-y-6 text-muted-foreground">
-                <p className="leading-relaxed">
-                  Deploy WolfGuard using Docker or Podman for easy installation and management.
-                </p>
-                <p className="text-foreground font-semibold">✅ Recommended for Production</p>
-                <ul className="space-y-2 pl-6 list-disc">
-                  <li>Quick start with pre-built container images</li>
-                  <li>Easy updates and version management</li>
-                  <li>Isolated environment with all dependencies</li>
-                  <li>Production-ready with Podman Compose</li>
-                  <li>Integration with reverse proxies (Traefik)</li>
-                </ul>
-                <div className="mt-6 p-4 bg-muted/50 rounded-lg">
-                  <p className="text-sm text-foreground font-semibold mb-2">🚧 Coming Soon</p>
+              <h2 className="text-2xl font-bold mb-6">Container Deployment</h2>
+              <div className="space-y-8 text-muted-foreground">
+                <div>
+                  <p className="leading-relaxed mb-4">
+                    Deploy WolfGuard using Podman or Docker containers for simplified deployment and
+                    management. This is the{' '}
+                    <strong className="text-foreground">recommended approach</strong> for production
+                    environments.
+                  </p>
+                  <div className="p-4 bg-primary/10 border border-primary/30 rounded-lg">
+                    <p className="text-sm text-foreground font-semibold mb-2">
+                      ✅ Why Container Deployment?
+                    </p>
+                    <ul className="text-sm space-y-1 pl-6 list-disc">
+                      <li>Pre-configured environment with all dependencies</li>
+                      <li>Consistent deployment across different systems</li>
+                      <li>Easy version updates and rollbacks</li>
+                      <li>Simplified backup and disaster recovery</li>
+                      <li>Integration with orchestration tools</li>
+                    </ul>
+                  </div>
+                </div>
+
+                {/* Prerequisites */}
+                <div>
+                  <h3 className="text-xl font-bold text-foreground mb-3">Prerequisites</h3>
+                  <p className="mb-3">Choose your container runtime:</p>
+                  <div className="space-y-4">
+                    <div>
+                      <p className="font-semibold text-foreground mb-2">Podman (Recommended):</p>
+                      <ul className="space-y-1 pl-6 list-disc mb-3">
+                        <li>Rootless containers with enhanced security</li>
+                        <li>Docker-compatible CLI</li>
+                        <li>No daemon requirement</li>
+                        <li>Native systemd integration</li>
+                      </ul>
+                      <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                        <code className="text-primary">
+                          {`# Ubuntu/Debian
+sudo apt update && sudo apt install -y podman podman-compose
+
+# RHEL/Fedora
+sudo dnf install -y podman podman-compose
+
+# Arch Linux
+sudo pacman -S podman podman-compose`}
+                        </code>
+                      </pre>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-foreground mb-2">Docker (Alternative):</p>
+                      <ul className="space-y-1 pl-6 list-disc mb-3">
+                        <li>Wide ecosystem support</li>
+                        <li>Familiar tooling</li>
+                      </ul>
+                      <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                        <code className="text-primary">
+                          {`# Install Docker Engine
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+
+# Install Docker Compose
+sudo apt install -y docker-compose-plugin`}
+                        </code>
+                      </pre>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Quick Start - Podman */}
+                <div>
+                  <h3 className="text-xl font-bold text-foreground mb-3">
+                    Quick Start with Podman
+                  </h3>
+                  <p className="mb-3">Run WolfGuard with a single command:</p>
+                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                    <code className="text-primary">
+                      {`# Pull the official image
+podman pull ghcr.io/dantte-lp/wolfguard:latest
+
+# Create volumes for persistent data
+podman volume create wolfguard-config
+podman volume create wolfguard-certs
+podman volume create wolfguard-logs
+
+# Run WolfGuard
+podman run -d \\
+  --name wolfguard \\
+  --cap-add=NET_ADMIN \\
+  --cap-add=NET_BIND_SERVICE \\
+  -p 443:443/tcp \\
+  -p 443:443/udp \\
+  -v wolfguard-config:/etc/wolfguard:Z \\
+  -v wolfguard-certs:/etc/wolfguard/certs:Z \\
+  -v wolfguard-logs:/var/log/wolfguard:Z \\
+  --restart unless-stopped \\
+  ghcr.io/dantte-lp/wolfguard:latest`}
+                    </code>
+                  </pre>
+                </div>
+
+                {/* Quick Start - Docker */}
+                <div>
+                  <h3 className="text-xl font-bold text-foreground mb-3">
+                    Quick Start with Docker
+                  </h3>
+                  <p className="mb-3">Alternative Docker command:</p>
+                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                    <code className="text-primary">
+                      {`# Pull and run with Docker
+docker run -d \\
+  --name wolfguard \\
+  --cap-add=NET_ADMIN \\
+  --cap-add=NET_BIND_SERVICE \\
+  -p 443:443/tcp \\
+  -p 443:443/udp \\
+  -v wolfguard-config:/etc/wolfguard \\
+  -v wolfguard-certs:/etc/wolfguard/certs \\
+  -v wolfguard-logs:/var/log/wolfguard \\
+  --restart unless-stopped \\
+  ghcr.io/dantte-lp/wolfguard:latest`}
+                    </code>
+                  </pre>
+                </div>
+
+                {/* Podman Compose Setup */}
+                <div>
+                  <h3 className="text-xl font-bold text-foreground mb-3">
+                    Production Setup with Compose
+                  </h3>
+                  <p className="mb-3">
+                    For production deployments, use Podman Compose or Docker Compose. Create a{' '}
+                    <code className="text-primary font-mono text-sm">compose.yaml</code> file:
+                  </p>
+                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                    <code className="text-primary">
+                      {`version: '3.8'
+
+services:
+  wolfguard:
+    image: ghcr.io/dantte-lp/wolfguard:latest
+    container_name: wolfguard-vpn
+    restart: unless-stopped
+
+    # Security capabilities
+    cap_add:
+      - NET_ADMIN           # Required for VPN tunnel
+      - NET_BIND_SERVICE    # Bind to port 443
+
+    # Network configuration
+    ports:
+      - "443:443/tcp"       # TLS 1.3
+      - "443:443/udp"       # DTLS 1.3
+
+    # Volume mounts
+    volumes:
+      - ./config:/etc/wolfguard:ro              # Read-only config
+      - ./certs:/etc/wolfguard/certs:ro         # Read-only certificates
+      - wolfguard-data:/var/lib/wolfguard       # Server state
+      - wolfguard-logs:/var/log/wolfguard       # Logs
+
+    # Environment variables
+    environment:
+      - WOLFGUARD_LOG_LEVEL=info
+      - WOLFGUARD_MAX_CLIENTS=100
+      - WOLFGUARD_ENABLE_WOLFSENTRY=true
+      - TZ=UTC
+
+    # Health check
+    healthcheck:
+      test: ["CMD", "wolfguard-health", "--check"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+    # Resource limits (optional)
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+volumes:
+  wolfguard-data:
+    driver: local
+  wolfguard-logs:
+    driver: local`}
+                    </code>
+                  </pre>
+                  <p className="mt-3 mb-3">Deploy with Compose:</p>
+                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                    <code className="text-primary">
+                      {`# Using Podman Compose
+podman-compose up -d
+
+# Using Docker Compose
+docker compose up -d
+
+# View logs
+podman-compose logs -f wolfguard
+# or
+docker compose logs -f wolfguard
+
+# Stop and remove
+podman-compose down
+# or
+docker compose down`}
+                    </code>
+                  </pre>
+                </div>
+
+                {/* Configuration Files */}
+                <div>
+                  <h3 className="text-xl font-bold text-foreground mb-3">Configuration Files</h3>
+                  <p className="mb-3">
+                    Create the configuration directory structure with your settings:
+                  </p>
+                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                    <code className="text-primary">
+                      {`# Create directory structure
+mkdir -p config certs
+
+# Create wolfguard.conf in ./config/
+cat > config/wolfguard.conf << 'EOF'
+[server]
+listen_address = 0.0.0.0
+listen_port = 443
+protocol = anyconnect
+
+[tls]
+certificate = /etc/wolfguard/certs/server.crt
+private_key = /etc/wolfguard/certs/server.key
+ca_certificate = /etc/wolfguard/certs/ca.crt
+min_version = TLS1.3
+
+[dtls]
+enabled = true
+port = 443
+min_version = DTLS1.3
+
+[vpn]
+network = 10.10.0.0/24
+dns_servers = 1.1.1.1,8.8.8.8
+split_tunneling = true
+
+[auth]
+method = certificate
+
+[logging]
+level = info
+file = /var/log/wolfguard/wolfguard.log
+
+[wolfsentry]
+enabled = true
+rules_file = /etc/wolfguard/wolfsentry-rules.conf
+EOF
+
+# Generate certificates (see Linux tab for detailed steps)
+# or copy your existing certificates to ./certs/
+
+# Set proper permissions
+chmod 600 config/wolfguard.conf
+chmod 644 certs/*.crt
+chmod 600 certs/*.key`}
+                    </code>
+                  </pre>
+                </div>
+
+                {/* Environment Variables */}
+                <div>
+                  <h3 className="text-xl font-bold text-foreground mb-3">Environment Variables</h3>
+                  <p className="mb-3">
+                    Available environment variables for container configuration:
+                  </p>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full text-sm">
+                      <thead className="bg-black/40">
+                        <tr>
+                          <th className="px-4 py-2 text-left text-foreground font-semibold">
+                            Variable
+                          </th>
+                          <th className="px-4 py-2 text-left text-foreground font-semibold">
+                            Default
+                          </th>
+                          <th className="px-4 py-2 text-left text-foreground font-semibold">
+                            Description
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="font-mono text-xs">
+                        <tr className="border-t border-muted/20">
+                          <td className="px-4 py-2 text-primary">WOLFGUARD_CONFIG</td>
+                          <td className="px-4 py-2">/etc/wolfguard/wolfguard.conf</td>
+                          <td className="px-4 py-2">Path to configuration file</td>
+                        </tr>
+                        <tr className="border-t border-muted/20">
+                          <td className="px-4 py-2 text-primary">WOLFGUARD_LOG_LEVEL</td>
+                          <td className="px-4 py-2">info</td>
+                          <td className="px-4 py-2">Logging level (debug, info, warn, error)</td>
+                        </tr>
+                        <tr className="border-t border-muted/20">
+                          <td className="px-4 py-2 text-primary">WOLFGUARD_MAX_CLIENTS</td>
+                          <td className="px-4 py-2">100</td>
+                          <td className="px-4 py-2">Maximum concurrent VPN clients</td>
+                        </tr>
+                        <tr className="border-t border-muted/20">
+                          <td className="px-4 py-2 text-primary">WOLFGUARD_ENABLE_WOLFSENTRY</td>
+                          <td className="px-4 py-2">true</td>
+                          <td className="px-4 py-2">Enable wolfSentry IDPS protection</td>
+                        </tr>
+                        <tr className="border-t border-muted/20">
+                          <td className="px-4 py-2 text-primary">TZ</td>
+                          <td className="px-4 py-2">UTC</td>
+                          <td className="px-4 py-2">Container timezone</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Networking */}
+                <div>
+                  <h3 className="text-xl font-bold text-foreground mb-3">Network Configuration</h3>
+                  <p className="mb-3">
+                    For advanced networking or integration with existing infrastructure:
+                  </p>
+                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                    <code className="text-primary">
+                      {`# Create custom network
+podman network create --driver bridge wolfguard-net
+
+# Run with custom network
+podman run -d \\
+  --name wolfguard \\
+  --network wolfguard-net \\
+  --cap-add=NET_ADMIN \\
+  --cap-add=NET_BIND_SERVICE \\
+  -p 443:443/tcp \\
+  -p 443:443/udp \\
+  ghcr.io/dantte-lp/wolfguard:latest
+
+# For host network mode (advanced)
+podman run -d \\
+  --name wolfguard \\
+  --network host \\
+  --cap-add=NET_ADMIN \\
+  ghcr.io/dantte-lp/wolfguard:latest`}
+                    </code>
+                  </pre>
+                </div>
+
+                {/* Traefik Integration */}
+                <div>
+                  <h3 className="text-xl font-bold text-foreground mb-3">Traefik Integration</h3>
+                  <p className="mb-3">
+                    Integrate with Traefik reverse proxy for automatic TLS and routing:
+                  </p>
+                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                    <code className="text-primary">
+                      {`version: '3.8'
+
+services:
+  wolfguard:
+    image: ghcr.io/dantte-lp/wolfguard:latest
+    container_name: wolfguard-vpn
+    restart: unless-stopped
+
+    cap_add:
+      - NET_ADMIN
+      - NET_BIND_SERVICE
+
+    networks:
+      - traefik_proxy
+
+    labels:
+      # Enable Traefik
+      - "traefik.enable=true"
+
+      # TLS router
+      - "traefik.tcp.routers.wolfguard-tls.rule=HostSNI(\`vpn.example.com\`)"
+      - "traefik.tcp.routers.wolfguard-tls.entrypoints=https"
+      - "traefik.tcp.routers.wolfguard-tls.service=wolfguard-tls"
+      - "traefik.tcp.services.wolfguard-tls.loadbalancer.server.port=443"
+
+      # DTLS router
+      - "traefik.udp.routers.wolfguard-dtls.entrypoints=dtls"
+      - "traefik.udp.routers.wolfguard-dtls.service=wolfguard-dtls"
+      - "traefik.udp.services.wolfguard-dtls.loadbalancer.server.port=443"
+
+    volumes:
+      - ./config:/etc/wolfguard:ro
+      - ./certs:/etc/wolfguard/certs:ro
+      - wolfguard-data:/var/lib/wolfguard
+      - wolfguard-logs:/var/log/wolfguard
+
+networks:
+  traefik_proxy:
+    external: true
+
+volumes:
+  wolfguard-data:
+  wolfguard-logs:`}
+                    </code>
+                  </pre>
+                </div>
+
+                {/* Building Custom Images */}
+                <div>
+                  <h3 className="text-xl font-bold text-foreground mb-3">
+                    Building Custom Container Images
+                  </h3>
+                  <p className="mb-3">Build your own image from source:</p>
+                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                    <code className="text-primary">
+                      {`# Clone the repository
+git clone https://github.com/dantte-lp/wolfguard.git
+cd wolfguard
+
+# Build with Buildah (Podman ecosystem)
+buildah bud -t localhost/wolfguard:custom -f Containerfile .
+
+# Or build with Docker
+docker build -t wolfguard:custom -f Containerfile .
+
+# Run your custom image
+podman run -d \\
+  --name wolfguard-custom \\
+  --cap-add=NET_ADMIN \\
+  --cap-add=NET_BIND_SERVICE \\
+  -p 443:443/tcp \\
+  -p 443:443/udp \\
+  localhost/wolfguard:custom`}
+                    </code>
+                  </pre>
+                </div>
+
+                {/* Health Checks and Monitoring */}
+                <div>
+                  <h3 className="text-xl font-bold text-foreground mb-3">
+                    Monitoring and Maintenance
+                  </h3>
+                  <p className="mb-3">Monitor your WolfGuard container:</p>
+                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                    <code className="text-primary">
+                      {`# Check container status
+podman ps | grep wolfguard
+
+# View logs
+podman logs -f wolfguard
+
+# Check resource usage
+podman stats wolfguard
+
+# Execute commands inside container
+podman exec -it wolfguard wolfguard-cli status
+
+# View health check status
+podman inspect --format='{{.State.Health.Status}}' wolfguard
+
+# Update to latest version
+podman pull ghcr.io/dantte-lp/wolfguard:latest
+podman-compose down
+podman-compose up -d`}
+                    </code>
+                  </pre>
+                </div>
+
+                {/* Backup and Recovery */}
+                <div>
+                  <h3 className="text-xl font-bold text-foreground mb-3">Backup and Recovery</h3>
+                  <p className="mb-3">Backup your WolfGuard configuration and data:</p>
+                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                    <code className="text-primary">
+                      {`# Backup volumes
+podman volume export wolfguard-config -o wolfguard-config.tar
+podman volume export wolfguard-certs -o wolfguard-certs.tar
+podman volume export wolfguard-data -o wolfguard-data.tar
+
+# Backup using tar (for bind mounts)
+tar -czf wolfguard-backup-$(date +%Y%m%d).tar.gz \\
+  config/ certs/ compose.yaml
+
+# Restore volumes
+podman volume import wolfguard-config wolfguard-config.tar
+podman volume import wolfguard-certs wolfguard-certs.tar
+podman volume import wolfguard-data wolfguard-data.tar`}
+                    </code>
+                  </pre>
+                </div>
+
+                {/* Troubleshooting */}
+                <div>
+                  <h3 className="text-xl font-bold text-foreground mb-3">Troubleshooting</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <p className="font-semibold text-foreground mb-2">
+                        Container won&apos;t start:
+                      </p>
+                      <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                        <code className="text-primary">
+                          {`# Check logs for errors
+podman logs wolfguard
+
+# Verify port availability
+sudo ss -tulpn | grep :443
+
+# Check SELinux contexts (if using SELinux)
+ls -lZ config/ certs/`}
+                        </code>
+                      </pre>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-foreground mb-2">Permission issues:</p>
+                      <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                        <code className="text-primary">
+                          {`# For SELinux systems, use :Z or :z flag
+podman run -v ./config:/etc/wolfguard:Z ...
+
+# Check file ownership
+ls -la config/ certs/
+
+# Fix permissions
+chmod 644 config/wolfguard.conf
+chmod 600 certs/*.key`}
+                        </code>
+                      </pre>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-foreground mb-2">Networking issues:</p>
+                      <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                        <code className="text-primary">
+                          {`# Test connectivity from host
+openssl s_client -connect localhost:443
+
+# Check container network
+podman inspect wolfguard | grep -A 10 "NetworkSettings"
+
+# Verify firewall rules
+sudo firewall-cmd --list-all`}
+                        </code>
+                      </pre>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Systemd Integration */}
+                <div>
+                  <h3 className="text-xl font-bold text-foreground mb-3">
+                    Systemd Integration (Podman)
+                  </h3>
+                  <p className="mb-3">Run container as a systemd service for automatic startup:</p>
+                  <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+                    <code className="text-primary">
+                      {`# Generate systemd unit file
+cd /path/to/compose
+podman-compose up -d
+podman generate systemd --new --files --name wolfguard-vpn
+
+# Move to systemd directory
+sudo mv container-wolfguard-vpn.service /etc/systemd/system/
+
+# Enable and start
+sudo systemctl daemon-reload
+sudo systemctl enable container-wolfguard-vpn
+sudo systemctl start container-wolfguard-vpn
+
+# Check status
+sudo systemctl status container-wolfguard-vpn`}
+                    </code>
+                  </pre>
+                </div>
+
+                {/* Next Steps */}
+                <div className="mt-6 p-6 bg-primary/10 border border-primary/30 rounded-lg">
+                  <h3 className="text-lg font-bold text-foreground mb-3">Next Steps</h3>
+                  <ul className="space-y-2 pl-6 list-disc">
+                    <li>
+                      Configure client connections (see{' '}
+                      <a href="/compatibility" className="text-primary hover:underline">
+                        Compatibility
+                      </a>{' '}
+                      page)
+                    </li>
+                    <li>Set up monitoring with Prometheus and Grafana</li>
+                    <li>Configure log aggregation (ELK, Loki, etc.)</li>
+                    <li>Implement automated backups</li>
+                    <li>
+                      Review security hardening in the{' '}
+                      <a
+                        href="https://docs.wolfguard.io"
+                        className="text-primary hover:underline"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        documentation
+                      </a>
+                    </li>
+                    <li>Join the community for support and updates</li>
+                  </ul>
+                </div>
+
+                {/* Support */}
+                <div className="mt-4 p-4 bg-muted/50 rounded-lg">
                   <p className="text-sm">
-                    Container deployment guide with Podman Compose examples is being prepared.
-                    Official container images will be published to GitHub Container Registry.
+                    <strong className="text-foreground">Container Support:</strong> For
+                    container-specific issues, check the{' '}
+                    <a
+                      href="https://github.com/dantte-lp/wolfguard/discussions"
+                      className="text-primary hover:underline"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      GitHub Discussions
+                    </a>{' '}
+                    or open an issue on{' '}
+                    <a
+                      href="https://github.com/dantte-lp/wolfguard/issues"
+                      className="text-primary hover:underline"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      GitHub
+                    </a>
+                    .
                   </p>
                 </div>
               </div>
