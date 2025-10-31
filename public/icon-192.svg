@@ -1,0 +1,43 @@
+<svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="192" height="192" fill="#1a1a2e"/>
+
+  <!-- Shield background -->
+  <path d="M96 22C96 22 48 34 24 58C24 106 24 154 96 190C168 154 168 106 168 58C144 34 96 22 96 22Z"
+        fill="#6b21ff" opacity="0.2"/>
+  <path d="M96 22C96 22 48 34 24 58C24 106 24 154 96 190C168 154 168 106 168 58C144 34 96 22 96 22Z"
+        stroke="#6b21ff" stroke-width="3" stroke-linejoin="round"/>
+
+  <!-- Wolf silhouette -->
+  <g transform="translate(96, 96)">
+    <!-- Wolf head -->
+    <ellipse cx="0" cy="-7" rx="17" ry="20" fill="#6b21ff"/>
+
+    <!-- Wolf ears -->
+    <path d="M-13 -24 L-9 -15 L-15 -13 Z" fill="#6b21ff"/>
+    <path d="M13 -24 L9 -15 L15 -13 Z" fill="#6b21ff"/>
+
+    <!-- Wolf snout -->
+    <ellipse cx="0" cy="2" rx="9" ry="13" fill="#6b21ff"/>
+
+    <!-- Wolf eyes -->
+    <circle cx="-6" cy="-9" r="2" fill="#ffffff"/>
+    <circle cx="6" cy="-9" r="2" fill="#ffffff"/>
+    <circle cx="-6" cy="-9" r="1" fill="#000000"/>
+    <circle cx="6" cy="-9" r="1" fill="#000000"/>
+
+    <!-- Wolf nose -->
+    <circle cx="0" cy="6" r="2.5" fill="#000000"/>
+
+    <!-- Wolf body -->
+    <ellipse cx="0" cy="24" rx="15" ry="17" fill="#6b21ff" opacity="0.9"/>
+  </g>
+
+  <!-- VPN Lock symbol -->
+  <g transform="translate(142, 49)">
+    <rect x="-7" y="2" width="14" height="13" rx="2" fill="#6b21ff"/>
+    <path d="M-5 2 L-5 -2 A5 5 0 0 1 5 -2 L5 2"
+          stroke="#6b21ff" stroke-width="2" fill="none"/>
+    <circle cx="0" cy="7" r="2" fill="#ffffff"/>
+  </g>
+</svg>

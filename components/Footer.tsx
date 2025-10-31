@@ -1,9 +1,12 @@
 'use client'
 
 import { Link } from '@heroui/react'
+import { useTheme } from 'next-themes'
+import Image from 'next/image'
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
+  const { resolvedTheme } = useTheme()
 
   return (
     <footer className="w-full border-t border-border bg-background/50 backdrop-blur-md mt-auto">
@@ -11,10 +14,15 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Project Info */}
           <div>
-            <h3 className="font-bold text-lg mb-4">
-              <span className="text-primary">Wolf</span>
-              <span className="text-foreground">Guard</span>
-            </h3>
+            <div className="mb-4">
+              <Image
+                src={resolvedTheme === 'dark' ? '/logo-dark.svg' : '/logo-light.svg'}
+                alt="WolfGuard Logo"
+                width={150}
+                height={36}
+                className="h-9 w-auto"
+              />
+            </div>
             <p className="text-sm text-muted-foreground">
               Open-source VPN server with TLS 1.3/DTLS 1.3 support, compatible with Cisco Secure
               Client.

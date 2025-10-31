@@ -1,0 +1,122 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a15;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#1a1a2e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#16213e;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6b21ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#9f7aea;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGradient)"/>
+
+  <!-- Grid pattern -->
+  <g opacity="0.05">
+    <path d="M0 0 L1200 0" stroke="#6b21ff" stroke-width="1"/>
+    <path d="M0 50 L1200 50" stroke="#6b21ff" stroke-width="1"/>
+    <path d="M0 100 L1200 100" stroke="#6b21ff" stroke-width="1"/>
+    <path d="M0 150 L1200 150" stroke="#6b21ff" stroke-width="1"/>
+    <path d="M0 200 L1200 200" stroke="#6b21ff" stroke-width="1"/>
+    <path d="M0 250 L1200 250" stroke="#6b21ff" stroke-width="1"/>
+    <path d="M0 300 L1200 300" stroke="#6b21ff" stroke-width="1"/>
+    <path d="M0 350 L1200 350" stroke="#6b21ff" stroke-width="1"/>
+    <path d="M0 400 L1200 400" stroke="#6b21ff" stroke-width="1"/>
+    <path d="M0 450 L1200 450" stroke="#6b21ff" stroke-width="1"/>
+    <path d="M0 500 L1200 500" stroke="#6b21ff" stroke-width="1"/>
+    <path d="M0 550 L1200 550" stroke="#6b21ff" stroke-width="1"/>
+    <path d="M0 600 L1200 600" stroke="#6b21ff" stroke-width="1"/>
+  </g>
+
+  <!-- Left side: Logo and Shield -->
+  <g transform="translate(200, 315)">
+    <!-- Shield background -->
+    <path d="M0 -150C0 -150 -75 -120 -120 -75C-120 0 -120 75 0 140C120 75 120 0 120 -75C75 -120 0 -150 0 -150Z"
+          fill="#6b21ff" opacity="0.2"/>
+    <path d="M0 -150C0 -150 -75 -120 -120 -75C-120 0 -120 75 0 140C120 75 120 0 120 -75C75 -120 0 -150 0 -150Z"
+          stroke="#6b21ff" stroke-width="4" stroke-linejoin="round" filter="url(#glow)"/>
+
+    <!-- Wolf silhouette -->
+    <g>
+      <!-- Wolf head -->
+      <ellipse cx="0" cy="-15" rx="35" ry="42" fill="#6b21ff" filter="url(#glow)"/>
+
+      <!-- Wolf ears -->
+      <path d="M-27 -50 L-20 -30 L-31 -27 Z" fill="#6b21ff" filter="url(#glow)"/>
+      <path d="M27 -50 L20 -30 L31 -27 Z" fill="#6b21ff" filter="url(#glow)"/>
+
+      <!-- Wolf snout -->
+      <ellipse cx="0" cy="4" rx="19" ry="27" fill="#6b21ff" filter="url(#glow)"/>
+
+      <!-- Wolf eyes -->
+      <circle cx="-12" cy="-19" r="4" fill="#ffffff"/>
+      <circle cx="12" cy="-19" r="4" fill="#ffffff"/>
+      <circle cx="-12" cy="-19" r="2" fill="#000000"/>
+      <circle cx="12" cy="-19" r="2" fill="#000000"/>
+
+      <!-- Wolf nose -->
+      <circle cx="0" cy="12" r="5" fill="#000000"/>
+
+      <!-- Wolf body -->
+      <ellipse cx="0" cy="50" rx="31" ry="35" fill="#6b21ff" opacity="0.9" filter="url(#glow)"/>
+    </g>
+
+    <!-- VPN Lock symbol -->
+    <g transform="translate(90, -100)">
+      <rect x="-15" y="4" width="30" height="26" rx="4" fill="#6b21ff" filter="url(#glow)"/>
+      <path d="M-11 4 L-11 -4 A11 11 0 0 1 11 -4 L11 4"
+            stroke="#6b21ff" stroke-width="4" fill="none" filter="url(#glow)"/>
+      <circle cx="0" cy="15" r="4" fill="#ffffff"/>
+    </g>
+  </g>
+
+  <!-- Right side: Text content -->
+  <g transform="translate(500, 200)">
+    <!-- Main title -->
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="72" font-weight="bold"
+          fill="url(#textGradient)" filter="url(#glow)">WolfGuard</text>
+
+    <!-- Subtitle -->
+    <text x="0" y="80" font-family="Arial, sans-serif" font-size="36" font-weight="600"
+          fill="#ffffff">Secure VPN Server</text>
+
+    <!-- Features -->
+    <g transform="translate(0, 150)">
+      <g transform="translate(0, 0)">
+        <circle cx="0" cy="-5" r="6" fill="#6b21ff" filter="url(#glow)"/>
+        <text x="20" y="0" font-family="Arial, sans-serif" font-size="28" fill="#e0e0e0">
+          TLS 1.3 / DTLS 1.3 Support
+        </text>
+      </g>
+
+      <g transform="translate(0, 50)">
+        <circle cx="0" cy="-5" r="6" fill="#6b21ff" filter="url(#glow)"/>
+        <text x="20" y="0" font-family="Arial, sans-serif" font-size="28" fill="#e0e0e0">
+          Cisco AnyConnect Compatible
+        </text>
+      </g>
+
+      <g transform="translate(0, 100)">
+        <circle cx="0" cy="-5" r="6" fill="#6b21ff" filter="url(#glow)"/>
+        <text x="20" y="0" font-family="Arial, sans-serif" font-size="28" fill="#e0e0e0">
+          Enterprise-Grade Security
+        </text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Bottom branding -->
+  <text x="600" y="580" font-family="Arial, sans-serif" font-size="20" fill="#6b21ff"
+        text-anchor="middle" opacity="0.8">wolfguard.io</text>
+</svg>

@@ -10,7 +10,7 @@ export const siteConfig = {
   description:
     'WolfGuard is an open-source VPN server (TLS 1.3/DTLS 1.3) compatible with Cisco Secure Client. Installation guides, documentation, and community resources.',
   url: 'https://wolfguard.io',
-  ogImage: '/og-image.png', // TODO: Create OG image (1200x630px)
+  ogImage: '/og-image.svg',
   keywords: [
     'vpn server',
     'TLS 1.3',

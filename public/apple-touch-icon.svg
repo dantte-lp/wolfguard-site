@@ -1,0 +1,43 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Rounded background for Apple -->
+  <rect width="180" height="180" rx="40" fill="#1a1a2e"/>
+
+  <!-- Shield background -->
+  <path d="M90 30C90 30 45 45 22.5 67.5C22.5 112.5 22.5 157.5 90 172.5C157.5 157.5 157.5 112.5 157.5 67.5C135 45 90 30 90 30Z"
+        fill="#6b21ff" opacity="0.2"/>
+  <path d="M90 30C90 30 45 45 22.5 67.5C22.5 112.5 22.5 157.5 90 172.5C157.5 157.5 157.5 112.5 157.5 67.5C135 45 90 30 90 30Z"
+        stroke="#6b21ff" stroke-width="3" stroke-linejoin="round"/>
+
+  <!-- Wolf silhouette -->
+  <g transform="translate(90, 90)">
+    <!-- Wolf head -->
+    <ellipse cx="0" cy="-7" rx="16" ry="19" fill="#6b21ff"/>
+
+    <!-- Wolf ears -->
+    <path d="M-12 -23 L-9 -14 L-14 -12 Z" fill="#6b21ff"/>
+    <path d="M12 -23 L9 -14 L14 -12 Z" fill="#6b21ff"/>
+
+    <!-- Wolf snout -->
+    <ellipse cx="0" cy="2" rx="9" ry="12" fill="#6b21ff"/>
+
+    <!-- Wolf eyes -->
+    <circle cx="-5" cy="-9" r="2" fill="#ffffff"/>
+    <circle cx="5" cy="-9" r="2" fill="#ffffff"/>
+    <circle cx="-5" cy="-9" r="1" fill="#000000"/>
+    <circle cx="5" cy="-9" r="1" fill="#000000"/>
+
+    <!-- Wolf nose -->
+    <circle cx="0" cy="5" r="2" fill="#000000"/>
+
+    <!-- Wolf body -->
+    <ellipse cx="0" cy="23" rx="14" ry="16" fill="#6b21ff" opacity="0.9"/>
+  </g>
+
+  <!-- VPN Lock symbol -->
+  <g transform="translate(135, 45)">
+    <rect x="-7" y="2" width="14" height="12" rx="2" fill="#6b21ff"/>
+    <path d="M-5 2 L-5 -2 A5 5 0 0 1 5 -2 L5 2"
+          stroke="#6b21ff" stroke-width="2" fill="none"/>
+    <circle cx="0" cy="7" r="2" fill="#ffffff"/>
+  </g>
+</svg>
