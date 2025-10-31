@@ -204,8 +204,8 @@ export function AlternativeClients() {
                         src="/assets/app-store-badge.svg"
                         alt="Download on the App Store"
                         width={135}
-                        height={40}
-                        style={{ height: '40px', width: 'auto' }}
+                        height={46}
+                        style={{ height: '46px', width: 'auto' }}
                       />
                     </a>
                     {/* Google Play Badge */}
