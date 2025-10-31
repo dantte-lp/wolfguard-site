@@ -1,0 +1,126 @@
+# Production Podman Compose configuration with Traefik integration
+# Uses Next.js Standalone mode (recommended)
+# Compose Specification 2025 (https://github.com/compose-spec/compose-spec)
+
+name: wolfguard
+
+services:
+  wolfguard-site:
+    container_name: wolfguard-site
+    image: localhost/wolfguard-site:latest
+
+    build:
+      context: /opt/projects/repositories/wolfguard-site
+      dockerfile: deploy/config/Containerfile.prod
+      args:
+        BUILD_DATE: "${BUILD_DATE:-}"
+        GIT_COMMIT: "${GIT_COMMIT:-}"
+
+    # No port mapping - Traefik handles external access
+    # ports:
+    #   - "3000:3000"
+
+    # Connect to Traefik network
+    networks:
+      - traefik-public
+
+    # Restart policy for production
+    restart: unless-stopped
+
+    # Health check
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+    # Resource limits (adjust based on your needs)
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 128M
+
+    # Security options
+    security_opt:
+      - no-new-privileges:true
+
+    cap_drop:
+      - ALL
+
+    # Read-only root filesystem with necessary writable directories
+    read_only: true
+
+    tmpfs:
+      - /tmp:mode=1777
+
+    # Volumes for Next.js cache
+    volumes:
+      - nextjs-cache:/app/.next/cache:rw
+
+    # Environment variables
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+      - TZ=UTC
+
+    # Traefik labels for automatic service discovery
+    labels:
+      # Enable Traefik
+      - "traefik.enable=true"
+
+      # Specify network (required if container has multiple networks)
+      - "traefik.docker.network=traefik-public"
+
+      # HTTP Router (redirect to HTTPS)
+      - "traefik.http.routers.wolfguard-http.rule=Host(`wolfguard.io`) || Host(`www.wolfguard.io`)"
+      - "traefik.http.routers.wolfguard-http.entrypoints=http"
+      - "traefik.http.routers.wolfguard-http.middlewares=https-redirect@file"
+
+      # HTTPS Router
+      - "traefik.http.routers.wolfguard.rule=Host(`wolfguard.io`) || Host(`www.wolfguard.io`)"
+      - "traefik.http.routers.wolfguard.entrypoints=https"
+      - "traefik.http.routers.wolfguard.tls.certresolver=cloudflare"
+      - "traefik.http.routers.wolfguard.tls.domains[0].main=wolfguard.io"
+      - "traefik.http.routers.wolfguard.tls.domains[0].sans=www.wolfguard.io"
+      - "traefik.http.routers.wolfguard.middlewares=web-standard@file"
+
+      # Service configuration (specify container port - Next.js runs on 3000)
+      - "traefik.http.services.wolfguard.loadbalancer.server.port=3000"
+
+      # Health check
+      - "traefik.http.services.wolfguard.loadbalancer.healthcheck.path=/"
+      - "traefik.http.services.wolfguard.loadbalancer.healthcheck.interval=30s"
+
+      # Metadata labels
+      - "com.wolfguard.project=wolfguard-site"
+      - "com.wolfguard.description=WolfGuard landing page - Next.js Standalone"
+      - "com.wolfguard.environment=production"
+
+    # Logging configuration
+    logging:
+      driver: k8s-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+        labels: "com.wolfguard.project,com.wolfguard.environment"
+
+# Volumes
+volumes:
+  nextjs-cache:
+    driver: local
+    labels:
+      - "com.wolfguard.project=wolfguard-site"
+      - "com.wolfguard.environment=production"
+
+# Networks
+networks:
+  traefik-public:
+    external: true
+    name: traefik-public

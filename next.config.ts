@@ -4,6 +4,9 @@ const nextConfig: NextConfig = {
   /* Essential Next.js configuration */
   reactStrictMode: true,
 
+  /* Output configuration for containerized deployments */
+  output: 'standalone',
+
   /* Image optimization - external domains if needed */
   images: {
     remotePatterns: [],
