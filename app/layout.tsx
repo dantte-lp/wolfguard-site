@@ -4,6 +4,7 @@ import './globals.css'
 import { Providers } from '@/components/providers'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
+import { SkipLinks } from '@/components/SkipLinks'
 import { siteConfig, generateMetadata, pageMetadata } from '@/lib/metadata'
 
 const inter = Inter({
@@ -106,8 +107,11 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen bg-background font-sans antialiased flex flex-col">
         <Providers>
+          <SkipLinks />
           <Header />
-          <main className="flex-grow">{children}</main>
+          <main id="main-content" className="flex-grow" tabIndex={-1}>
+            {children}
+          </main>
           <Footer />
         </Providers>
       </body>

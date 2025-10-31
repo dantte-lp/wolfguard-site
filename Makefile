@@ -59,6 +59,14 @@ dev-down: ## Stop development containers
 	@echo -e "$(YELLOW)Stopping development containers...$(RESET)"
 	@podman-compose -f $(COMPOSE_DEV) down
 
+.PHONY: dev-clean
+dev-clean: ## Clean development environment (stop containers and remove volumes)
+	@echo -e "$(YELLOW)Cleaning development environment...$(RESET)"
+	@podman-compose -f $(COMPOSE_DEV) down -v
+	@echo -e "$(YELLOW)Removing local .next directory...$(RESET)"
+	@rm -rf .next 2>/dev/null || true
+	@echo -e "$(GREEN)Development environment cleaned!$(RESET)"
+
 .PHONY: dev-logs
 dev-logs: ## Show development logs
 	@echo -e "$(CYAN)Showing development logs...$(RESET)"
@@ -70,7 +78,16 @@ dev-shell: ## Open shell in development container
 	@podman-compose -f $(COMPOSE_DEV) exec node-dev sh
 
 .PHONY: dev-restart
-dev-restart: dev-down dev ## Restart development server
+dev-restart: ## Restart development server (clean restart with volume cleanup)
+	@echo -e "$(YELLOW)Performing clean restart of development server...$(RESET)"
+	@podman-compose -f $(COMPOSE_DEV) down -v
+	@echo -e "$(YELLOW)Removing local .next directory...$(RESET)"
+	@rm -rf .next 2>/dev/null || true
+	@echo -e "$(GREEN)Starting fresh development server...$(RESET)"
+	@podman-compose -f $(COMPOSE_DEV) up --build
+
+.PHONY: dev-rebuild
+dev-rebuild: dev-clean dev-build ## Full rebuild (clean + build + start)
 
 # ==============================================================================
 # Building Targets

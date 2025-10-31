@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:1.4
 # Development Containerfile for WolfGuard site
 # This container is for development purposes only
+# Uses rootless configuration to prevent permission issues
 
 FROM docker.io/library/node:22-trixie-slim
 
@@ -9,7 +10,7 @@ LABEL org.opencontainers.image.title="WolfGuard Site Development"
 LABEL org.opencontainers.image.description="Development environment for WolfGuard Next.js site"
 LABEL org.opencontainers.image.vendor="WolfGuard"
 
-# Install development dependencies
+# Install development dependencies and update npm to latest
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     python3 \
@@ -17,16 +18,28 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     g++ \
     curl \
     ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
+    sudo \
+    && rm -rf /var/lib/apt/lists/* \
+    && npm install -g npm@11.6.2
+
+# Configure node user for rootless operation
+# The node user in node:22 has UID 1000 and GID 1000
+RUN usermod -u 1000 node \
+    && groupmod -g 1000 node \
+    && echo "node ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Set working directory
 WORKDIR /app
 
-# Use existing node user and fix permissions
-RUN chown -R node:node /app
+# Create .next directory with correct permissions before mounting
+RUN mkdir -p /app/.next /app/node_modules /app/.npm \
+    && chown -R node:node /app
 
-# Switch to non-root user
+# Switch to non-root user BEFORE any npm operations
 USER node
+
+# Set npm cache directory to writable location
+ENV NPM_CONFIG_CACHE=/app/.npm
 
 # Expose Next.js dev server port
 EXPOSE 3000
@@ -35,5 +48,5 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
     CMD curl -f http://localhost:3000/ || exit 1
 
-# Default command (will be overridden by docker-compose)
+# Default command (will be overridden by compose)
 CMD ["npm", "run", "dev"]

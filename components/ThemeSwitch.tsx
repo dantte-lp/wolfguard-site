@@ -3,6 +3,7 @@
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 import { Button } from '@heroui/react'
+import { ARIA_LABELS } from '@/lib/accessibility'
 
 export function ThemeSwitch() {
   const [mounted, setMounted] = useState(false)
@@ -14,12 +15,16 @@ export function ThemeSwitch() {
 
   if (!mounted) return null
 
+  const isDark = theme === 'dark'
+  const ariaLabel = isDark ? ARIA_LABELS.theme.light : ARIA_LABELS.theme.dark
+
   return (
     <Button
       variant="light"
       isIconOnly
-      aria-label="Toggle theme"
-      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+      aria-label={ariaLabel}
+      aria-pressed={isDark}
+      onClick={() => setTheme(isDark ? 'light' : 'dark')}
       className="text-foreground"
     >
       {theme === 'dark' ? (
@@ -30,6 +35,7 @@ export function ThemeSwitch() {
           strokeWidth={1.5}
           stroke="currentColor"
           className="w-5 h-5"
+          aria-hidden="true"
         >
           <path
             strokeLinecap="round"
@@ -45,6 +51,7 @@ export function ThemeSwitch() {
           strokeWidth={1.5}
           stroke="currentColor"
           className="w-5 h-5"
+          aria-hidden="true"
         >
           <path
             strokeLinecap="round"

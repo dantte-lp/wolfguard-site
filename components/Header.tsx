@@ -16,6 +16,7 @@ import { useState } from 'react'
 import { Github } from 'lucide-react'
 import { ThemeSwitch } from './ThemeSwitch'
 import { ThemeAwareLogo } from './ThemeAwareLogo'
+import { ARIA_LABELS } from '@/lib/accessibility'
 
 const MotionLink = motion.create(Link)
 const MotionButton = motion.create(Button)
@@ -34,6 +35,9 @@ export function Header() {
 
   return (
     <Navbar
+      as="nav"
+      aria-label={ARIA_LABELS.navigation.main}
+      id="main-navigation"
       onMenuOpenChange={setIsMenuOpen}
       maxWidth="xl"
       className="bg-background/80 backdrop-blur-md border-b border-border"
@@ -45,7 +49,7 @@ export function Header() {
           className="sm:hidden"
         />
         <NavbarBrand>
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2" aria-label="WolfGuard home">
             <ThemeAwareLogo width={150} height={36} priority className="h-9" />
           </Link>
         </NavbarBrand>
@@ -81,7 +85,8 @@ export function Header() {
             rel="noopener noreferrer"
             variant="bordered"
             className="border-primary text-primary hover:bg-primary/10"
-            startContent={<Github className="w-4 h-4" />}
+            startContent={<Github className="w-4 h-4" aria-hidden="true" />}
+            aria-label={ARIA_LABELS.social.github}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -113,7 +118,8 @@ export function Header() {
             variant="flat"
             color="primary"
             className="w-full mt-4"
-            startContent={<Github className="w-4 h-4" />}
+            startContent={<Github className="w-4 h-4" aria-hidden="true" />}
+            aria-label={ARIA_LABELS.social.github}
           >
             GitHub
           </Button>

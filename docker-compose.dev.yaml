@@ -1,5 +1,6 @@
-# Development Docker Compose configuration for WolfGuard site
+# Development Compose configuration for WolfGuard site
 # Compose Specification 2025 (https://github.com/compose-spec/compose-spec)
+# Optimized for Podman rootless containers
 
 name: wolfguard-dev
 
@@ -11,11 +12,17 @@ services:
       context: .
       dockerfile: deploy/config/Containerfile.dev
 
-    # Mount source code for hot reload
+    # Mount source code for hot reload with proper UID/GID mapping
+    # Using :Z for SELinux compatibility on RHEL/Fedora systems
     volumes:
-      - .:/app:rw
-      - /app/node_modules
-      - npm-cache:/home/node/.npm:rw
+      # Mount entire project directory with correct ownership
+      - .:/app:rw,Z
+      # Exclude node_modules from host mount (use container's version)
+      - node-dev-modules:/app/node_modules:rw
+      # Dedicated volume for .next to prevent permission issues
+      - next-cache:/app/.next:rw
+      # NPM cache for faster installs
+      - npm-cache:/app/.npm:rw
 
     # Port mapping: host:container (kept for local access)
     ports:
@@ -31,6 +38,9 @@ services:
       - NEXT_TELEMETRY_DISABLED=1
       - WATCHPACK_POLLING=false
       - TZ=UTC
+      - NPM_CONFIG_CACHE=/app/.npm
+      # Ensure Next.js uses correct permissions
+      - NEXT_PRIVATE_STANDALONE=true
 
     # Interactive terminal for debugging
     stdin_open: true
@@ -45,7 +55,11 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 40s
+
+    # Security context for rootless operation
+    security_opt:
+      - label=disable
 
     # Labels
     labels:
@@ -80,13 +94,31 @@ services:
     # Command to run (npm run dev will be executed)
     command: sh -c "npm install && npm run dev"
 
-# Named volumes
+# Named volumes with proper labels
 volumes:
+  # Separate volume for node_modules to persist dependencies
+  node-dev-modules:
+    driver: local
+    labels:
+      - "com.wolfguard.project=wolfguard-site"
+      - "com.wolfguard.environment=development"
+      - "com.wolfguard.volume=node-modules"
+
+  # Dedicated volume for .next build cache
+  next-cache:
+    driver: local
+    labels:
+      - "com.wolfguard.project=wolfguard-site"
+      - "com.wolfguard.environment=development"
+      - "com.wolfguard.volume=next-cache"
+
+  # NPM cache for faster dependency installation
   npm-cache:
     driver: local
     labels:
       - "com.wolfguard.project=wolfguard-site"
       - "com.wolfguard.environment=development"
+      - "com.wolfguard.volume=npm-cache"
 
 # Networks
 networks:

@@ -60,7 +60,7 @@ const item = {
 
 export function Benefits() {
   return (
-    <section className="py-24 px-6">
+    <section className="py-24 px-6" aria-labelledby="benefits-heading">
       <div className="max-w-7xl mx-auto">
         <motion.div
           className="text-center mb-16"
@@ -69,7 +69,7 @@ export function Benefits() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+          <h2 id="benefits-heading" className="text-4xl md:text-5xl font-bold mb-4">
             Why Choose <span className="text-foreground">Wolf</span>
             <span className="text-primary">Guard</span>?
           </h2>
@@ -95,7 +95,7 @@ export function Benefits() {
                 >
                   <CardBody className="p-6">
                     <div className="mb-4 inline-block p-3 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                      <Icon className="w-8 h-8 text-primary" />
+                      <Icon className="w-8 h-8 text-primary" aria-hidden="true" />
                     </div>
                     <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">
                       {benefit.title}

@@ -6,12 +6,18 @@ import Link from 'next/link'
 
 export function Hero() {
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+    <section
+      className="relative min-h-[90vh] flex items-center justify-center overflow-hidden"
+      aria-label="Hero section"
+    >
       {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-primary/5" />
+      <div
+        className="absolute inset-0 bg-gradient-to-br from-background via-background to-primary/5"
+        aria-hidden="true"
+      />
 
       {/* Animated grid pattern */}
-      <div className="absolute inset-0 opacity-20">
+      <div className="absolute inset-0 opacity-20" aria-hidden="true">
         <div
           className="absolute inset-0"
           style={{
@@ -107,13 +113,20 @@ export function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1, duration: 1 }}
+          aria-hidden="true"
         >
           <motion.div
             animate={{ y: [0, 10, 0] }}
             transition={{ repeat: Infinity, duration: 2 }}
             className="text-primary/50"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
