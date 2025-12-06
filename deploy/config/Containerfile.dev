@@ -1,16 +1,18 @@
-# syntax=docker/dockerfile:1.4
+# syntax=docker/dockerfile:1.12
 # Development Containerfile for WolfGuard site
 # This container is for development purposes only
 # Uses rootless configuration to prevent permission issues
+# Compose Specification 2025 compliant
 
-FROM docker.io/library/node:lts-trixie-slim
+FROM docker.io/library/node:lts-trixie
 
 # OCI Labels - Development Stage
 LABEL org.opencontainers.image.title="WolfGuard Site Development"
 LABEL org.opencontainers.image.description="Development environment for WolfGuard Next.js site"
 LABEL org.opencontainers.image.vendor="WolfGuard"
+LABEL org.opencontainers.image.source="https://github.com/dantte-lp/wolfguard-site"
 
-# Install development dependencies and update npm to latest
+# Install development dependencies and pnpm via corepack
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     python3 \
@@ -20,7 +22,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     sudo \
     && rm -rf /var/lib/apt/lists/* \
-    && npm install -g npm@11.6.2
+    && corepack enable && corepack prepare pnpm@latest --activate
 
 # Configure node user for rootless operation
 # The node user in node:24 has UID 1000 and GID 1000
@@ -32,14 +34,15 @@ RUN usermod -u 1000 node \
 WORKDIR /app
 
 # Create .next directory with correct permissions before mounting
-RUN mkdir -p /app/.next /app/node_modules /app/.npm \
+RUN mkdir -p /app/.next /app/node_modules /app/.pnpm-store \
     && chown -R node:node /app
 
-# Switch to non-root user BEFORE any npm operations
+# Switch to non-root user BEFORE any pnpm operations
 USER node
 
-# Set npm cache directory to writable location
-ENV NPM_CONFIG_CACHE=/app/.npm
+# Set pnpm store directory to writable location
+ENV PNPM_HOME=/app/.pnpm-store
+ENV PATH="$PNPM_HOME:$PATH"
 
 # Expose Next.js dev server port
 EXPOSE 3000
@@ -49,4 +52,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
     CMD curl -f http://localhost:3000/ || exit 1
 
 # Default command (will be overridden by compose)
-CMD ["npm", "run", "dev"]
+CMD ["pnpm", "run", "dev"]

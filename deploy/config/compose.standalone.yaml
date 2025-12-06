@@ -1,20 +1,25 @@
 # Production Podman Compose configuration with Traefik integration
 # Uses Next.js Standalone mode (recommended)
 # Compose Specification 2025 (https://github.com/compose-spec/compose-spec)
+# Build with buildah, run with podman + crun
 
 name: wolfguard
 
 services:
   wolfguard-site:
     container_name: wolfguard-site
-    image: localhost/wolfguard-site:latest
+    image: ghcr.io/dantte-lp/wolfguard-site:latest
 
     build:
-      context: /opt/projects/repositories/wolfguard-site
+      context: ../..
       dockerfile: deploy/config/Containerfile.prod
       args:
         BUILD_DATE: "${BUILD_DATE:-}"
         GIT_COMMIT: "${GIT_COMMIT:-}"
+      tags:
+        - ghcr.io/dantte-lp/wolfguard-site:latest
+        - ghcr.io/dantte-lp/wolfguard-site:${VERSION:-1.0.0}
+        - localhost/wolfguard-site:latest
 
     # No port mapping - Traefik handles external access
     # ports:
@@ -64,44 +69,44 @@ services:
 
     # Environment variables
     environment:
-      - NODE_ENV=production
-      - NEXT_TELEMETRY_DISABLED=1
-      - PORT=3000
-      - HOSTNAME=0.0.0.0
-      - TZ=UTC
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: "1"
+      PORT: "3000"
+      HOSTNAME: "0.0.0.0"
+      TZ: UTC
 
     # Traefik labels for automatic service discovery
     labels:
       # Enable Traefik
-      - "traefik.enable=true"
+      traefik.enable: "true"
 
       # Specify network (required if container has multiple networks)
-      - "traefik.docker.network=traefik-public"
+      traefik.docker.network: traefik-public
 
       # HTTP Router (redirect to HTTPS)
-      - "traefik.http.routers.wolfguard-http.rule=Host(`wolfguard.io`) || Host(`www.wolfguard.io`)"
-      - "traefik.http.routers.wolfguard-http.entrypoints=http"
-      - "traefik.http.routers.wolfguard-http.middlewares=https-redirect@file"
+      traefik.http.routers.wolfguard-http.rule: "Host(`wolfguard.io`) || Host(`www.wolfguard.io`)"
+      traefik.http.routers.wolfguard-http.entrypoints: http
+      traefik.http.routers.wolfguard-http.middlewares: https-redirect@file
 
       # HTTPS Router
-      - "traefik.http.routers.wolfguard.rule=Host(`wolfguard.io`) || Host(`www.wolfguard.io`)"
-      - "traefik.http.routers.wolfguard.entrypoints=https"
-      - "traefik.http.routers.wolfguard.tls.certresolver=cloudflare"
-      - "traefik.http.routers.wolfguard.tls.domains[0].main=wolfguard.io"
-      - "traefik.http.routers.wolfguard.tls.domains[0].sans=www.wolfguard.io"
-      - "traefik.http.routers.wolfguard.middlewares=web-standard@file"
+      traefik.http.routers.wolfguard.rule: "Host(`wolfguard.io`) || Host(`www.wolfguard.io`)"
+      traefik.http.routers.wolfguard.entrypoints: https
+      traefik.http.routers.wolfguard.tls.certresolver: cloudflare
+      traefik.http.routers.wolfguard.tls.domains[0].main: wolfguard.io
+      traefik.http.routers.wolfguard.tls.domains[0].sans: www.wolfguard.io
+      traefik.http.routers.wolfguard.middlewares: web-standard@file
 
       # Service configuration (specify container port - Next.js runs on 3000)
-      - "traefik.http.services.wolfguard.loadbalancer.server.port=3000"
+      traefik.http.services.wolfguard.loadbalancer.server.port: "3000"
 
       # Health check
-      - "traefik.http.services.wolfguard.loadbalancer.healthcheck.path=/"
-      - "traefik.http.services.wolfguard.loadbalancer.healthcheck.interval=30s"
+      traefik.http.services.wolfguard.loadbalancer.healthcheck.path: /
+      traefik.http.services.wolfguard.loadbalancer.healthcheck.interval: 30s
 
       # Metadata labels
-      - "com.wolfguard.project=wolfguard-site"
-      - "com.wolfguard.description=WolfGuard landing page - Next.js Standalone"
-      - "com.wolfguard.environment=production"
+      com.wolfguard.project: wolfguard-site
+      com.wolfguard.description: WolfGuard landing page - Next.js Standalone
+      com.wolfguard.environment: production
 
     # Logging configuration
     logging:
@@ -109,15 +114,14 @@ services:
       options:
         max-size: "50m"
         max-file: "5"
-        labels: "com.wolfguard.project,com.wolfguard.environment"
 
 # Volumes
 volumes:
   nextjs-cache:
     driver: local
     labels:
-      - "com.wolfguard.project=wolfguard-site"
-      - "com.wolfguard.environment=production"
+      com.wolfguard.project: wolfguard-site
+      com.wolfguard.environment: production
 
 # Networks
 networks:

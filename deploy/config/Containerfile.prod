@@ -1,12 +1,13 @@
-# syntax=docker/dockerfile:1.4
+# syntax=docker/dockerfile:1.12
 # Multi-stage Containerfile for WolfGuard Site (Next.js Standalone)
 # Built with Buildah, runs with Podman + crun runtime
 # Uses Next.js standalone output (recommended by Vercel)
+# Compose Specification 2025 compliant
 
 # ==============================================================================
 # Stage 1: Dependencies Installation
 # ==============================================================================
-FROM docker.io/library/node:lts-trixie-slim AS deps
+FROM docker.io/library/node:lts-trixie AS deps
 
 # OCI Labels - Dependencies Stage
 LABEL org.opencontainers.image.title="WolfGuard Site Dependencies"
@@ -15,23 +16,24 @@ LABEL org.opencontainers.image.vendor="WolfGuard"
 
 WORKDIR /app
 
-# Install build dependencies
+# Install build dependencies and pnpm
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 \
     make \
     g++ \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && corepack enable && corepack prepare pnpm@latest --activate
 
 # Copy package files
-COPY package*.json ./
+COPY package.json pnpm-lock.yaml* ./
 
 # Install dependencies (including devDependencies for build)
-RUN npm ci
+RUN pnpm install --frozen-lockfile || pnpm install
 
 # ==============================================================================
 # Stage 2: Build Stage
 # ==============================================================================
-FROM docker.io/library/node:lts-trixie-slim AS builder
+FROM docker.io/library/node:lts-trixie AS builder
 
 # OCI Labels - Build Stage
 LABEL org.opencontainers.image.title="WolfGuard Site Builder"
@@ -39,6 +41,9 @@ LABEL org.opencontainers.image.description="Build stage for WolfGuard site"
 LABEL org.opencontainers.image.vendor="WolfGuard"
 
 WORKDIR /app
+
+# Enable pnpm via corepack
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
 # Copy dependencies from deps stage
 COPY --from=deps /app/node_modules ./node_modules
@@ -51,10 +56,10 @@ ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Build Next.js application with standalone output
-RUN npm run build
+RUN pnpm run build
 
 # ==============================================================================
-# Stage 3: Production Runtime Stage
+# Stage 3: Production Runtime Stage (minimal image)
 # ==============================================================================
 FROM docker.io/library/node:lts-trixie-slim AS runtime
 

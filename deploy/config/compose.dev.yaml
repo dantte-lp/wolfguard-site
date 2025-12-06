@@ -1,6 +1,6 @@
 # Development Compose configuration for WolfGuard site
 # Compose Specification 2025 (https://github.com/compose-spec/compose-spec)
-# Optimized for Podman rootless containers
+# Optimized for Podman rootless containers with pnpm
 
 name: wolfguard-dev
 
@@ -9,20 +9,23 @@ services:
     container_name: wolfguard-site-dev
 
     build:
-      context: .
+      context: ../..
       dockerfile: deploy/config/Containerfile.dev
+      tags:
+        - ghcr.io/dantte-lp/wolfguard-site-dev:latest
+        - localhost/wolfguard-site-dev:latest
 
     # Mount source code for hot reload with proper UID/GID mapping
     # Using :Z for SELinux compatibility on RHEL/Fedora systems
     volumes:
       # Mount entire project directory with correct ownership
-      - .:/app:rw,Z
+      - ../..:/app:rw,Z
       # Exclude node_modules from host mount (use container's version)
       - node-dev-modules:/app/node_modules:rw
       # Dedicated volume for .next to prevent permission issues
       - next-cache:/app/.next:rw
-      # NPM cache for faster installs
-      - npm-cache:/app/.npm:rw
+      # pnpm store for faster installs
+      - pnpm-store:/app/.pnpm-store:rw
 
     # Port mapping: host:container (kept for local access)
     ports:
@@ -38,7 +41,7 @@ services:
       - NEXT_TELEMETRY_DISABLED=1
       - WATCHPACK_POLLING=false
       - TZ=UTC
-      - NPM_CONFIG_CACHE=/app/.npm
+      - PNPM_HOME=/app/.pnpm-store
       # Ensure Next.js uses correct permissions
       - NEXT_PRIVATE_STANDALONE=true
 
@@ -64,35 +67,35 @@ services:
     # Labels
     labels:
       # Project metadata
-      - "com.wolfguard.project=wolfguard-site"
-      - "com.wolfguard.environment=development"
-      - "com.wolfguard.description=WolfGuard site development server"
+      com.wolfguard.project: wolfguard-site
+      com.wolfguard.environment: development
+      com.wolfguard.description: WolfGuard site development server
 
       # Traefik configuration
-      - "traefik.enable=true"
-      - "traefik.docker.network=traefik-public"
+      traefik.enable: "true"
+      traefik.docker.network: traefik-public
 
       # HTTP Router (redirect to HTTPS)
-      - "traefik.http.routers.wolfguard-dev-http.rule=Host(`dev.wolfguard.io`)"
-      - "traefik.http.routers.wolfguard-dev-http.entrypoints=http"
-      - "traefik.http.routers.wolfguard-dev-http.middlewares=https-redirect@file"
+      traefik.http.routers.wolfguard-dev-http.rule: "Host(`dev.wolfguard.io`)"
+      traefik.http.routers.wolfguard-dev-http.entrypoints: http
+      traefik.http.routers.wolfguard-dev-http.middlewares: https-redirect@file
 
       # HTTPS Router
-      - "traefik.http.routers.wolfguard-dev.rule=Host(`dev.wolfguard.io`)"
-      - "traefik.http.routers.wolfguard-dev.entrypoints=https"
-      - "traefik.http.routers.wolfguard-dev.tls.certresolver=cloudflare"
-      - "traefik.http.routers.wolfguard-dev.tls.domains[0].main=dev.wolfguard.io"
-      - "traefik.http.routers.wolfguard-dev.middlewares=web-development@file"
+      traefik.http.routers.wolfguard-dev.rule: "Host(`dev.wolfguard.io`)"
+      traefik.http.routers.wolfguard-dev.entrypoints: https
+      traefik.http.routers.wolfguard-dev.tls.certresolver: cloudflare
+      traefik.http.routers.wolfguard-dev.tls.domains[0].main: dev.wolfguard.io
+      traefik.http.routers.wolfguard-dev.middlewares: web-development@file
 
       # Service configuration (Next.js dev server port)
-      - "traefik.http.services.wolfguard-dev.loadbalancer.server.port=3000"
+      traefik.http.services.wolfguard-dev.loadbalancer.server.port: "3000"
 
       # Health check
-      - "traefik.http.services.wolfguard-dev.loadbalancer.healthcheck.path=/"
-      - "traefik.http.services.wolfguard-dev.loadbalancer.healthcheck.interval=30s"
+      traefik.http.services.wolfguard-dev.loadbalancer.healthcheck.path: /
+      traefik.http.services.wolfguard-dev.loadbalancer.healthcheck.interval: 30s
 
-    # Command to run (npm run dev will be executed)
-    command: sh -c "npm install && npm run dev"
+    # Command to run (pnpm install + dev)
+    command: sh -c "pnpm install && pnpm run dev"
 
 # Named volumes with proper labels
 volumes:
@@ -100,25 +103,25 @@ volumes:
   node-dev-modules:
     driver: local
     labels:
-      - "com.wolfguard.project=wolfguard-site"
-      - "com.wolfguard.environment=development"
-      - "com.wolfguard.volume=node-modules"
+      com.wolfguard.project: wolfguard-site
+      com.wolfguard.environment: development
+      com.wolfguard.volume: node-modules
 
   # Dedicated volume for .next build cache
   next-cache:
     driver: local
     labels:
-      - "com.wolfguard.project=wolfguard-site"
-      - "com.wolfguard.environment=development"
-      - "com.wolfguard.volume=next-cache"
+      com.wolfguard.project: wolfguard-site
+      com.wolfguard.environment: development
+      com.wolfguard.volume: next-cache
 
-  # NPM cache for faster dependency installation
-  npm-cache:
+  # pnpm store for faster dependency installation
+  pnpm-store:
     driver: local
     labels:
-      - "com.wolfguard.project=wolfguard-site"
-      - "com.wolfguard.environment=development"
-      - "com.wolfguard.volume=npm-cache"
+      com.wolfguard.project: wolfguard-site
+      com.wolfguard.environment: development
+      com.wolfguard.volume: pnpm-store
 
 # Networks
 networks:
